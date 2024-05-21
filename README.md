@@ -4,7 +4,7 @@
 ### 과제 결과물 마감 기한 : 6/2 (일) 23:59 / LMS 제출을 기준으로 합니다.
 ### 자세한 사항은 [RFP](https://drive.google.com/drive/folders/1pQ_jHrTAIp_qhoSlVtRZ77EkIild78JE) 참고 부탁드립니다.
 
-### 프로젝트 설명 (수정 예정)
+### 프로젝트 설명 
 - [RFP](https://drive.google.com/drive/folders/1pQ_jHrTAIp_qhoSlVtRZ77EkIild78JE)를 기반으로 팀별로 결과물을 작업하여 제출하시오. 
 - 3단계 달성 목표 : Spring Security, JUnit, Openapi 활용
   - 여행의 여정 정보를 기록하고 조회하는 [ToyProject 2단계] RESTful API 고도화
