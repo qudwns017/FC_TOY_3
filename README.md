@@ -2,10 +2,10 @@
 
 ### 프로젝트 기간 : 5/27(월) ~ 5/31 (금)
 ### 과제 결과물 마감 기한 : 6/2 (일) 23:59 / LMS 제출을 기준으로 합니다.
-### 자세한 사항은 [RFP](https://drive.google.com/drive/folders/1pQ_jHrTAIp_qhoSlVtRZ77EkIild78JE) 참고 부탁드립니다.
+### 자세한 사항은 [RFP](https://www.notion.so/3-217455bdb40f40b1baafa07e4417f77d) 노션페이지 참고 부탁드립니다.
 
 ### 프로젝트 설명 
-- [RFP](https://drive.google.com/drive/folders/1pQ_jHrTAIp_qhoSlVtRZ77EkIild78JE)를 기반으로 팀별로 결과물을 작업하여 제출하시오. 
+- [RFP](https://www.notion.so/Toy-Project-3-c008e3638360424c8a001b24f293c335)를 기반으로 팀별로 결과물을 작업하여 제출하시오. 
 - 3단계 달성 목표 : Spring Security, JUnit, Openapi 활용
   - 여행의 여정 정보를 기록하고 조회하는 [ToyProject 2단계] RESTful API 고도화
   - Spring Security 를 활용할 수 있도록, 사용자 테이블 추가 설계
