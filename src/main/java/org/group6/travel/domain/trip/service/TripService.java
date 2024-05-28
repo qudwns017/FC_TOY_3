@@ -16,6 +16,10 @@ import java.util.Optional;
 public class TripService {
     private final TripRepository tripRepository;
 
+    public boolean compareUserId(Long userId, TripEntity trip){
+        return trip.getUserId().equals(userId);
+    }
+
     public TripEntity insertTrip(TripRequest tripRequest){
         return tripRepository.save(TripEntity.builder()
                         .userId((long)1)
