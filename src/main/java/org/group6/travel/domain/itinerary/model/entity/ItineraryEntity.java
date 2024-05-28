@@ -1,25 +1,14 @@
 package org.group6.travel.domain.itinerary.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.DiscriminatorColumn;
-import jakarta.persistence.DiscriminatorType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.group6.travel.domain.itinerary.model.enums.ItineraryType;
+import org.group6.travel.domain.trip.model.entity.TripEntity;
 
 @Data
 @NoArgsConstructor
@@ -36,8 +25,11 @@ public class ItineraryEntity {
     @Column(name = "id")
     private Long itineraryId;
 
-    @Column(nullable = false)
-    private Long tripId;
+    @ManyToOne
+    @JoinColumn(name="trip_id")
+    @JsonIgnore
+    @ToString.Exclude
+    private TripEntity tripEntity;
 
     @Column(name = "name", length =50, nullable = false)
     private String itineraryName;

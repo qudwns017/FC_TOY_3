@@ -38,8 +38,9 @@ public class AccommodationService {
     public AccommodationDto save(Long tripId, AccommodationRequest accommodationRequest) {
         // TODO : 로그인 사용자 검증 추가
 
+        var tripEntity = tripService.getTripById(tripId);
         var accommodationEntity = AccommodationEntity.builder()
-            .tripId(tripId)
+            .tripEntity(tripEntity)
             .name(accommodationRequest.getName())
             .checkInDatetime(accommodationRequest.getCheckInDatetime())
             .checkOutDatetime(accommodationRequest.getCheckOutDatetime())

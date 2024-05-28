@@ -1,5 +1,6 @@
 package org.group6.travel.domain.accommodation.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.persistence.Column;
@@ -9,11 +10,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
+import org.group6.travel.domain.trip.model.entity.TripEntity;
 
 @Data
 @Builder
@@ -26,8 +28,12 @@ public class AccommodationEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // @ManyToOne
-    private Long tripId;
+//  @ManyToOne
+    @ManyToOne
+    @JoinColumn(name="trip_id")
+    @JsonIgnore
+    @ToString.Exclude
+    private TripEntity tripEntity;
 
     @Column(length = 50, nullable = false)
     private String name;
