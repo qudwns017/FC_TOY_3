@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,19 +18,22 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "accommodation")
+@Entity
+@Table(name = "accommodation")
 public class AccommodationEntity {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-//  @ManyToOne
-  private Long tripId;
-  private String name;
+    // @ManyToOne
+    private Long tripId;
+    private String name;
 
-  private Double latitude;
-  private Double longitude;
+    // latitude
+    private Double lat;
+    // longitude
+    private Double lng;
 
-  private LocalDateTime checkInDatetime;
-  private LocalDateTime checkOutDatetime;
+    private LocalDateTime checkInDatetime;
+    private LocalDateTime checkOutDatetime;
 }
