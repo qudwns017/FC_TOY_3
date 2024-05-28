@@ -1,19 +1,13 @@
 package org.group6.travel.domain.itinerary.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 import org.group6.travel.domain.itinerary.model.enums.ItineraryType;
+import org.group6.travel.domain.trip.model.entity.TripEntity;
 
 @Data
 @NoArgsConstructor
@@ -26,8 +20,11 @@ public class ItineraryEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Long tripId;
+    @ManyToOne
+    @JoinColumn(name="trip_id")
+    @JsonIgnore
+    @ToString.Exclude
+    private TripEntity tripEntity;
 
     @Column(length =50, nullable = false)
     private String name;

@@ -5,9 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.group6.travel.domain.accommodation.model.entity.AccommodationEntity;
+import org.group6.travel.domain.itinerary.model.entity.ItineraryEntity;
 import org.group6.travel.domain.trip.model.enums.DomesticType;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -30,4 +33,14 @@ public class TripEntity {
     @Column(name="comment")
     private String tripComment;
     private int likeCount;
+
+    @OneToMany(
+            mappedBy = "tripEntity"
+    )
+    private List<ItineraryEntity> itineraryList = List.of();
+
+    @OneToMany(
+            mappedBy = "tripEntity"
+    )
+    private List<AccommodationEntity> accommodationList = List.of();
 }
