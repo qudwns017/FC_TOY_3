@@ -24,6 +24,13 @@ public class Result {
             .resultDescription("성공")
             .build();
     }
+    public static Result SUCCSESS() {
+        return Result.builder()
+            .resultCode(ErrorCode.SUCCSESS.getErrorCode())
+            .resultMessage(ErrorCode.SUCCSESS.getDescription())
+            .resultDescription("성공")
+            .build();
+    }
 
     public static Result ERROR(ErrorCodeIfs errorCodeIfs) {
         return Result.builder()
