@@ -15,4 +15,11 @@ public class TripService {
     public List<TripEntity> getTripAll(){
         return tripRepository.findAll();
     }
+    public TripEntity getTripById(Long tripId){
+        return tripRepository.findById(tripId).get();
+    }
+
+    public List<TripEntity> getTripByKeyword(String keyword){
+        return tripRepository.findByTripNameContains(keyword).get();
+    }
 }

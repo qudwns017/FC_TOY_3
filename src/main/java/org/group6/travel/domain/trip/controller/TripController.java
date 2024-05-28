@@ -5,9 +5,7 @@ import org.group6.travel.common.api.Api;
 import org.group6.travel.domain.trip.model.dto.TripDto;
 import org.group6.travel.domain.trip.model.entity.TripEntity;
 import org.group6.travel.domain.trip.service.TripService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,5 +18,19 @@ public class TripController {
     @GetMapping
     public Api<List<TripEntity>> getTripList(){
         return Api.OK(tripService.getTripAll());
+    }
+
+    @GetMapping("/{tripId}")
+    public Api<TripEntity> getTripId(
+            @PathVariable Long tripId
+    ){
+        return Api.OK(tripService.getTripById(tripId));
+    }
+
+    @GetMapping("/search")
+    public Api<List<TripEntity>> searchTripListByKeyword(
+            @RequestParam("keyword") String keyword
+    ){
+        return Api.OK(tripService.getTripByKeyword(keyword));
     }
 }
