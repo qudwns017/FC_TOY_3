@@ -8,23 +8,23 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Table(name = "like")
+@IdClass(LikeId.class)
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class LikeEntity {
 
-    //@Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
-    //private Long id;
 
     @Id
     @Column(name = "user_id")
     //@ManyToOne(fetch = FetchType.LAZY)
     private Long userId; //private UserEntity user
+
 
     @Id
     @Column(name = "trip_id")
