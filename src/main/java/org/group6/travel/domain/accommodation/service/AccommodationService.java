@@ -18,6 +18,13 @@ public class AccommodationService {
 
     public List<AccommodationDto> findByTripId(Long tripId) {
         // TODO : TripId 검증 추가
+
+        /*
+        if (tripId == null) {
+
+        }
+         */
+
         // TODO : 로그인 사용자 검증 추가
 
         List<AccommodationEntity> accommodationList = accommodationRepository.findByTripId(tripId);
