@@ -1,19 +1,24 @@
 package org.group6.travel.domain.itinerary.model.entity;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "move")
-public class MoveEntity {
+@SuperBuilder
+@DiscriminatorValue("0")
+public class MoveEntity{
 
     @Id
     @Column(nullable = false)
@@ -29,14 +34,14 @@ public class MoveEntity {
     private String arrivalPlace;
 
     @Column(nullable = false)
-    private double departureLat;
+    private Double departureLat;
 
     @Column(nullable = false)
-    private double departureLng;
+    private Double departureLng;
 
     @Column(nullable = false)
-    private double arrivalLat;
+    private Double arrivalLat;
 
     @Column(nullable = false)
-    private double arrivalLng;
+    private Double arrivalLng;
 }

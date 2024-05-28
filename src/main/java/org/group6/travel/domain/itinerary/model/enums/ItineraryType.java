@@ -1,17 +1,14 @@
 package org.group6.travel.domain.itinerary.model.enums;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 public enum ItineraryType {
-    MOVE("이동", 0),
-    STAY("체류", 1);
+    MOVE(0),
+    STAY(1)
+    ;
 
-    private String s;
-    private int value;
-
-    ItineraryType(String s, int value){
-        this.value = value;
-        this.s = s;
-    }
+    private final int value;
 }
