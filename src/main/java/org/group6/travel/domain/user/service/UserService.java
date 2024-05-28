@@ -8,6 +8,7 @@ import org.group6.travel.domain.user.model.entity.UserEntity;
 import org.group6.travel.domain.user.model.request.UserRegisterRequest;
 import org.group6.travel.domain.user.model.response.UserResponse;
 import org.group6.travel.domain.user.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,11 +16,12 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public UserResponse register(UserRegisterRequest request) {
         var entity = UserEntity.builder()
                 .email(request.getEmail())
-                .password(request.getPassword())
+                .password(passwordEncoder.encode(request.getPassword()))
                 .userName(request.getName())
                 .build();
 
