@@ -18,10 +18,9 @@ public class LikeController {
     //여행 좋아요, post put 201
    @PostMapping("/trip/{trip_id}/like")
     public Api<?> like(
-        @PathVariable("trip_id") Long tripId,
-        @PathVariable("user_id") Long userId
+        @PathVariable("trip_id") Long tripId
     ) {
-        var clickLike = likeService.like(tripId,userId);
+        var clickLike = likeService.like(tripId);
         return Api.SUCCSESS(clickLike);
     }
 

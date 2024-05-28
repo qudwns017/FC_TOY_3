@@ -12,6 +12,7 @@ public interface LikeRepository extends JpaRepository<LikeEntity, LikeId> {
 
     LikeEntity findByUserIdAndTripId(Long userId, Long tripId); //UserEntity TripEntity
 
+    LikeEntity findByTripId(Long tripId);
     //LikeEntity deleteByLikeId(Long LikeId); 취소시 id 필요?
 
 
