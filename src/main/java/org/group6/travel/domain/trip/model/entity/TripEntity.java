@@ -27,6 +27,7 @@ public class TripEntity {
     private LocalDate startDate;
     private LocalDate endDate;
     private Boolean domestic;
-    private String comment;
+    @Column(name="comment")
+    private String tripComment;
     private int likeCount;
 }

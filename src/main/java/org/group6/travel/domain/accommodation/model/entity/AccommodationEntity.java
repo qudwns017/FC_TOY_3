@@ -27,8 +27,8 @@ public class AccommodationEntity {
   private Long tripId;
   private String name;
 
-  private Double latitude;
-  private Double longitude;
+  private Double lat;
+  private Double lng;
 
   private LocalDateTime checkInDatetime;
   private LocalDateTime checkOutDatetime;

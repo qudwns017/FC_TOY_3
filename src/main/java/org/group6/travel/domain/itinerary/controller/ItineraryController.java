@@ -13,6 +13,4 @@ public class ItineraryController {
 
     private final ItineraryService itineraryService;
 
-    @GetMapping("")
-    public Api<List<>>
 }

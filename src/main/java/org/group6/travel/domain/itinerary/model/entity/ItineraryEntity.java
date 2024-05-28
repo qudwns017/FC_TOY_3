@@ -33,8 +33,7 @@ public class ItineraryEntity {
     private String name;
 
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private ItineraryType type;
+    private Boolean type;
 
     @Column(nullable = false)
     private LocalDateTime startDatetime;
