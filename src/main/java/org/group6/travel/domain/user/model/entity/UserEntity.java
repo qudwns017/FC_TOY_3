@@ -18,12 +18,15 @@ import lombok.NoArgsConstructor;
 public class UserEntity {
 
     @Id
-    @Column(nullable = false)
-    private Long id;
+    @Column(name = "id", nullable = false)
+    private Long userId;
+
     @Column(length = 45, nullable = false)
     private String email;
+
     @Column(length = 20, nullable = false)
     private String password;
+
     @Column(length = 20, nullable = false)
-    private String name;
+    private String userName;
 }
