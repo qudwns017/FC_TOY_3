@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum DomesticType {
     DOMESTIC("국내", 0),
-    OVERSEAS("해외", 0);
+    OVERSEAS("해외", 1);
 
     private final String title;
     private final int value;

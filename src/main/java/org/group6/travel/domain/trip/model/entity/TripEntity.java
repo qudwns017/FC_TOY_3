@@ -21,11 +21,12 @@ public class TripEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
     private Long tripId;
+    private Long userId;
     @Column(name="name")
     private String tripName;
     private LocalDate startDate;
     private LocalDate endDate;
-    private DomesticType domestic;
+    private Boolean domestic;
     private String comment;
     private int likeCount;
 }
