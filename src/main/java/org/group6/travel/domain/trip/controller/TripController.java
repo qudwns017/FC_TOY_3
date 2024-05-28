@@ -28,6 +28,11 @@ public class TripController {
         return Api.OK(tripService.getTripAll());
     }
 
+    @GetMapping("/user")
+    public Api<List<TripEntity>> getTripListByUser(){
+        return Api.OK(tripService.getTripByUserId((long)1));
+    }
+
     @GetMapping("/{tripId}")
     public Api<TripEntity> getTripId(
             @PathVariable Long tripId

@@ -35,6 +35,10 @@ public class TripService {
         return tripRepository.findById(tripId).get();
     }
 
+    public List<TripEntity> getTripByUserId(Long userId){
+        return tripRepository.findByUserId(userId).get();
+    }
+
     public List<TripEntity> getTripByKeyword(String keyword){
         return tripRepository.findByTripNameContains(keyword).get();
     }

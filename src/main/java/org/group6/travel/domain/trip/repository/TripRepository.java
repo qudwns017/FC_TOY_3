@@ -8,5 +8,6 @@ import java.util.Optional;
 
 public interface TripRepository extends JpaRepository<TripEntity,Long> {
 
+    Optional<List<TripEntity>> findByUserId(Long userId);
     Optional<List<TripEntity>> findByTripNameContains(String keyword);
 }
