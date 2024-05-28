@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface LikeRepository extends JpaRepository<LikeEntity, Long> {
 }
-//좋아요 테이블도 id 가 필요하지 않나?
+//userid + tripid
 */
