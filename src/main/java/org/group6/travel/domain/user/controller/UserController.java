@@ -22,7 +22,7 @@ public class UserController {
             @Valid
             @RequestBody UserRegisterRequest request
             ) {
-        var response = service.register(request);
+        UserResponse response = service.register(request);
         return Api.OK(response);
     }
 }

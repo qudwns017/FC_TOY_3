@@ -1,9 +1,7 @@
 package org.group6.travel.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
-import org.group6.travel.common.error.ErrorCode;
-import org.group6.travel.common.exception.ApiException;
-import org.group6.travel.domain.user.model.dto.UserDto;
+import org.group6.travel.domain.user.model.converter.UserConverter;
 import org.group6.travel.domain.user.model.entity.UserEntity;
 import org.group6.travel.domain.user.model.request.UserRegisterRequest;
 import org.group6.travel.domain.user.model.response.UserResponse;
@@ -16,19 +14,12 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserConverter userConverter;
     private final PasswordEncoder passwordEncoder;
 
     public UserResponse register(UserRegisterRequest request) {
-        var entity = UserEntity.builder()
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .userName(request.getName())
-                .build();
-
-        if (entity == null) {
-            throw new ApiException(ErrorCode.NULL_POINT, "User Entity Null");
-        }
+        UserEntity entity = userConverter.toEntity(request, passwordEncoder);
         UserEntity responseEntity = userRepository.save(entity);
-        return UserDto.toResponse(responseEntity);
+        return userConverter.toResponse(responseEntity);
     }
 }
