@@ -18,6 +18,7 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @SuperBuilder
 @DiscriminatorValue("0")
+@Table(name = "move")
 public class MoveEntity{
 
     @Id

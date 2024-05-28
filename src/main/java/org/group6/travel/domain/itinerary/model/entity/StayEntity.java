@@ -18,6 +18,7 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @SuperBuilder
 @DiscriminatorValue("1")
+@Table(name="stay")
 public class StayEntity{
 
     @Id

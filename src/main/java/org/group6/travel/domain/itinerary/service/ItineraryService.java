@@ -19,6 +19,7 @@ import org.group6.travel.domain.itinerary.model.enums.ItineraryType;
 import org.group6.travel.domain.itinerary.repository.ItineraryRepository;
 import org.group6.travel.domain.itinerary.repository.MoveRepository;
 import org.group6.travel.domain.itinerary.repository.StayRepository;
+import org.group6.travel.domain.trip.service.TripService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,12 +31,14 @@ public class ItineraryService {
     private final ItineraryRepository itineraryRepository;
     private final MoveRepository moveRepository;
     private final StayRepository stayRepository;
+    private final TripService tripService;
 
     public List<ItineraryDto> getItinerary(Long tripId) {
 //        if (tripService.getTripId(tripId) == null) {
 //            throw new ApiException(ErrorCode.NULL_POINT, "없는 여행 아이디입니다.");
 //        }
-        List<ItineraryEntity> itineraries = itineraryRepository.findAllByTripId(tripId);
+        var tripEntity = tripService.getTripById(tripId);
+        List<ItineraryEntity> itineraries = itineraryRepository.findAllByTripEntity(tripEntity);
 
         return itineraries.stream()
             .map(this::mapToItineraryDto)
@@ -53,6 +56,7 @@ public class ItineraryService {
         ItineraryRequest itineraryRequest,
         Long tripId
     ) {
+        var tripEntity = tripService.getTripById(tripId);
         // TODO trip이랑 합치면 날짜 비교해야함
 //        var trip = tripService.findById(tripId);
 //        if(!isValidDateTime(
@@ -62,7 +66,7 @@ public class ItineraryService {
 //        }
 
         ItineraryEntity itineraryEntity = ItineraryEntity.builder()
-            .tripId(tripId)
+            .tripEntity(tripEntity)
             .itineraryName(itineraryRequest.getItineraryName())
             .type(itineraryRequest.getType())
             .startDatetime(itineraryRequest.getStartDatetime())
@@ -113,6 +117,7 @@ public class ItineraryService {
         Long itineraryId,
         ItineraryRequest itineraryRequest
     ) {
+        var tripEntity = tripService.getTripById(tripId);
 
         //TODO trip 날짜비교
 //        var trip = tripService.findById(tripId);
@@ -124,7 +129,7 @@ public class ItineraryService {
         var itineraryEntity = itineraryRepository.findById(itineraryId)
             .orElseThrow(() -> new ApiException(ErrorCode.BAD_REQUEST, "Itinerary not found"));
 
-        itineraryEntity.setTripId(tripId);
+        itineraryEntity.setTripEntity(tripEntity);
         itineraryEntity.setItineraryName(itineraryRequest.getItineraryName());
         itineraryEntity.setType(itineraryRequest.getType());
         itineraryEntity.setStartDatetime(itineraryRequest.getStartDatetime());

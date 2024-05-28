@@ -27,7 +27,8 @@ public class AccommodationService {
 
         // TODO : 로그인 사용자 검증 추가
 
-        List<AccommodationEntity> accommodationList = accommodationRepository.findByTripId(tripId);
+        var tripEntity = tripService.getTripById(tripId);
+        List<AccommodationEntity> accommodationList = accommodationRepository.findByTripEntity(tripEntity);
 
         return accommodationList.stream()
             .map(AccommodationDto::toAccommodationDto)

@@ -70,7 +70,7 @@ public class ItineraryDto {
     ) {
         return ItineraryDto.builder()
             .itineraryId(itinerary.getItineraryId())
-            .tripId(itinerary.getTripId())
+            .tripId(itinerary.getTripEntity().getTripId())
             .itineraryName(itinerary.getItineraryName())
             .type(itinerary.getType())
             .startDatetime(itinerary.getStartDatetime())

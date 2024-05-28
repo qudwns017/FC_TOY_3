@@ -16,7 +16,7 @@ import org.group6.travel.domain.trip.model.entity.TripEntity;
 @Entity
 @SuperBuilder
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.INTEGER)
+@DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.INTEGER, columnDefinition = "bit")
 @Table(name = "itinerary")
 public class ItineraryEntity {
 

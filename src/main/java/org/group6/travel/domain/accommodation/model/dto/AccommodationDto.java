@@ -31,7 +31,7 @@ public class AccommodationDto {
 
     public static AccommodationDto toAccommodationDto(AccommodationEntity accommodationEntity) {
         return AccommodationDto.builder()
-            .tripId(accommodationEntity.getTripId())
+            .tripId(accommodationEntity.getTripEntity().getTripId())
             .id(accommodationEntity.getId())
             .name(accommodationEntity.getName())
             .lat(accommodationEntity.getLat())

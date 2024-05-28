@@ -7,8 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ItineraryType {
     MOVE(0),
-    STAY(1)
-    ;
+    STAY(1);
 
     private final int value;
 }
