@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+// TODO UserDto Static Method로 이동시키기
 public class UserConverter {
-
     public UserEntity toEntity(UserRegisterRequest request, PasswordEncoder passwordEncoder) {
         return Optional.ofNullable(request)
                 .map(it -> UserEntity.builder()
