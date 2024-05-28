@@ -7,6 +7,7 @@ import org.group6.travel.domain.trip.model.entity.TripEntity;
 import org.group6.travel.domain.trip.repository.TripRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +46,13 @@ public class TripService {
 
     public List<TripEntity> getTripByKeyword(String keyword){
         return tripRepository.findByTripNameContains(keyword).get();
+    }
+
+    public List<TripEntity> getTripByLike(Long UserId){
+        List<Long> testList = new ArrayList<>();
+        testList.add((long)1);
+        testList.add((long)2);
+        return tripRepository.findByLikeList(testList);
     }
 
     public TripEntity updateTrip(Long tripId, TripRequest tripRequest){

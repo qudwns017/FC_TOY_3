@@ -40,6 +40,11 @@ public class TripController {
         return Api.OK(tripService.getTripById(tripId));
     }
 
+    @GetMapping("/user/like-list")
+    public Api<List<TripEntity>> getTripListByUserLike(){
+        return Api.OK(tripService.getTripByLike((long) 1));
+    }
+
     @GetMapping("/search")
     public Api<List<TripEntity>> searchTripListByKeyword(
             @RequestParam("keyword") String keyword
