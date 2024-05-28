@@ -14,6 +14,6 @@ import lombok.*;
 public class ReplyRequest {
 
     @NotBlank(message = "댓글을 입력하세요")
-    private String comment;
+    private String replyComment;
 
 }

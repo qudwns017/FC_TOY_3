@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
@@ -19,12 +18,13 @@ public class ReplyController {
     private final ReplyService replyService;
 
     //여행 댓글 작성
+    @PostMapping("/trip/{trip_id}/reply")
     public Api<?> create(
         @PathVariable("trip_id") Long tripId,
         @Valid @RequestBody ReplyRequest replyRequest
     ) {
         var replyDto = replyService.create(tripId, replyRequest);
-        return Api.OK(replyDto);
+        return Api.SUCCSESS(replyDto);
     }
 
     //여행아이디 별 댓글 조회
@@ -34,25 +34,49 @@ public class ReplyController {
         return Api.OK(id);
     }
 
-    //여행 댓글 수정
-    @PutMapping("/trip/{trip_id}/reply/{reply_id}")
-    public Api<?> updateReply(
-        @PathVariable("trip_id") Long tripId,
-        @PathVariable("reply_id") Long replyId
-        ) {
-        var updateId = replyService.update(tripId, replyId);
-        return Api.OK(updateId);
-    }
-
     //여행 댓글 삭제
     @DeleteMapping("/trip/{trip_id}/reply/{reply_id}")
-    public Api<?> delete (
+    public Api<?> delete(
         @PathVariable("trip_id") Long tripId,
         @PathVariable("reply_id") Long replyId
-    ){
-        var deleteReply = replyService.delete (tripId, replyId);
-        return Api.OK(deleteReply);
+    ) {
+        replyService.delete(tripId, replyId);
+        return Api.OK(delete(tripId, replyId));
 
+    }
+
+    //댓글 수정
+    @PutMapping("/trip/{trip_id}/reply/{reply_id}")
+    public Api<?> update(
+        @PathVariable("trip_id") Long tripId,
+        @PathVariable("reply_id") Long replyId,
+        @RequestBody ReplyRequest replyRequest
+    ){
+        var updateReply = replyService.update(tripId, replyId, replyRequest);
+
+        return Api.SUCCSESS(updateReply);
     }
 
 }
+
+/*
+ //여행 댓글 수정
+    @PutMapping("/trip/{trip_id}/reply/{reply_id}")
+    public Api<?> update(
+        @PathVariable("trip_id") Long tripId,
+        @PathVariable("reply_id") Long replyId,
+        @RequestBody ReplyRequest replyRequest
+    ) {
+        var updateReply = replyService.update(tripId, replyId,replyRequest);
+        return Api.OK(updateReply);
+    }
+
+ */
+
+
+
+
+
+
+
+

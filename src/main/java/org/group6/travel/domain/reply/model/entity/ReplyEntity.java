@@ -24,7 +24,8 @@ public class ReplyEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "id")
+    private Long replyId;
 
     //@ManyToOne
     //@JsonIgnore
@@ -34,7 +35,8 @@ public class ReplyEntity {
     // @JsonIgnore
     private Long tripId; //private TripEntity trip
 
-    private String comment;
+    @Column(name = "comment")
+    private String replyComment;
 
     private LocalDateTime createdAt;
 
