@@ -29,7 +29,9 @@ public class TripEntity {
     private String tripName;
     private LocalDate startDate;
     private LocalDate endDate;
-    private Boolean domestic;
+    @Column(columnDefinition = "bit")
+    @Enumerated(EnumType.ORDINAL)
+    private DomesticType domestic;
     @Column(name="comment")
     private String tripComment;
     private int likeCount;

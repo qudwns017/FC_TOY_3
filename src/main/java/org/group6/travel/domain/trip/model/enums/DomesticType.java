@@ -4,14 +4,12 @@ import lombok.Getter;
 
 @Getter
 public enum DomesticType {
-    DOMESTIC("국내", 0),
-    OVERSEAS("해외", 1);
+    DOMESTIC(0),
+    OVERSEAS(1);
 
-    private final String title;
-    private final int value;
+    private final int status;
 
-    DomesticType(String title, int value){
-        this.title = title;
-        this.value = value;
+    DomesticType(int status){
+        this.status = status;
     }
 }
