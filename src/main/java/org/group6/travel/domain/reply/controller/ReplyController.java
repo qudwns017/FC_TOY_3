@@ -3,7 +3,6 @@ package org.group6.travel.domain.reply.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.group6.travel.common.api.Api;
-import org.group6.travel.domain.reply.model.dto.ReplyDto;
 import org.group6.travel.domain.reply.model.request.ReplyRequest;
 import org.group6.travel.domain.reply.service.ReplyService;
 import org.springframework.web.bind.annotation.*;
