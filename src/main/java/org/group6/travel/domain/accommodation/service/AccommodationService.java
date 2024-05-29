@@ -44,7 +44,6 @@ public class AccommodationService {
         // TODO : 로그인 사용자 검증 추가
 
         var tripEntity = tripRepository.findByTripId(tripId);
-        var tripEntity = tripService.getTripById(tripId);
 
         if(!isValidDateTime(
             tripEntity.getStartDate(), tripEntity.getEndDate(), accommodationRequest.getCheckInDatetime(), accommodationRequest.getCheckOutDatetime()

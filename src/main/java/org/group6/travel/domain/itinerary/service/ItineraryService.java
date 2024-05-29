@@ -5,6 +5,7 @@ import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,12 +39,15 @@ public class ItineraryService {
 //        if (tripService.getTripId(tripId) == null) {
 //            throw new ApiException(ErrorCode.NULL_POINT, "없는 여행 아이디입니다.");
 //        }
-        var tripEntity = tripRepository.findByTripId(tripId);
-        List<ItineraryEntity> itineraries = itineraryRepository.findAllByTripEntity(tripEntity);
 
-        return itineraries.stream()
+        var tripEntity = Optional.ofNullable(tripRepository.findByTripId(tripId))
+            .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
+
+        return itineraryRepository.findAllByTripEntity(tripEntity)
+            .stream()
             .map(this::mapToItineraryDto)
             .collect(Collectors.toList());
+
     }
 
     private ItineraryDto mapToItineraryDto(ItineraryEntity itinerary) {
