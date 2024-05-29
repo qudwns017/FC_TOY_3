@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface TripRepository extends JpaRepository<TripEntity,Long> {
 
     Optional<List<TripEntity>> findByUserId(Long userId);
-    Optional<List<TripEntity>> findByTripNameContains(String keyword);
+    List<TripEntity> findByTripNameContains(String keyword);
     @Query(value = "select * from trip trip where trip.id in ?1", nativeQuery = true)
     public List<TripEntity> findByLikeList(List<Long> likeList);
     TripEntity findByTripId(Long tripId);

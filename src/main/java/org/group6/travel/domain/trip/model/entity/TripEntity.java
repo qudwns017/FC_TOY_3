@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.group6.travel.domain.accommodation.model.entity.AccommodationEntity;
 import org.group6.travel.domain.itinerary.model.entity.ItineraryEntity;
+import org.group6.travel.domain.reply.model.entity.ReplyEntity;
 import org.group6.travel.domain.trip.model.enums.DomesticType;
 
 import java.time.LocalDate;
@@ -45,4 +46,8 @@ public class TripEntity {
             mappedBy = "tripEntity"
     )
     private List<AccommodationEntity> accommodationList = List.of();
+    @OneToMany(
+            mappedBy = "tripEntity"
+    )
+    private List<ReplyEntity> replyList = List.of();
 }

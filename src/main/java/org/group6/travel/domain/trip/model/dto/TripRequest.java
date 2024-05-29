@@ -3,7 +3,6 @@ package org.group6.travel.domain.trip.model.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -21,15 +20,15 @@ import java.time.LocalDate;
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class TripRequest {
 
-    @NotBlank
+    @NotBlank(message = "제목은 빈 값일 수 없습니다.")
     private String tripName;
-    @NotNull
+    @NotNull(message = "시작일자는 빈 값일 수 없습니다.")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate startDate;
-    @NotNull
+    @NotNull(message = "종료일자는 빈 값일 수 없습니다.")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate endDate;
-    @NotNull
+    @NotNull(message = "국/내외 여부 항목은 빈 값일 수 없습니다.")
     private DomesticType domestic;
     @NotBlank
     private String tripComment;

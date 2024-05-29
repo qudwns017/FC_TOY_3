@@ -30,7 +30,7 @@ public class ReplyDto {
     public static ReplyDto toDto(ReplyEntity replyEntity){
         return  ReplyDto.builder()
             .id(replyEntity.getReplyId())
-            .tripId(replyEntity.getTripId())
+            .tripId(replyEntity.getTripEntity().getTripId())
             .userId(replyEntity.getUserId())
             .comment(replyEntity.getReplyComment())
             .createdAt(replyEntity.getCreatedAt())

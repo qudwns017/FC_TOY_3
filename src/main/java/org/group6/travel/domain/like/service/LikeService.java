@@ -12,6 +12,7 @@ import org.group6.travel.domain.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,21 +27,22 @@ public class LikeService {
             .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
         //존재 확인
-        LikeEntity existingLike = likeRepository.findByTripId(tripId);
+        LikeEntity existingLike = likeRepository.findByTripId(tripId)
+                .orElse(null);
 
         if (existingLike == null) {
             LikeEntity newLike = LikeEntity.builder()
-                .userId(trip.getUserId())
+                .userId(1L)
                 .tripId(tripId)
                 .build();
-            likeRepository.save(newLike);
+            newLike = likeRepository.save(newLike);
+            return LikeDto.toDto(newLike);
 
         } else {
             likeRepository.delete(existingLike);
+            return null;
             //삭제
         }
-
-        return null; //LikeDto.toDto(existingLike)
     }
 
     public List<LikeEntity> all() {
