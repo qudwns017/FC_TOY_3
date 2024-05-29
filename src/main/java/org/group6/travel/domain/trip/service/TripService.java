@@ -2,12 +2,15 @@ package org.group6.travel.domain.trip.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.group6.travel.domain.like.model.entity.LikeEntity;
+import org.group6.travel.domain.like.repository.LikeRepository;
 import org.group6.travel.domain.trip.model.dto.TripRequest;
 import org.group6.travel.domain.trip.model.entity.TripEntity;
 import org.group6.travel.domain.trip.repository.TripRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +19,7 @@ import java.util.Optional;
 @Slf4j
 public class TripService {
     private final TripRepository tripRepository;
+    private final LikeRepository likeRepository;
 
     public boolean compareUserId(Long userId, TripEntity trip){
         return trip.getUserId().equals(userId);
@@ -48,11 +52,10 @@ public class TripService {
         return tripRepository.findByTripNameContains(keyword).get();
     }
 
-    public List<TripEntity> getTripByLike(Long UserId){
-        List<Long> testList = new ArrayList<>();
-        testList.add((long)1);
-        testList.add((long)2);
-        return tripRepository.findByLikeList(testList);
+    public List<TripEntity> getTripByLike(Long userId){
+        List<Long> tripIdList = likeRepository.findByUserId(userId);
+        System.out.println(Arrays.stream(tripIdList.toArray()).toString());
+        return tripRepository.findByLikeList(tripIdList);
     }
 
     public TripEntity updateTrip(Long tripId, TripRequest tripRequest){
