@@ -36,10 +36,6 @@ public class ItineraryService {
     private final TripRepository tripRepository;
 
     public List<ItineraryDto> getItinerary(Long tripId) {
-//        if (tripService.getTripId(tripId) == null) {
-//            throw new ApiException(ErrorCode.NULL_POINT, "없는 여행 아이디입니다.");
-//        }
-
         var tripEntity = Optional.ofNullable(tripRepository.findByTripId(tripId))
             .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
@@ -62,14 +58,14 @@ public class ItineraryService {
         ItineraryRequest itineraryRequest,
         Long tripId
     ) {
-        var tripEntity = tripRepository.findByTripId(tripId);
-        // TODO trip이랑 합치면 날짜 비교해야함
-//        var trip = tripService.findById(tripId);
-//        if(!isValidDateTime(
-//            trip.getStartDate(), trip.getEndDate(), itineraryRequest.getStartDatetime(), itineraryRequest.getEndDatetime()
-//        )){
-//            throw TravelError.TIME_ERROR.defaultException();
-//        }
+        var tripEntity = Optional.ofNullable(tripRepository.findByTripId(tripId))
+            .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
+
+        if(!isValidDateTime(
+            tripEntity.getStartDate(), tripEntity.getEndDate(), itineraryRequest.getStartDatetime(), itineraryRequest.getEndDatetime()
+        )){
+            throw new ApiException(ErrorCode.TIME_ERROR, "여행 시간 범위에 들어가지 않습니다.");
+        }
 
         MoveEntity moveEntity = null;
         StayEntity stayEntity = null;
@@ -119,7 +115,8 @@ public class ItineraryService {
             Long itineraryId,
             ItineraryRequest itineraryRequest
     ){
-        var tripEntity = tripRepository.findByTripId(tripId);
+        var tripEntity = Optional.ofNullable(tripRepository.findByTripId(tripId))
+            .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
         if(!isValidDateTime(
             tripEntity.getStartDate(), tripEntity.getEndDate(), itineraryRequest.getStartDatetime(), itineraryRequest.getEndDatetime()
@@ -128,7 +125,7 @@ public class ItineraryService {
         }
 
         var itineraryEntity = itineraryRepository.findById(itineraryId)
-                .orElseThrow(()->new ApiException(ErrorCode.BAD_REQUEST, "Itinerary not found"));
+                .orElseThrow(()->new ApiException(ErrorCode.ITINERARY_NOT_EXIST, "Itinerary not found"));
 
         MoveEntity moveEntity = moveRepository.findById(itineraryId)
                 .orElse(null);
@@ -147,10 +144,8 @@ public class ItineraryService {
     @Transactional
     public void deleteItinerary(Long tripId, Long itineraryId) {
 
-        // TODO 연결한 후 tripId 확인
-//        if (!tripRepository.existById(tripId)) {
-//            throw new ApiException(ErrorCode.BAD_REQUEST, "Trip not found");
-//        }
+        Optional.ofNullable(tripRepository.findByTripId(tripId))
+            .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
         if (!itineraryRepository.existsById(itineraryId)) {
             throw new ApiException(ErrorCode.BAD_REQUEST, "Itinerary not found");

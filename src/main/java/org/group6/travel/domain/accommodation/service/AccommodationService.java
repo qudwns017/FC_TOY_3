@@ -3,6 +3,7 @@ package org.group6.travel.domain.accommodation.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.group6.travel.common.error.ErrorCode;
@@ -21,20 +22,14 @@ public class AccommodationService {
     private final TripRepository tripRepository;
 
     public List<AccommodationDto> findByTripId(Long tripId) {
-        // TODO : TripId 검증 추가
-
-        /*
-        if (tripId == null) {
-
-        }
-         */
+        var tripEntity = Optional.ofNullable(tripRepository.findByTripId(tripId))
+            .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
         // TODO : 로그인 사용자 검증 추가
 
-        var tripEntity = tripRepository.findByTripId(tripId);
-        List<AccommodationEntity> accommodationList = accommodationRepository.findByTripEntity(tripEntity);
 
-        return accommodationList.stream()
+        return accommodationRepository.findByTripEntity(tripEntity)
+            .stream()
             .map(AccommodationDto::toAccommodationDto)
             .collect(Collectors.toList());
     }
@@ -43,7 +38,8 @@ public class AccommodationService {
     public AccommodationDto save(Long tripId, AccommodationRequest accommodationRequest) {
         // TODO : 로그인 사용자 검증 추가
 
-        var tripEntity = tripRepository.findByTripId(tripId);
+        var tripEntity = Optional.ofNullable(tripRepository.findByTripId(tripId))
+            .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
         if(!isValidDateTime(
             tripEntity.getStartDate(), tripEntity.getEndDate(), accommodationRequest.getCheckInDatetime(), accommodationRequest.getCheckOutDatetime()
@@ -60,12 +56,16 @@ public class AccommodationService {
             .lng(accommodationRequest.getLng())
             .build();
 
-        var savedAccommodationEntity = accommodationRepository.save(accommodationEntity);
-        return AccommodationDto.toAccommodationDto(savedAccommodationEntity);
+        return Optional.of(accommodationRepository.save(accommodationEntity))
+            .map(AccommodationDto::toAccommodationDto)
+            .orElseThrow(() -> new ApiException(ErrorCode.BAD_REQUEST, "잘못된 서식입니다."));
     }
 
 
     public void delete(Long tripId, Long accommodationId) {
+
+        Optional.ofNullable(tripRepository.findByTripId(tripId))
+            .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
         // TODO : 로그인 사용자 검증 추가
         accommodationRepository.deleteById(accommodationId);
