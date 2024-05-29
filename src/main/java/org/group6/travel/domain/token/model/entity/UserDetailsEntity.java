@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.group6.travel.domain.user.model.enums.StoreUserRole;
-import org.group6.travel.domain.user.model.enums.StoreUserStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,8 +24,6 @@ public class UserDetailsEntity implements UserDetails {
     private String password;
 
     private String userName;
-
-    private StoreUserStatus status;
 
     private StoreUserRole role;
 
