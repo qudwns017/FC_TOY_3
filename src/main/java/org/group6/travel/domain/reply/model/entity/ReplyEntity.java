@@ -29,10 +29,11 @@ public class ReplyEntity {
     @JoinColumn(name="user_id")
     private Long userId; //private UserEntity user
 
-    //@ManyToOne
+    @ManyToOne
     @JsonIgnore
     @JoinColumn(name="trip_id")
-    private Long tripId; //private TripEntity trip
+    @ToString.Exclude
+    private TripEntity tripEntity;
 
     @Column(name = "comment")
     private String replyComment;
