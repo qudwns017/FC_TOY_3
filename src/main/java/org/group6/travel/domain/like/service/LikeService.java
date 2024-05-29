@@ -23,7 +23,7 @@ public class LikeService {
     private final UserRepository userRepository;
 
     public LikeDto like(Long tripId) {
-        var trip = tripRepository.findById(tripId)
+        var tripEntity = tripRepository.findById(tripId)
             .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
         //존재 확인
@@ -50,32 +50,3 @@ public class LikeService {
     }
 
 }
-/*
-
-
- LikeEntity clickLike = likeRepository.findUserIdAndTripId(tripId,userId);
-
-if(clickLike == null){
-            LikeEntity likeEntity = LikeDto.builder()
-                .tripId(tripId)
-                .userId(userId)
-                .build();
-                likeRepository.save(likeEntity);
-        }else{
-            likeRepository.deleteById(clickLike.getTripId()); //id
-        }
-
-         var likeEntity = LikeEntity.builder()
-            .userId(userId)
-            .tripId(tripId)
-            .build();
-
-        likeRepository.save(likeEntity);
-
-        if (likeEntity == null) {
-            //기존 데이터 없다면 좋아요 생성
-        } else {
-            //있다면 좋아요 취소
-        }
-
- */

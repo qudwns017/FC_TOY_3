@@ -35,7 +35,7 @@ public class ItineraryService {
     private final TripRepository tripRepository;
 
     public List<ItineraryDto> getItinerary(Long tripId) {
-        var tripEntity = Optional.ofNullable(tripRepository.findByTripId(tripId))
+        var tripEntity = tripRepository.findByTripId(tripId)
             .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
         return itineraryRepository.findAllByTripEntity(tripEntity)
@@ -57,7 +57,7 @@ public class ItineraryService {
         ItineraryRequest itineraryRequest,
         Long tripId
     ) {
-        var tripEntity = Optional.ofNullable(tripRepository.findByTripId(tripId))
+        var tripEntity = tripRepository.findByTripId(tripId)
             .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
         if(!isValidDateTime(
@@ -114,7 +114,7 @@ public class ItineraryService {
             Long itineraryId,
             ItineraryRequest itineraryRequest
     ){
-        var tripEntity = Optional.ofNullable(tripRepository.findByTripId(tripId))
+        var tripEntity = tripRepository.findByTripId(tripId)
             .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
         if(!isValidDateTime(
@@ -143,7 +143,7 @@ public class ItineraryService {
     @Transactional
     public void deleteItinerary(Long tripId, Long itineraryId) {
 
-        Optional.ofNullable(tripRepository.findByTripId(tripId))
+        tripRepository.findByTripId(tripId)
             .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
         if (!itineraryRepository.existsById(itineraryId)) {

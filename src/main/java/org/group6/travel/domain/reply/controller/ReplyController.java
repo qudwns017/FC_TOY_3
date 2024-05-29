@@ -23,7 +23,6 @@ public class ReplyController {
         @PathVariable("trip_id") Long tripId,
         @Valid @RequestBody ReplyRequest replyRequest
     ) {
-       // var reponse = replyService.create(tripId,replyRequest.getBody());
         return Api.SUCCESS(replyService.create(tripId,replyRequest));
     }
 
@@ -58,25 +57,3 @@ public class ReplyController {
     }
 
 }
-
-/*
- //여행 댓글 수정
-    @PutMapping("/trip/{trip_id}/reply/{reply_id}")
-    public Api<?> update(
-        @PathVariable("trip_id") Long tripId,
-        @PathVariable("reply_id") Long replyId,
-        @RequestBody ReplyRequest replyRequest
-    ) {
-        var updateReply = replyService.update(tripId, replyId,replyRequest);
-        return Api.OK(updateReply);
-    }
-
- */
-
-
-
-
-
-
-
-

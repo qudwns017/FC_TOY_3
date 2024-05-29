@@ -8,7 +8,6 @@ import org.group6.travel.domain.reply.model.entity.ReplyEntity;
 import org.group6.travel.domain.reply.model.request.ReplyRequest;
 import org.group6.travel.domain.reply.repository.ReplyRepository;
 import org.group6.travel.domain.trip.repository.TripRepository;
-import org.group6.travel.domain.trip.service.TripService;
 import org.group6.travel.domain.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,20 +24,18 @@ public class ReplyService {
     private final ReplyRepository replyRepository;
     private final TripRepository tripRepository;
     private final UserRepository userRepository;
-    private final TripService tripService;
 
     public ReplyDto create(
         Long tripId, ReplyRequest replyRequest
     ) {
-        var trip = tripRepository.findById(tripId)
-                .orElseThrow(()->new ApiException(ErrorCode.BAD_REQUEST,"Trip not found"));
+        var tripEntity = tripRepository.findById(tripId)
+            .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
         var replyEntity = ReplyEntity.builder()
             .userId(1L)
-            .tripEntity(trip)
+            .tripEntity(tripEntity)
             .replyComment(replyRequest.getReplyComment())
             .createdAt(LocalDateTime.now())
-            //.updatedAt(LocalDateTime.now())
             .build();
 
         try {
@@ -61,51 +58,54 @@ public class ReplyService {
         try {
             replyEntityList = replyRepository.findAllByTripEntity(trip);
         } catch (Exception e) {
+            // TODO error 수정하기
             throw new ApiException(ErrorCode.SERVER_ERROR);
         }
 
-        return replyEntityList.stream()
+        return replyEntityList
+            .stream()
             .map(ReplyDto::toDto)
             .collect(Collectors.toList());
+
     }
 
     @Transactional
     public void delete(Long tripId, Long replyId) {
-        var trip = tripRepository.findById(tripId)
+        var tripEntity = tripRepository.findById(tripId)
                 .orElseThrow(()->new ApiException(ErrorCode.TRIP_NOT_EXIST));
-        var reply = replyRepository.findByReplyId(replyId);
+        var replyEntity = replyRepository.findByReplyId(replyId);
 
-        if(reply == null){
+        if(replyEntity == null){
             throw new ApiException(ErrorCode.REPLY_NOT_EXIST);
         }
 
-        replyRepository.deleteByReplyIdAndTripEntity(replyId, trip)
-                .orElseThrow(()->new ApiException(ErrorCode.REPLY_NOT_EXIST, "Error"));
 
+        replyRepository.deleteByReplyIdAndTripEntity(replyId, tripEntity)
+                .orElseThrow(()->new ApiException(ErrorCode.REPLY_NOT_EXIST, "Error"));
     }
 
     @Transactional
     public ReplyDto update(Long tripId, Long replyId,
                            ReplyRequest replyRequest
     ) {
-        var trip = tripRepository.findById(tripId)
+        var tripEntity = tripRepository.findById(tripId)
                 .orElseThrow(()->new ApiException(ErrorCode.TRIP_NOT_EXIST));
-        var reply = replyRepository.findByReplyId(replyId);
+        var replyEntity = replyRepository.findByReplyId(replyId);
 
-        if(reply == null){
+        if(replyEntity == null){
             throw new ApiException(ErrorCode.REPLY_NOT_EXIST);
         }
 
-        var replyEntity  = ReplyEntity.builder()
+        replyEntity  = ReplyEntity.builder()
                  .replyId(replyId)
-                 .tripEntity(trip)
+                 .tripEntity(tripEntity)
                  .userId(1L)
                  .replyComment(replyRequest.getReplyComment())
                  .updatedAt(LocalDateTime.now())
-                 .createdAt(reply.getCreatedAt())
+                 .createdAt(replyEntity.getCreatedAt())
                  .build();
 
-        replyRepository.updateCommentByIdAndTripId(replyEntity.getReplyComment(), replyId, trip);
+        replyRepository.updateCommentByIdAndTripId(replyEntity.getReplyComment(), replyId, tripEntity);
 
         return ReplyDto.toDto(replyEntity);
     }

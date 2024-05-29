@@ -25,7 +25,7 @@ public class AccommodationController {
 
     private final AccommodationService accommodationService;
 
-    @GetMapping("")
+    @GetMapping
     public Api<List<AccommodationDto>> findByTripId(
         @PathVariable Long tripId
     ) {
@@ -33,7 +33,7 @@ public class AccommodationController {
       return Api.OK(response);
     }
 
-    @PostMapping("")
+    @PostMapping
     public Api<AccommodationDto> create(
         @PathVariable Long tripId,
         @Valid @RequestBody AccommodationRequest accommodationRequest

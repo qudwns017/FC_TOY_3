@@ -21,7 +21,7 @@ public class AccommodationDto {
     private Long tripId;
     private String name;
 
-    //  latitude
+    //  latitude 이름 바꾸기
     private Double lat;
     // longitude
     private Double lng;
