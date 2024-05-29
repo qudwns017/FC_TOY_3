@@ -21,7 +21,6 @@ import org.group6.travel.domain.itinerary.repository.MoveRepository;
 import org.group6.travel.domain.itinerary.repository.StayRepository;
 import org.group6.travel.domain.trip.model.entity.TripEntity;
 import org.group6.travel.domain.trip.repository.TripRepository;
-import org.group6.travel.domain.trip.service.TripService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,14 +32,13 @@ public class ItineraryService {
     private final ItineraryRepository itineraryRepository;
     private final MoveRepository moveRepository;
     private final StayRepository stayRepository;
-    private final TripService tripService;
     private final TripRepository tripRepository;
 
     public List<ItineraryDto> getItinerary(Long tripId) {
 //        if (tripService.getTripId(tripId) == null) {
 //            throw new ApiException(ErrorCode.NULL_POINT, "없는 여행 아이디입니다.");
 //        }
-        var tripEntity = tripService.getTripById(tripId);
+        var tripEntity = tripRepository.findByTripId(tripId);
         List<ItineraryEntity> itineraries = itineraryRepository.findAllByTripEntity(tripEntity);
 
         return itineraries.stream()
@@ -60,13 +58,14 @@ public class ItineraryService {
         ItineraryRequest itineraryRequest,
         Long tripId
     ) {
-        var tripEntity = tripService.getTripById(tripId);
-
-        if(!isValidDateTime(
-            tripEntity.getStartDate(), tripEntity.getEndDate(), itineraryRequest.getStartDatetime(), itineraryRequest.getEndDatetime()
-        )){
-            throw new ApiException(ErrorCode.TIME_ERROR, "여행 시간 범위에 들어가지 않습니다.");
-        }
+        var tripEntity = tripRepository.findByTripId(tripId);
+        // TODO trip이랑 합치면 날짜 비교해야함
+//        var trip = tripService.findById(tripId);
+//        if(!isValidDateTime(
+//            trip.getStartDate(), trip.getEndDate(), itineraryRequest.getStartDatetime(), itineraryRequest.getEndDatetime()
+//        )){
+//            throw TravelError.TIME_ERROR.defaultException();
+//        }
 
         MoveEntity moveEntity = null;
         StayEntity stayEntity = null;
@@ -116,7 +115,7 @@ public class ItineraryService {
             Long itineraryId,
             ItineraryRequest itineraryRequest
     ){
-        var tripEntity = tripService.getTripById(tripId);
+        var tripEntity = tripRepository.findByTripId(tripId);
 
         if(!isValidDateTime(
             tripEntity.getStartDate(), tripEntity.getEndDate(), itineraryRequest.getStartDatetime(), itineraryRequest.getEndDatetime()
