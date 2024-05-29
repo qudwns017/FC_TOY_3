@@ -26,9 +26,10 @@ import org.springframework.stereotype.Service;
 public class AccommodationService {
     private final AccommodationRepository accommodationRepository;
     private final TripRepository tripRepository;
+    private final MapsService mapsService;
 
     public List<AccommodationDto> findByTripId(Long tripId) {
-        var tripEntity = Optional.ofNullable(tripRepository.findByTripId(tripId))
+        var tripEntity = tripRepository.findByTripId(tripId)
             .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
         // TODO : 로그인 사용자 검증 추가
@@ -43,17 +44,16 @@ public class AccommodationService {
 
     public AccommodationDto save(Long tripId, AccommodationRequest accommodationRequest) {
 
-//        var tripEntity = tripService.getTripById(tripId);
-
         // TODO : 로그인 사용자 검증 추가
+        var tripEntity = tripRepository.findByTripId(tripId)
+            .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
+
         var loginUserId = '1'; // TODO : 로그인 사용자 Id 변경
 
+        // 오류 코드 수정해야함.
         if(tripEntity.getUserId() != loginUserId) {
             throw new ApiException(ErrorCode.BAD_REQUEST);
         }
-
-        var tripEntity = Optional.ofNullable(tripRepository.findByTripId(tripId))
-            .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
         if(!isValidDateTime(
             tripEntity.getStartDate(), tripEntity.getEndDate(), accommodationRequest.getCheckInDatetime(), accommodationRequest.getCheckOutDatetime()
@@ -62,7 +62,6 @@ public class AccommodationService {
         }
 
         var geocodingResult = mapsService.getLatLngFromAddress(accommodationRequest.getAddress());
-
 
         var accommodationEntity = AccommodationEntity.builder()
             .tripEntity(tripEntity)
@@ -78,14 +77,13 @@ public class AccommodationService {
             .orElseThrow(() -> new ApiException(ErrorCode.BAD_REQUEST, "잘못된 서식입니다."));
     }
 
-
     public void delete(Long tripId, Long accommodationId) {
 
-        Optional.ofNullable(tripRepository.findByTripId(tripId))
+        var tripEntity = tripRepository.findByTripId(tripId)
             .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
         // TODO : 로그인 사용자 검증 추가
-        var tripUserId = tripService.getTripById(tripId).getUserId();
+        var tripUserId = tripEntity.getUserId();
         var loginUserId = '1'; // TODO : 로그인 사용자 Id 변경
 
         if(tripUserId != loginUserId) {
