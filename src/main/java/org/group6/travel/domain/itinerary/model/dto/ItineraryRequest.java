@@ -20,6 +20,7 @@ public class ItineraryRequest {
     @Size(min = 1, max = 50, message = "제목은 1 ~ 50자 사이여야 합니다.")
     private String itineraryName;
 
+    @NotNull
     private ItineraryType type;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
