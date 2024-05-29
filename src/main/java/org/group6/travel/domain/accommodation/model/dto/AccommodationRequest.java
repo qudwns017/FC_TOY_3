@@ -34,12 +34,8 @@ public class AccommodationRequest {
         return checkOutDatetime.isAfter(checkInDatetime);
     }
 
-    // latitude
-    @NotNull(message = "숙박 : latitude가 없습니다.")
-    private Double lat;
-    // longitude
-    @NotNull(message = "숙박 : longitude가 없습니다.")
-    private Double lng;
-
+    // 주소
+    @NotNull(message = "숙박 : 주소가 없습니다.")
+    private String address;
 
 }

@@ -28,7 +28,6 @@ public class AccommodationEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//  @ManyToOne
     @ManyToOne
     @JoinColumn(name="trip_id")
     @JsonIgnore

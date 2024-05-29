@@ -14,7 +14,9 @@ public enum ErrorCode implements ErrorCodeIfs {
     SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), 500, "서버 에러"),
     NULL_POINT(HttpStatus.INTERNAL_SERVER_ERROR.value(), 512, "Null Point"),
     TRIP_NOT_EXIST(HttpStatus.NOT_FOUND.value(), 412, "TRIP NOT EXIST"),
-    REPLY_NOT_EXIST(HttpStatus.NOT_FOUND.value(), 413,"REPLY_NOT_FOUND");
+    REPLY_NOT_EXIST(HttpStatus.NOT_FOUND.value(), 413,"REPLY_NOT_FOUND"),
+    LOCATION_NOT_EXIST(HttpStatus.NOT_FOUND.value(), 414,"위치 결과 없음")
+    ;
 
     private final Integer httpStatusCode;
     private final Integer errorCode;
