@@ -1,8 +1,12 @@
 package org.group6.travel.domain.accommodation.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.group6.travel.common.error.ErrorCode;
+import org.group6.travel.common.exception.ApiException;
 import org.group6.travel.domain.accommodation.model.dto.AccommodationDto;
 import org.group6.travel.domain.accommodation.model.dto.AccommodationRequest;
 import org.group6.travel.domain.accommodation.model.entity.AccommodationEntity;
@@ -40,6 +44,13 @@ public class AccommodationService {
         // TODO : 로그인 사용자 검증 추가
 
         var tripEntity = tripService.getTripById(tripId);
+
+        if(!isValidDateTime(
+            tripEntity.getStartDate(), tripEntity.getEndDate(), accommodationRequest.getCheckInDatetime(), accommodationRequest.getCheckOutDatetime()
+        )){
+            throw new ApiException(ErrorCode.TIME_ERROR, "여행 시간 범위에 들어가지 않습니다.");
+        }
+
         var accommodationEntity = AccommodationEntity.builder()
             .tripEntity(tripEntity)
             .name(accommodationRequest.getName())
@@ -60,5 +71,13 @@ public class AccommodationService {
         accommodationRepository.deleteById(accommodationId);
     }
 
+    public static boolean isValidDateTime(
+        LocalDate startTravel, LocalDate endTravel,
+        LocalDateTime checkIn, LocalDateTime checkOut
+    ) {
+        return (checkIn.toLocalDate().isEqual(startTravel) || checkIn.toLocalDate().isAfter(startTravel)) &&
+            (checkOut.toLocalDate().isEqual(endTravel) || checkOut.toLocalDate().isBefore(endTravel)) &&
+            (checkIn.isBefore(checkOut));
+    }
 
 }

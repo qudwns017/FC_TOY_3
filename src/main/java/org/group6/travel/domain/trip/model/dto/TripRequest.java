@@ -3,6 +3,7 @@ package org.group6.travel.domain.trip.model.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -32,4 +33,9 @@ public class TripRequest {
     private DomesticType domestic;
     @NotBlank
     private String tripComment;
+
+    @AssertTrue(message = "종료일은 시작일을 앞설 수 없습니다.")
+    public boolean isValidPeriod() {
+        return endDate.isAfter(startDate) || startDate.isEqual(endDate);
+    }
 }

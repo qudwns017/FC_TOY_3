@@ -1,6 +1,7 @@
 package org.group6.travel.domain.itinerary.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -13,7 +14,6 @@ import org.group6.travel.domain.itinerary.model.enums.ItineraryType;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class ItineraryRequest {
 
     @NotBlank(message= "여정 이름을 입력해주세요.")
@@ -43,5 +43,10 @@ public class ItineraryRequest {
     private String place;
     private Double lat;
     private Double lng;
+
+    @AssertTrue(message = "종료시간은 시각시간을 앞설 수 없습니다.")
+    public boolean isValidPeriod() {
+        return endDatetime.isAfter(startDatetime);
+    }
 
 }
