@@ -29,13 +29,19 @@ public class AccommodationRequest {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime checkOutDatetime;
 
-    @AssertTrue(message = "숙박 : 체크인/체크아웃 시간이 올바르지 않습니다.")
-    public boolean isValidPeriod() {
-        return checkOutDatetime.isAfter(checkInDatetime);
-    }
+    @NotNull(message = "숙박 : latitude가 없습니다.")
+    private Double lat;
+
+    @NotNull(message = "숙박 : longitude가 없습니다.")
+    private Double lng;
 
     // 주소
     @NotNull(message = "숙박 : 주소가 없습니다.")
     private String address;
+
+    @AssertTrue(message = "숙박 : 체크인/체크아웃 시간이 올바르지 않습니다.")
+    public boolean isValidPeriod() {
+        return checkOutDatetime.isAfter(checkInDatetime);
+    }
 
 }

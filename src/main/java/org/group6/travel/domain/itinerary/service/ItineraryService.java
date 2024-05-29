@@ -1,10 +1,10 @@
 package org.group6.travel.domain.itinerary.service;
 
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ import org.group6.travel.domain.itinerary.repository.ItineraryRepository;
 import org.group6.travel.domain.itinerary.repository.MoveRepository;
 import org.group6.travel.domain.itinerary.repository.StayRepository;
 import org.group6.travel.domain.trip.model.entity.TripEntity;
-import org.group6.travel.domain.trip.service.TripService;
+import org.group6.travel.domain.trip.repository.TripRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,18 +32,17 @@ public class ItineraryService {
     private final ItineraryRepository itineraryRepository;
     private final MoveRepository moveRepository;
     private final StayRepository stayRepository;
-    private final TripService tripService;
+    private final TripRepository tripRepository;
 
     public List<ItineraryDto> getItinerary(Long tripId) {
-//        if (tripService.getTripId(tripId) == null) {
-//            throw new ApiException(ErrorCode.NULL_POINT, "없는 여행 아이디입니다.");
-//        }
-        var tripEntity = tripService.getTripById(tripId);
-        List<ItineraryEntity> itineraries = itineraryRepository.findAllByTripEntity(tripEntity);
+        var tripEntity = Optional.ofNullable(tripRepository.findByTripId(tripId))
+            .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
-        return itineraries.stream()
+        return itineraryRepository.findAllByTripEntity(tripEntity)
+            .stream()
             .map(this::mapToItineraryDto)
             .collect(Collectors.toList());
+
     }
 
     private ItineraryDto mapToItineraryDto(ItineraryEntity itinerary) {
@@ -58,14 +57,14 @@ public class ItineraryService {
         ItineraryRequest itineraryRequest,
         Long tripId
     ) {
-        var tripEntity = tripService.getTripById(tripId);
-        // TODO trip이랑 합치면 날짜 비교해야함
-//        var trip = tripService.findById(tripId);
-//        if(!isValidDateTime(
-//            trip.getStartDate(), trip.getEndDate(), itineraryRequest.getStartDatetime(), itineraryRequest.getEndDatetime()
-//        )){
-//            throw TravelError.TIME_ERROR.defaultException();
-//        }
+        var tripEntity = Optional.ofNullable(tripRepository.findByTripId(tripId))
+            .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
+
+        if(!isValidDateTime(
+            tripEntity.getStartDate(), tripEntity.getEndDate(), itineraryRequest.getStartDatetime(), itineraryRequest.getEndDatetime()
+        )){
+            throw new ApiException(ErrorCode.TIME_ERROR, "여행 시간 범위에 들어가지 않습니다.");
+        }
 
         MoveEntity moveEntity = null;
         StayEntity stayEntity = null;
@@ -115,9 +114,17 @@ public class ItineraryService {
             Long itineraryId,
             ItineraryRequest itineraryRequest
     ){
-        var tripEntity = tripService.getTripById(tripId);
+        var tripEntity = Optional.ofNullable(tripRepository.findByTripId(tripId))
+            .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
+
+        if(!isValidDateTime(
+            tripEntity.getStartDate(), tripEntity.getEndDate(), itineraryRequest.getStartDatetime(), itineraryRequest.getEndDatetime()
+        )){
+            throw new ApiException(ErrorCode.TIME_ERROR, "여행 시간 범위에 들어가지 않습니다.");
+        }
+
         var itineraryEntity = itineraryRepository.findById(itineraryId)
-                .orElseThrow(()->new ApiException(ErrorCode.BAD_REQUEST, "Itinerary not found"));
+                .orElseThrow(()->new ApiException(ErrorCode.ITINERARY_NOT_EXIST, "Itinerary not found"));
 
         MoveEntity moveEntity = moveRepository.findById(itineraryId)
                 .orElse(null);
@@ -125,7 +132,6 @@ public class ItineraryService {
                 .orElse(null);
 
         if(!itineraryEntity.getType().equals(itineraryRequest.getType())){
-            log.info("바꼈지롱~");
             moveRepository.deleteById(itineraryId);
             stayRepository.deleteById(itineraryId);
         }
@@ -137,10 +143,8 @@ public class ItineraryService {
     @Transactional
     public void deleteItinerary(Long tripId, Long itineraryId) {
 
-        // TODO 연결한 후 tripId 확인
-//        if (!tripRepository.existById(tripId)) {
-//            throw new ApiException(ErrorCode.BAD_REQUEST, "Trip not found");
-//        }
+        Optional.ofNullable(tripRepository.findByTripId(tripId))
+            .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
         if (!itineraryRepository.existsById(itineraryId)) {
             throw new ApiException(ErrorCode.BAD_REQUEST, "Itinerary not found");

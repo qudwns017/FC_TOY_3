@@ -13,4 +13,5 @@ public interface TripRepository extends JpaRepository<TripEntity,Long> {
     List<TripEntity> findByTripNameContains(String keyword);
     @Query(value = "select * from trip trip where trip.id in ?1", nativeQuery = true)
     public List<TripEntity> findByLikeList(List<Long> likeList);
+    TripEntity findByTripId(Long tripId);
 }
