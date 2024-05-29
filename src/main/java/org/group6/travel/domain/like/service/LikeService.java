@@ -1,12 +1,14 @@
 package org.group6.travel.domain.like.service;
 
 import lombok.RequiredArgsConstructor;
+import org.group6.travel.common.api.Api;
 import org.group6.travel.common.error.ErrorCode;
 import org.group6.travel.common.exception.ApiException;
 import org.group6.travel.domain.like.model.dto.LikeDto;
 import org.group6.travel.domain.like.model.entity.LikeEntity;
 import org.group6.travel.domain.like.repository.LikeRepository;
 import org.group6.travel.domain.trip.repository.TripRepository;
+import org.group6.travel.domain.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,19 +19,18 @@ public class LikeService {
 
     private final LikeRepository likeRepository;
     private final TripRepository tripRepository;
-    //private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    public LikeDto like(Long tripId, Long userId) {
+    public LikeDto like(Long tripId) {
         var trip = tripRepository.findById(tripId)
             .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
-        // var user = userRepository.findById(userId).orElse
 
         //존재 확인
-        LikeEntity existingLike = likeRepository.findByUserIdAndTripId(userId, tripId);
+        LikeEntity existingLike = likeRepository.findByTripId(tripId);
 
         if (existingLike == null) {
             LikeEntity newLike = LikeEntity.builder()
-                .userId(userId)
+                .userId(trip.getUserId())
                 .tripId(tripId)
                 .build();
             likeRepository.save(newLike);
@@ -39,7 +40,7 @@ public class LikeService {
             //삭제
         }
 
-        return new LikeDto(userId, tripId);
+        return null; //LikeDto.toDto(existingLike)
     }
 
     public List<LikeEntity> all() {

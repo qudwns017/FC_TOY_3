@@ -2,12 +2,10 @@ package org.group6.travel.domain.like.model.dto;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.group6.travel.domain.like.model.entity.LikeEntity;
 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString

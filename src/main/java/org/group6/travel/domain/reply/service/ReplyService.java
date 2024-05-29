@@ -8,10 +8,14 @@ import org.group6.travel.domain.reply.model.entity.ReplyEntity;
 import org.group6.travel.domain.reply.model.request.ReplyRequest;
 import org.group6.travel.domain.reply.repository.ReplyRepository;
 import org.group6.travel.domain.trip.repository.TripRepository;
+import org.group6.travel.domain.trip.service.TripService;
+import org.group6.travel.domain.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,6 +24,8 @@ public class ReplyService {
 
     private final ReplyRepository replyRepository;
     private final TripRepository tripRepository;
+    private final UserRepository userRepository;
+    private final TripService tripService;
 
     public ReplyDto create(
         Long tripId, ReplyRequest replyRequest
@@ -29,10 +35,11 @@ public class ReplyService {
             throw new ApiException(ErrorCode.TRIP_NOT_EXIST);
         }
         var replyEntity = ReplyEntity.builder()
-            .userId(tripId)
+            .userId(1L)
             .tripId(tripId)
             .replyComment(replyRequest.getReplyComment())
             .createdAt(LocalDateTime.now())
+            //.updatedAt(LocalDateTime.now())
             .build();
 
         try {
@@ -52,6 +59,7 @@ public class ReplyService {
         }
         List<ReplyEntity> replyEntityList;
 
+
         try {
             replyEntityList = replyRepository.findAllByTripId(tripId);
         } catch (Exception e) {
@@ -63,77 +71,54 @@ public class ReplyService {
             .collect(Collectors.toList());
     }
 
-
+   @Transactional
     public void delete(Long tripId, Long replyId) {
-        if (tripRepository.findById(tripId) == null) {
-            throw new ApiException(ErrorCode.TRIP_NOT_EXIST);
-        }
-        if (replyRepository.findById(replyId) == null) {
-            throw new ApiException(ErrorCode.REPLY_NOT_EXIST);
-        }
-        try {
-            replyRepository.deleteByReplyIdAndTripId(replyId, tripId);
-        } catch (Exception e) {
-            throw new ApiException(ErrorCode.SERVER_ERROR);
-        }
+        var trip = tripService.getTripById(tripId);
+        var reply = replyRepository.findByReplyId(replyId);
+       if(trip == null){
+           throw new ApiException(ErrorCode.TRIP_NOT_EXIST);
+       }
+       if(reply == null){
+           throw new ApiException(ErrorCode.REPLY_NOT_EXIST);
+       }
+
+       Optional<ReplyEntity> deleteReply = replyRepository.deleteByReplyIdAndTripId(replyId, tripId);
+       if(deleteReply.isPresent()){
+           replyRepository.deleteByReplyIdAndTripId(tripId, replyId);
+
+       }else{
+           throw new ApiException(ErrorCode.SERVER_ERROR);
+       }
+
+
+
     }
 
+    @Transactional
     public ReplyDto update(Long tripId, Long replyId,
                            ReplyRequest replyRequest
     ) {
-        if (replyRepository.findByTripId(tripId) == null) {
-            throw new ApiException(ErrorCode.TRIP_NOT_EXIST);
-        }
-        if (replyRepository.findByReplyId(replyId) == null) {
-            throw new ApiException(ErrorCode.REPLY_NOT_EXIST);
-        }
+        var trip = tripService.getTripById(tripId);
+        var reply = replyRepository.findByReplyId(replyId);
+       if(trip == null){
+           throw new ApiException(ErrorCode.TRIP_NOT_EXIST);
+       }
+       if(reply == null){
+           throw new ApiException(ErrorCode.REPLY_NOT_EXIST);
+       }
 
-        var replyEntity = ReplyEntity.builder()
-            .tripId(tripId)
-            .replyId(replyId)
-            .replyComment(replyRequest.getReplyComment())
-            .updatedAt(LocalDateTime.now())
-            .build();
+       var replyEntity  = ReplyEntity.builder()
+           .replyId(replyId)
+           .tripId(tripId)
+           .userId(1L)
+           .replyComment(replyRequest.getReplyComment())
+           .updatedAt(LocalDateTime.now())
+           .createdAt(reply.getCreatedAt())
+           .build();
 
-        try {
-            replyRepository.updateReply(replyEntity);
-        } catch (Exception e) {
-            throw new ApiException(ErrorCode.SERVER_ERROR);
-        }
+        replyRepository.updateCommentByIdAndTripId(replyEntity.getReplyComment(), replyId, tripId);
 
         return ReplyDto.toDto(replyEntity);
     }
 
 }
-
-/*
-
-  public ReplyDto update(
-        Long tripId, Long replyId,
-        ReplyRequest replyRequest
-    ) {
-
-        if (tripRepository.findById(tripId) == null) {
-            throw new ApiException(ErrorCode.TRIP_NOT_EXIST);
-        }
-        if (replyRepository.findById(replyId) == null) {
-            throw new ApiException(ErrorCode.REPLY_NOT_EXIST);
-        }
-        var replyEntity = ReplyEntity.builder()
-            .tripId(tripId)
-            .replyId(replyId)
-            .replyComment(replyRequest.getReplyComment())
-            //.createdAt()
-            .updatedAt(LocalDateTime.now())
-            .build();
-
-        try {
-            replyRepository.updateCommentByIdAndTripId(replyEntity, replyId, tripId);
-
-        } catch (Exception e) {
-            throw new ApiException(ErrorCode.SERVER_ERROR);
-        }
-
-        return ReplyDto.toDto(replyEntity);
-    }
- */

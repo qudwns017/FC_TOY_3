@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "like")
+@Table(name = "likes")
 @IdClass(LikeId.class)
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class LikeEntity {
