@@ -1,5 +1,6 @@
 package org.group6.travel.domain.trip.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.group6.travel.common.api.Api;
 import org.group6.travel.domain.trip.model.dto.TripDto;
@@ -18,6 +19,7 @@ public class TripController {
 
     @PostMapping
     public Api<?> insertTrip(
+            @Valid
             @RequestBody TripRequest tripRequest
     ){
         return Api.OK(tripService.insertTrip(tripRequest));
@@ -55,6 +57,7 @@ public class TripController {
     @PutMapping("/{tripId}")
     public Api<?> updateTrip(
             @PathVariable Long tripId,
+            @Valid
             @RequestBody TripRequest tripRequest
     ){
         return Api.OK(tripService.updateTrip(tripId, tripRequest));
