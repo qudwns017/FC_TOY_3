@@ -2,8 +2,11 @@ package org.group6.travel.domain.trip.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.group6.travel.common.error.ErrorCode;
+import org.group6.travel.common.exception.ApiException;
 import org.group6.travel.domain.like.model.entity.LikeEntity;
 import org.group6.travel.domain.like.repository.LikeRepository;
+import org.group6.travel.domain.trip.model.dto.TripDto;
 import org.group6.travel.domain.trip.model.dto.TripRequest;
 import org.group6.travel.domain.trip.model.entity.TripEntity;
 import org.group6.travel.domain.trip.repository.TripRepository;
@@ -13,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,60 +29,63 @@ public class TripService {
         return trip.getUserId().equals(userId);
     }
 
-    public TripEntity insertTrip(TripRequest tripRequest){
-        return tripRepository.save(TripEntity.builder()
-                        .userId((long)1)
-                        .tripName(tripRequest.getTripName())
-                        .startDate(tripRequest.getStartDate())
-                        .endDate(tripRequest.getEndDate())
-                        .domestic(tripRequest.getDomestic())
-                        .likeCount(0)
-                        .tripComment(tripRequest.getTripComment())
-                .build());
+    public TripDto insertTrip(TripRequest tripRequest){
+        return TripDto.toDto(tripRepository.save(TripEntity.builder()
+                .userId((long)1)
+                .tripName(tripRequest.getTripName())
+                .startDate(tripRequest.getStartDate())
+                .endDate(tripRequest.getEndDate())
+                .domestic(tripRequest.getDomestic())
+                .likeCount(0)
+                .tripComment(tripRequest.getTripComment())
+                .build())
+            );
     }
 
-    public List<TripEntity> getTripAll(){
-        return tripRepository.findAll();
+    public List<TripDto> getTripAll(){
+        return tripRepository.findAll().stream()
+                .map(TripDto::toDto)
+                .collect(Collectors.toList());
     }
     public TripEntity getTripById(Long tripId){
-        return tripRepository.findById(tripId).get();
+        return tripRepository.findById(tripId)
+                .orElseThrow(()->new ApiException(ErrorCode.TRIP_NOT_EXIST));
     }
 
     public List<TripEntity> getTripByUserId(Long userId){
         return tripRepository.findByUserId(userId).get();
     }
 
-    public List<TripEntity> getTripByKeyword(String keyword){
-        return tripRepository.findByTripNameContains(keyword).get();
+    public List<TripDto> getTripByKeyword(String keyword){
+        return tripRepository.findByTripNameContains(keyword).stream()
+                .map(TripDto::toDto)
+                .collect(Collectors.toList());
     }
 
     public List<TripEntity> getTripByLike(Long userId){
         List<Long> tripIdList = likeRepository.findByUserId(userId);
-        System.out.println(Arrays.stream(tripIdList.toArray()).toString());
         return tripRepository.findByLikeList(tripIdList);
     }
 
     public TripEntity updateTrip(Long tripId, TripRequest tripRequest){
-        Optional<TripEntity> entity = tripRepository.findById(tripId);
-        if(entity.isPresent()){
-            TripEntity saveEntity = entity.get();
-            saveEntity.setTripName(tripRequest.getTripName());
-            saveEntity.setStartDate(tripRequest.getStartDate());
-            saveEntity.setEndDate(tripRequest.getEndDate());
-            saveEntity.setDomestic(tripRequest.getDomestic());
-            saveEntity.setTripComment(tripRequest.getTripComment());
+        TripEntity entity = tripRepository.findById(tripId)
+                .orElseThrow(()->new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
-            return tripRepository.save(saveEntity);
-        }
-        return null;
+        entity.setTripName(tripRequest.getTripName());
+        entity.setStartDate(tripRequest.getStartDate());
+        entity.setEndDate(tripRequest.getEndDate());
+        entity.setDomestic(tripRequest.getDomestic());
+        entity.setTripComment(tripRequest.getTripComment());
+
+        return tripRepository.save(entity);
+
     }
 
     public void deleteTrip(Long tripId){
-        Optional<TripEntity> entity = tripRepository.findById(tripId);
-        if(entity.isPresent()) {
-            tripRepository.delete(entity.get());
-        }else{
-           log.info("id 없음");
-        }
+        TripEntity entity = tripRepository.findById(tripId)
+                .orElseThrow(()->new ApiException(ErrorCode.TRIP_NOT_EXIST));
+
+        tripRepository.delete(entity);
+
     }
 }
