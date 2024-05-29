@@ -1,6 +1,5 @@
 package org.group6.travel.domain.itinerary.service;
 
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

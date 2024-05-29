@@ -23,7 +23,7 @@ public interface ReplyRepository extends JpaRepository<ReplyEntity, Long> {
     @Query("UPDATE ReplyEntity r SET r.replyComment = :comment WHERE r.replyId = :id AND r.tripId = :trip_id")
     void updateCommentByIdAndTripId(@Param("comment") String comment, @Param("id") Long id, @Param("trip_id") Long tripId);
 
-    ReplyEntity findByTripId(Long tripId);
+    List<ReplyEntity> findByTripId(Long tripId);
     ReplyEntity findByReplyId(Long replyId);
 
     @Modifying
