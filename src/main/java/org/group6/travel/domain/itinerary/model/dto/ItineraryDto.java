@@ -64,18 +64,17 @@ public class ItineraryDto {
     private Double lng;
 
     public static ItineraryDto toDto(
-        ItineraryEntity itinerary,
         MoveEntity move,
         StayEntity stay
     ) {
         return ItineraryDto.builder()
-            .itineraryId(itinerary.getItineraryId())
-            .tripId(itinerary.getTripEntity().getTripId())
-            .itineraryName(itinerary.getItineraryName())
-            .type(itinerary.getType())
-            .startDatetime(itinerary.getStartDatetime())
-            .endDatetime(itinerary.getEndDatetime())
-            .itineraryComment(itinerary.getItineraryComment())
+            .itineraryId(move != null ? move.getItineraryId() : stay.getItineraryId())
+            .tripId(move != null ? move.getTripEntity().getTripId() : stay.getTripEntity().getTripId())
+            .itineraryName(move != null ? move.getItineraryName(): stay.getItineraryName())
+            .type(move != null ? move.getType(): stay.getType())
+            .startDatetime(move != null ? move.getStartDatetime(): stay.getStartDatetime())
+            .endDatetime(move != null ? move.getEndDatetime(): stay.getEndDatetime())
+            .itineraryComment(move != null ? move.getItineraryComment(): stay.getItineraryComment())
             .transportation(move != null ? move.getTransportation() : null)
             .departurePlace(move != null ? move.getDeparturePlace() : null)
             .arrivalPlace(move != null ? move.getArrivalPlace() : null)

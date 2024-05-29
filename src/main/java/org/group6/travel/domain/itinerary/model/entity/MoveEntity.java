@@ -11,7 +11,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.group6.travel.domain.itinerary.model.enums.ItineraryType;
 
+import static org.group6.travel.domain.itinerary.model.enums.ItineraryType.MOVE;
+
+@EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,11 +23,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @DiscriminatorValue("0")
 @Table(name = "move")
-public class MoveEntity{
-
-    @Id
-    @Column(nullable = false)
-    private Long itineraryId;
+public class MoveEntity extends ItineraryEntity{
 
     @Column(length = 50, nullable = false)
     private String transportation;
