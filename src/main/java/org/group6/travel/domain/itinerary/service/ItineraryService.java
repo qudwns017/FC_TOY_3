@@ -19,6 +19,7 @@ import org.group6.travel.domain.itinerary.model.enums.ItineraryType;
 import org.group6.travel.domain.itinerary.repository.ItineraryRepository;
 import org.group6.travel.domain.itinerary.repository.MoveRepository;
 import org.group6.travel.domain.itinerary.repository.StayRepository;
+import org.group6.travel.domain.trip.model.entity.TripEntity;
 import org.group6.travel.domain.trip.service.TripService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,9 +50,10 @@ public class ItineraryService {
         MoveEntity move = itinerary.getType().equals(ItineraryType.MOVE) ? moveRepository.findFirstByItineraryId(itinerary.getItineraryId()) : null;
         StayEntity stay = itinerary.getType().equals(ItineraryType.STAY) ? stayRepository.findFirstByItineraryId(itinerary.getItineraryId()) : null;
 
-        return ItineraryDto.toDto(itinerary, move, stay);
+        return ItineraryDto.toDto(move, stay);
     }
 
+    @Transactional
     public ItineraryDto createItinerary(
         ItineraryRequest itineraryRequest,
         Long tripId
@@ -65,111 +67,72 @@ public class ItineraryService {
 //            throw TravelError.TIME_ERROR.defaultException();
 //        }
 
-        ItineraryEntity itineraryEntity = ItineraryEntity.builder()
-            .tripEntity(tripEntity)
-            .itineraryName(itineraryRequest.getItineraryName())
-            .type(itineraryRequest.getType())
-            .startDatetime(itineraryRequest.getStartDatetime())
-            .endDatetime(itineraryRequest.getEndDatetime())
-            .itineraryComment(itineraryRequest.getItineraryComment())
-            .build();
-        try {
-            itineraryRepository.save(itineraryEntity);
-        }
-        catch (Exception e){
-            throw new ApiException(ErrorCode.BAD_REQUEST, e.getMessage());
-        }
-
-
         MoveEntity moveEntity = null;
         StayEntity stayEntity = null;
 
-        if(itineraryRequest.getType().getValue() == 0){
+        return saveItineraryByType(null,itineraryRequest,tripEntity,moveEntity,stayEntity);
+    }
+    public ItineraryDto saveItineraryByType(Long itineraryId, ItineraryRequest itineraryRequest, TripEntity tripEntity, MoveEntity moveEntity, StayEntity stayEntity){
+        if(itineraryRequest.getType().getValue()==0){
             moveEntity = MoveEntity.builder()
-                .itineraryId(itineraryEntity.getItineraryId())
-                .transportation(itineraryRequest.getTransportation())
-                .departurePlace(itineraryRequest.getDeparturePlace())
-                .arrivalPlace(itineraryRequest.getArrivalPlace())
-                .departureLat(itineraryRequest.getDepartureLat())
-                .departureLng(itineraryRequest.getDepartureLng())
-                .arrivalLat(itineraryRequest.getArrivalLat())
-                .arrivalLng(itineraryRequest.getArrivalLng())
-                .build();
+                    .itineraryId(itineraryId)
+                    .tripEntity(tripEntity)
+                    .itineraryName(itineraryRequest.getItineraryName())
+                    .type(itineraryRequest.getType())
+                    .startDatetime(itineraryRequest.getStartDatetime())
+                    .endDatetime(itineraryRequest.getEndDatetime())
+                    .itineraryComment(itineraryRequest.getItineraryComment())
+                    .transportation(itineraryRequest.getTransportation())
+                    .departurePlace(itineraryRequest.getDeparturePlace())
+                    .arrivalPlace(itineraryRequest.getArrivalPlace())
+                    .departureLat(itineraryRequest.getDepartureLat())
+                    .departureLng(itineraryRequest.getDepartureLng())
+                    .arrivalLat(itineraryRequest.getArrivalLat())
+                    .arrivalLng(itineraryRequest.getArrivalLng())
+                    .build();
             moveRepository.save(moveEntity);
         }
-
         else{
             stayEntity = StayEntity.builder()
-                .itineraryId(itineraryEntity.getItineraryId())
-                .place(itineraryRequest.getPlace())
-                .lat(itineraryRequest.getLat())
-                .lng(itineraryRequest.getLng())
-                .build();
+                    .itineraryId(itineraryId)
+                    .tripEntity(tripEntity)
+                    .itineraryName(itineraryRequest.getItineraryName())
+                    .type(itineraryRequest.getType())
+                    .startDatetime(itineraryRequest.getStartDatetime())
+                    .endDatetime(itineraryRequest.getEndDatetime())
+                    .itineraryComment(itineraryRequest.getItineraryComment())
+                    .place(itineraryRequest.getPlace())
+                    .lat(itineraryRequest.getLat())
+                    .lng(itineraryRequest.getLng())
+                    .build();
             stayRepository.save(stayEntity);
         }
-
-        return ItineraryDto.toDto(itineraryEntity, moveEntity, stayEntity);
+        return ItineraryDto.toDto(moveEntity, stayEntity);
     }
-
     @Transactional
     public ItineraryDto updateItinerary(
-        Long tripId,
-        Long itineraryId,
-        ItineraryRequest itineraryRequest
-    ) {
+            Long tripId,
+            Long itineraryId,
+            ItineraryRequest itineraryRequest
+    ){
         var tripEntity = tripService.getTripById(tripId);
-
-        //TODO trip 날짜비교
-//        var trip = tripService.findById(tripId);
-//        if(!isValidDateTime(
-//            trip.getStartDate(), trip.getEndDate(), itineraryRequest.getStartDatetime(), itineraryRequest.getEndDatetime()
-//        ))
-//            throw TravelError.TIME_ERROR.defaultException();
-
         var itineraryEntity = itineraryRepository.findById(itineraryId)
-            .orElseThrow(() -> new ApiException(ErrorCode.BAD_REQUEST, "Itinerary not found"));
+                .orElseThrow(()->new ApiException(ErrorCode.BAD_REQUEST, "Itinerary not found"));
 
-        itineraryEntity.setTripEntity(tripEntity);
-        itineraryEntity.setItineraryName(itineraryRequest.getItineraryName());
-        itineraryEntity.setType(itineraryRequest.getType());
-        itineraryEntity.setStartDatetime(itineraryRequest.getStartDatetime());
-        itineraryEntity.setEndDatetime(itineraryRequest.getEndDatetime());
-        itineraryEntity.setItineraryComment(itineraryRequest.getItineraryComment());
+        MoveEntity moveEntity = moveRepository.findById(itineraryId)
+                .orElse(null);
+        StayEntity stayEntity = stayRepository.findById(itineraryId)
+                .orElse(null);
 
-        itineraryRepository.save(itineraryEntity);
-
-        moveRepository.deleteById(itineraryId);
-        stayRepository.deleteById(itineraryId);
-
-        MoveEntity moveEntity = null;
-        StayEntity stayEntity = null;
-
-        if(itineraryRequest.getType().getValue() == 0) {
-            moveEntity = MoveEntity.builder()
-                .itineraryId(itineraryId)
-                .transportation(itineraryRequest.getTransportation())
-                .departurePlace(itineraryRequest.getDeparturePlace())
-                .arrivalPlace(itineraryRequest.getArrivalPlace())
-                .departureLat(itineraryRequest.getDepartureLat())
-                .departureLng(itineraryRequest.getDepartureLng())
-                .arrivalLat(itineraryRequest.getArrivalLat())
-                .arrivalLng(itineraryRequest.getArrivalLng())
-                .build()
-            ;
-            moveRepository.save(moveEntity);
-
-        } else {
-            stayEntity = StayEntity.builder()
-                .itineraryId(itineraryId)
-                .place(itineraryRequest.getPlace())
-                .lat(itineraryRequest.getLat())
-                .lng(itineraryRequest.getLng())
-                .build()
-            ;
-            stayRepository.save(stayEntity);
+        if(!itineraryEntity.getType().equals(itineraryRequest.getType())){
+            log.info("바꼈지롱~");
+            moveRepository.deleteById(itineraryId);
+            stayRepository.deleteById(itineraryId);
         }
-        return ItineraryDto.toDto(itineraryEntity, moveEntity, stayEntity);
+        return saveItineraryByType(itineraryId, itineraryRequest, tripEntity, moveEntity, stayEntity);
+
     }
+
 
     @Transactional
     public void deleteItinerary(Long tripId, Long itineraryId) {
@@ -182,12 +145,7 @@ public class ItineraryService {
         if (!itineraryRepository.existsById(itineraryId)) {
             throw new ApiException(ErrorCode.BAD_REQUEST, "Itinerary not found");
         } else {
-            var type = itineraryRepository.findTypeByItineraryId(itineraryId);
-            if (type.getValue() == 0) {
-                moveRepository.deleteById(itineraryId);
-            } else {
-                stayRepository.deleteById(itineraryId);
-            }
+            itineraryRepository.deleteById(itineraryId);
         }
     }
 

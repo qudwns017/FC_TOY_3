@@ -12,6 +12,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,11 +20,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @DiscriminatorValue("1")
 @Table(name="stay")
-public class StayEntity{
-
-    @Id
-    @Column(nullable = false)
-    private Long itineraryId;
+public class StayEntity extends ItineraryEntity{
 
     @Column(length = 50, nullable = false)
     private String place;

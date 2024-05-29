@@ -15,11 +15,10 @@ import org.group6.travel.domain.trip.model.entity.TripEntity;
 @AllArgsConstructor
 @Entity
 @SuperBuilder
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.INTEGER, columnDefinition = "bit")
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name="type", discriminatorType = DiscriminatorType.INTEGER,columnDefinition = "bit")
 @Table(name = "itinerary")
 public class ItineraryEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -34,7 +33,7 @@ public class ItineraryEntity {
     @Column(name = "name", length =50, nullable = false)
     private String itineraryName;
 
-    @Column(nullable = false, columnDefinition = "bit", insertable = false, updatable = false)
+    @Column(columnDefinition = "bit",insertable = false, updatable = false)
     @Enumerated(EnumType.ORDINAL)
     private ItineraryType type;
 
