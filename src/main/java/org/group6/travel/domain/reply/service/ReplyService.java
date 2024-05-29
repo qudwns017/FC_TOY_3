@@ -30,13 +30,12 @@ public class ReplyService {
     public ReplyDto create(
         Long tripId, ReplyRequest replyRequest
     ) {
-        var trip = tripRepository.findById(tripId);
-        if (trip.isEmpty()) {
-            throw new ApiException(ErrorCode.TRIP_NOT_EXIST);
-        }
+        var trip = tripRepository.findById(tripId)
+                .orElseThrow(()->new ApiException(ErrorCode.BAD_REQUEST,"Trip not found"));
+
         var replyEntity = ReplyEntity.builder()
             .userId(1L)
-            .tripId(tripId)
+            .tripEntity(trip)
             .replyComment(replyRequest.getReplyComment())
             .createdAt(LocalDateTime.now())
             //.updatedAt(LocalDateTime.now())
@@ -54,14 +53,13 @@ public class ReplyService {
 
 
     public List<ReplyDto> getByTripId(Long tripId) {
-        if (tripRepository.findById(tripId) == null) {
-            throw new ApiException(ErrorCode.TRIP_NOT_EXIST);
-        }
+        var trip = tripRepository.findById(tripId)
+                .orElseThrow(()->new ApiException(ErrorCode.TRIP_NOT_EXIST));
+
         List<ReplyEntity> replyEntityList;
 
-
         try {
-            replyEntityList = replyRepository.findAllByTripId(tripId);
+            replyEntityList = replyRepository.findAllByTripEntity(trip);
         } catch (Exception e) {
             throw new ApiException(ErrorCode.SERVER_ERROR);
         }
@@ -73,24 +71,16 @@ public class ReplyService {
 
    @Transactional
     public void delete(Long tripId, Long replyId) {
-        var trip = tripService.getTripById(tripId);
+        var trip = tripRepository.findById(tripId)
+                .orElseThrow(()->new ApiException(ErrorCode.TRIP_NOT_EXIST));
         var reply = replyRepository.findByReplyId(replyId);
-       if(trip == null){
-           throw new ApiException(ErrorCode.TRIP_NOT_EXIST);
-       }
-       if(reply == null){
-           throw new ApiException(ErrorCode.REPLY_NOT_EXIST);
-       }
 
-       Optional<ReplyEntity> deleteReply = replyRepository.deleteByReplyIdAndTripId(replyId, tripId);
-       if(deleteReply.isPresent()){
-           replyRepository.deleteByReplyIdAndTripId(tripId, replyId);
+        if(reply == null){
+            throw new ApiException(ErrorCode.REPLY_NOT_EXIST);
+        }
 
-       }else{
-           throw new ApiException(ErrorCode.SERVER_ERROR);
-       }
-
-
+        replyRepository.deleteByReplyIdAndTripEntity(replyId, trip)
+                .orElseThrow(()->new ApiException(ErrorCode.REPLY_NOT_EXIST, "Error"));
 
     }
 
@@ -98,25 +88,24 @@ public class ReplyService {
     public ReplyDto update(Long tripId, Long replyId,
                            ReplyRequest replyRequest
     ) {
-        var trip = tripService.getTripById(tripId);
+        var trip = tripRepository.findById(tripId)
+                .orElseThrow(()->new ApiException(ErrorCode.TRIP_NOT_EXIST));
         var reply = replyRepository.findByReplyId(replyId);
-       if(trip == null){
-           throw new ApiException(ErrorCode.TRIP_NOT_EXIST);
-       }
-       if(reply == null){
-           throw new ApiException(ErrorCode.REPLY_NOT_EXIST);
-       }
 
-       var replyEntity  = ReplyEntity.builder()
-           .replyId(replyId)
-           .tripId(tripId)
-           .userId(1L)
-           .replyComment(replyRequest.getReplyComment())
-           .updatedAt(LocalDateTime.now())
-           .createdAt(reply.getCreatedAt())
-           .build();
+        if(reply == null){
+            throw new ApiException(ErrorCode.REPLY_NOT_EXIST);
+        }
 
-        replyRepository.updateCommentByIdAndTripId(replyEntity.getReplyComment(), replyId, tripId);
+        var replyEntity  = ReplyEntity.builder()
+                 .replyId(replyId)
+                 .tripEntity(trip)
+                 .userId(1L)
+                 .replyComment(replyRequest.getReplyComment())
+                 .updatedAt(LocalDateTime.now())
+                 .createdAt(reply.getCreatedAt())
+                 .build();
+
+        replyRepository.updateCommentByIdAndTripId(replyEntity.getReplyComment(), replyId, trip);
 
         return ReplyDto.toDto(replyEntity);
     }
