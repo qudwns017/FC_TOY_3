@@ -21,7 +21,7 @@ public class LikeController {
         @PathVariable("trip_id") Long tripId
     ) {
         var clickLike = likeService.like(tripId);
-        return Api.SUCCSESS(clickLike);
+        return Api.SUCCESS(clickLike);
     }
 
     //좋아요 목록 조회
