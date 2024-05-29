@@ -24,10 +24,10 @@ public class Result {
             .resultDescription("성공")
             .build();
     }
-    public static Result SUCCSESS() {
+    public static Result SUCCESS() {
         return Result.builder()
-            .resultCode(ErrorCode.SUCCSESS.getErrorCode())
-            .resultMessage(ErrorCode.SUCCSESS.getDescription())
+            .resultCode(ErrorCode.SUCCESS.getErrorCode())
+            .resultMessage(ErrorCode.SUCCESS.getDescription())
             .resultDescription("성공")
             .build();
     }

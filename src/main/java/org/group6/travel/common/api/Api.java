@@ -23,9 +23,9 @@ public class Api<T> {
         return api;
     }
 
-    public static <T> Api<T> SUCCSESS(T data) {
+    public static <T> Api<T> SUCCESS(T data) {
         var api = new Api<T>();
-        api.result = Result.SUCCSESS();
+        api.result = Result.SUCCESS();
         api.body = data;
         return api;
     }

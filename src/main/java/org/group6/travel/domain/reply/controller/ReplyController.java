@@ -24,7 +24,7 @@ public class ReplyController {
         @Valid @RequestBody ReplyRequest replyRequest
     ) {
        // var reponse = replyService.create(tripId,replyRequest.getBody());
-        return Api.SUCCSESS(replyService.create(tripId,replyRequest));
+        return Api.SUCCESS(replyService.create(tripId,replyRequest));
     }
 
     //여행아이디 별 댓글 조회
@@ -54,7 +54,7 @@ public class ReplyController {
     ){
         var updateReply = replyService.update(tripId, replyId, replyRequest);
 
-        return Api.SUCCSESS(updateReply);
+        return Api.SUCCESS(updateReply);
     }
 
 }
