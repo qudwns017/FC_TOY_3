@@ -7,14 +7,14 @@ import org.group6.travel.domain.accommodation.model.dto.AccommodationDto;
 import org.group6.travel.domain.accommodation.model.dto.AccommodationRequest;
 import org.group6.travel.domain.accommodation.model.entity.AccommodationEntity;
 import org.group6.travel.domain.accommodation.repository.AccommodationRepository;
-import org.group6.travel.domain.trip.service.TripService;
+import org.group6.travel.domain.trip.repository.TripRepository;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
 public class AccommodationService {
     private final AccommodationRepository accommodationRepository;
-    private final TripService tripService;
+    private final TripRepository tripRepository;
 
     public List<AccommodationDto> findByTripId(Long tripId) {
         // TODO : TripId 검증 추가
@@ -27,7 +27,7 @@ public class AccommodationService {
 
         // TODO : 로그인 사용자 검증 추가
 
-        var tripEntity = tripService.getTripById(tripId);
+        var tripEntity = tripRepository.findByTripId(tripId);
         List<AccommodationEntity> accommodationList = accommodationRepository.findByTripEntity(tripEntity);
 
         return accommodationList.stream()
@@ -39,7 +39,7 @@ public class AccommodationService {
     public AccommodationDto save(Long tripId, AccommodationRequest accommodationRequest) {
         // TODO : 로그인 사용자 검증 추가
 
-        var tripEntity = tripService.getTripById(tripId);
+        var tripEntity = tripRepository.findByTripId(tripId);
         var accommodationEntity = AccommodationEntity.builder()
             .tripEntity(tripEntity)
             .name(accommodationRequest.getName())

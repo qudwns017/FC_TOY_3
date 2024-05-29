@@ -20,7 +20,7 @@ import org.group6.travel.domain.itinerary.repository.ItineraryRepository;
 import org.group6.travel.domain.itinerary.repository.MoveRepository;
 import org.group6.travel.domain.itinerary.repository.StayRepository;
 import org.group6.travel.domain.trip.model.entity.TripEntity;
-import org.group6.travel.domain.trip.service.TripService;
+import org.group6.travel.domain.trip.repository.TripRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,13 +32,13 @@ public class ItineraryService {
     private final ItineraryRepository itineraryRepository;
     private final MoveRepository moveRepository;
     private final StayRepository stayRepository;
-    private final TripService tripService;
+    private final TripRepository tripRepository;
 
     public List<ItineraryDto> getItinerary(Long tripId) {
-//        if (tripService.getTripId(tripId) == null) {
+//        if (tripService.getTripId(tripId) == null) { // tripRepository.findByTripId(tripId);
 //            throw new ApiException(ErrorCode.NULL_POINT, "없는 여행 아이디입니다.");
 //        }
-        var tripEntity = tripService.getTripById(tripId);
+        var tripEntity = tripRepository.findByTripId(tripId);
         List<ItineraryEntity> itineraries = itineraryRepository.findAllByTripEntity(tripEntity);
 
         return itineraries.stream()
@@ -58,7 +58,7 @@ public class ItineraryService {
         ItineraryRequest itineraryRequest,
         Long tripId
     ) {
-        var tripEntity = tripService.getTripById(tripId);
+        var tripEntity = tripRepository.findByTripId(tripId);
         // TODO trip이랑 합치면 날짜 비교해야함
 //        var trip = tripService.findById(tripId);
 //        if(!isValidDateTime(
@@ -115,7 +115,7 @@ public class ItineraryService {
             Long itineraryId,
             ItineraryRequest itineraryRequest
     ){
-        var tripEntity = tripService.getTripById(tripId);
+        var tripEntity = tripRepository.findByTripId(tripId);
         var itineraryEntity = itineraryRepository.findById(itineraryId)
                 .orElseThrow(()->new ApiException(ErrorCode.BAD_REQUEST, "Itinerary not found"));
 

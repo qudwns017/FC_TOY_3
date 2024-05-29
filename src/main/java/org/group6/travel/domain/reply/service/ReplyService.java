@@ -25,7 +25,6 @@ public class ReplyService {
     private final ReplyRepository replyRepository;
     private final TripRepository tripRepository;
     private final UserRepository userRepository;
-    private final TripService tripService;
 
     public ReplyDto create(
         Long tripId, ReplyRequest replyRequest
@@ -39,7 +38,6 @@ public class ReplyService {
             .tripId(tripId)
             .replyComment(replyRequest.getReplyComment())
             .createdAt(LocalDateTime.now())
-            //.updatedAt(LocalDateTime.now())
             .build();
 
         try {
@@ -73,7 +71,7 @@ public class ReplyService {
 
    @Transactional
     public void delete(Long tripId, Long replyId) {
-        var trip = tripService.getTripById(tripId);
+        var trip = tripRepository.findByTripId(tripId);
         var reply = replyRepository.findByReplyId(replyId);
        if(trip == null){
            throw new ApiException(ErrorCode.TRIP_NOT_EXIST);
@@ -98,7 +96,7 @@ public class ReplyService {
     public ReplyDto update(Long tripId, Long replyId,
                            ReplyRequest replyRequest
     ) {
-        var trip = tripService.getTripById(tripId);
+        var trip = tripRepository.findByTripId(tripId);
         var reply = replyRepository.findByReplyId(replyId);
        if(trip == null){
            throw new ApiException(ErrorCode.TRIP_NOT_EXIST);
