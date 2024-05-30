@@ -2,6 +2,7 @@ package org.group6.travel.interceptor;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,33 +24,53 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
 
     private final TokenService tokenService;
 
+    private static final List<String> EXCLUDED_URIS = List.of(
+            "/api/trip",
+            "/api/trip/{tripId}",
+            "/api/trip/search",
+            "/api/trip/{tripId}/reply",
+            "/api/trip/{tripId}/accommodation",
+            "/api/trip/{tripId}/itinerary"
+    );
+
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+            throws Exception {
         log.info("Authorization Interceptor url : {}", request.getRequestURI());
 
         // WEB ,chrome 의 경우 GET, POST OPTIONS = pass
-        if(HttpMethod.OPTIONS.matches(request.getMethod())){
+        if (HttpMethod.OPTIONS.matches(request.getMethod())) {
             return true;
         }
 
         // js. html. png resource 를 요청하는 경우 = pass
-        if(handler instanceof ResourceHttpRequestHandler){
+        if (handler instanceof ResourceHttpRequestHandler) {
+            return true;
+        }
+
+        if (HttpMethod.GET.matches(request.getMethod()) && isExcludedUri(request.getRequestURI())) {
             return true;
         }
 
         var accessToken = request.getHeader("authorization-token");
-        if(accessToken == null){
+        if (accessToken == null) {
             throw new ApiException(TokenErrorCode.AUTHORIZATION_TOKEN_NOT_FOUND);
         }
 
         var userId = tokenService.validationAccessToken(accessToken);
 
-        if(userId != null){
+        System.out.println("userId" + userId);
+
+        if (userId != null) {
             var requestContext = Objects.requireNonNull(RequestContextHolder.getRequestAttributes());
             requestContext.setAttribute("userId", userId, RequestAttributes.SCOPE_REQUEST);
             return true;
         }
 
         throw new ApiException(ErrorCode.BAD_REQUEST, "Failed to authorization");
+    }
+
+    private boolean isExcludedUri(String requestUri) {
+        return EXCLUDED_URIS.stream().anyMatch(uri -> uri.equalsIgnoreCase(requestUri));
     }
 }
