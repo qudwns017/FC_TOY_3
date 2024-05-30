@@ -1,10 +1,8 @@
 package org.group6.travel.config.security;
 
 import lombok.RequiredArgsConstructor;
-import org.group6.travel.domain.token.provider.TokenProvider;
 import org.group6.travel.domain.token.provider.TokenProviderNew;
 import org.group6.travel.domain.token.service.JwtAuthenticationFilter;
-import org.group6.travel.domain.token.service.TokenService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
