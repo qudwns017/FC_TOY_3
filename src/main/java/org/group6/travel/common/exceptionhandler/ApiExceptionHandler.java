@@ -20,8 +20,8 @@ public class ApiExceptionHandler {
     ) {
         log.error("", apiException);
 
-        var errorCode = apiException.getErrorCodeIfs();
-        log.info(apiException.getErrorCodeIfs().getDescription());
+        var errorCode = apiException.getErrorCode();
+        log.info(apiException.getErrorCode().getDescription());
         return ResponseApi.ERROR(errorCode, apiException.getErrorDescription());
     }
 }
