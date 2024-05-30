@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.group6.travel.common.error.ErrorCode;
 import org.group6.travel.common.exception.ApiException;
-import org.group6.travel.domain.token.service.TokenService;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
