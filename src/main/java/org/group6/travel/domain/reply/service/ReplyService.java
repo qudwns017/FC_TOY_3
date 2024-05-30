@@ -49,6 +49,7 @@ public class ReplyService {
     }
 
 
+    @Transactional(readOnly = true)
     public List<ReplyDto> getByTripId(Long tripId) {
         var trip = tripRepository.findById(tripId)
                 .orElseThrow(()->new ApiException(ErrorCode.TRIP_NOT_EXIST));

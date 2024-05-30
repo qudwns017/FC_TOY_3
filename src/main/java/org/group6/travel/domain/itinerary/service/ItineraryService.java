@@ -34,6 +34,7 @@ public class ItineraryService {
     private final StayRepository stayRepository;
     private final TripRepository tripRepository;
 
+    @Transactional(readOnly = true)
     public List<ItineraryDto> getItinerary(Long tripId) {
         var tripEntity = tripRepository.findByTripId(tripId)
             .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
@@ -52,7 +53,6 @@ public class ItineraryService {
         return ItineraryDto.toDto(move, stay);
     }
 
-    @Transactional
     public ItineraryDto createItinerary(
         ItineraryRequest itineraryRequest,
         Long tripId
@@ -71,6 +71,7 @@ public class ItineraryService {
 
         return saveItineraryByType(null,itineraryRequest,tripEntity,moveEntity,stayEntity);
     }
+
     public ItineraryDto saveItineraryByType(Long itineraryId, ItineraryRequest itineraryRequest, TripEntity tripEntity, MoveEntity moveEntity, StayEntity stayEntity){
         if(itineraryRequest.getType().getValue()==0){
             moveEntity = MoveEntity.builder()
@@ -108,6 +109,7 @@ public class ItineraryService {
         }
         return ItineraryDto.toDto(moveEntity, stayEntity);
     }
+
     @Transactional
     public ItineraryDto updateItinerary(
             Long tripId,

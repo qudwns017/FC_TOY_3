@@ -16,6 +16,7 @@ import org.group6.travel.domain.user.model.response.UserResponse;
 import org.group6.travel.domain.user.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +34,7 @@ public class UserService {
         return userConverter.toResponse(responseEntity);
     }
 
+    @Transactional(readOnly = true)
     public TokenResponse login(
             UserLoginRequest request
     ) {
@@ -40,6 +42,7 @@ public class UserService {
         return tokenService.issueToken(userEntity);
     }
 
+    @Transactional(readOnly = true)
     public UserEntity getUserWithThrow(String email, String password) {
         System.out.println(email + " " + password);
 
@@ -47,7 +50,7 @@ public class UserService {
                 .orElseThrow(() -> new ApiException(UserErrorCode.USER_NOT_FOUND, "Unregistered email"));
 
         Optional.of(password)
-                .filter(pw -> passwordEncoder.matches(pw, user.getPassword()))
+                .filter(pw -> passwordEncoder.matches(pw, user.getEncryptedPassword()))
                 .orElseThrow(() -> new ApiException(UserErrorCode.INVALID_PASSWORD, "Invalid password"));
 
         return user;

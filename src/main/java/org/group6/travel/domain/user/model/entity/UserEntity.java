@@ -28,7 +28,7 @@ public class UserEntity {
     private String email;
 
     @Column(length = 70, nullable = false)
-    private String password;
+    private String encryptedPassword;
 
     @Column(name = "name", length = 20, nullable = false)
     private String userName;
