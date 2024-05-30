@@ -22,7 +22,11 @@ public class LikeService {
     private final TripRepository tripRepository;
     private final UserRepository userRepository;
 
-    public LikeDto like(Long tripId) {
+    public List<LikeEntity> getlikes() {
+        return likeRepository.findAll();
+    }
+
+    public LikeDto addLike(Long tripId) {
         var tripEntity = tripRepository.findById(tripId)
             .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
@@ -45,8 +49,5 @@ public class LikeService {
         }
     }
 
-    public List<LikeEntity> all() {
-        return likeRepository.findAll();
-    }
 
 }

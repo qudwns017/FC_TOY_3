@@ -29,20 +29,7 @@ public class TripService {
         return trip.getUserId().equals(userId);
     }
 
-    public TripDto insertTrip(TripRequest tripRequest){
-        return TripDto.toDto(tripRepository.save(TripEntity.builder()
-                .userId((long)1)
-                .tripName(tripRequest.getTripName())
-                .startDate(tripRequest.getStartDate())
-                .endDate(tripRequest.getEndDate())
-                .domestic(tripRequest.getDomestic())
-                .likeCount(0)
-                .tripComment(tripRequest.getTripComment())
-                .build())
-            );
-    }
-
-    public List<TripDto> getTripAll(){
+    public List<TripDto> getTrips(){
         return tripRepository.findAll().stream()
                 .map(TripDto::toDto)
                 .collect(Collectors.toList());
@@ -52,19 +39,32 @@ public class TripService {
                 .orElseThrow(()->new ApiException(ErrorCode.TRIP_NOT_EXIST));
     }
 
-    public List<TripEntity> getTripByUserId(Long userId){
+    public List<TripEntity> getTripsByUser(Long userId){
         return tripRepository.findByUserId(userId).get();
     }
 
-    public List<TripDto> getTripByKeyword(String keyword){
+    public List<TripDto> getTripsByKeyword(String keyword){
         return tripRepository.findByTripNameContains(keyword).stream()
                 .map(TripDto::toDto)
                 .collect(Collectors.toList());
     }
 
-    public List<TripEntity> getTripByLike(Long userId){
+    public List<TripEntity> getTripsByUserLike(Long userId){
         List<Long> tripIdList = likeRepository.findByUserId(userId);
         return tripRepository.findByLikeList(tripIdList);
+    }
+
+    public TripDto createTrip(TripRequest tripRequest){
+        return TripDto.toDto(tripRepository.save(TripEntity.builder()
+            .userId((long)1)
+            .tripName(tripRequest.getTripName())
+            .startDate(tripRequest.getStartDate())
+            .endDate(tripRequest.getEndDate())
+            .domestic(tripRequest.getDomestic())
+            .likeCount(0)
+            .tripComment(tripRequest.getTripComment())
+            .build())
+        );
     }
 
     public TripEntity updateTrip(Long tripId, TripRequest tripRequest){
@@ -86,6 +86,5 @@ public class TripService {
                 .orElseThrow(()->new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
         tripRepository.delete(entity);
-
     }
 }

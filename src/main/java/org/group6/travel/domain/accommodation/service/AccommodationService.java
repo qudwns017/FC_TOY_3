@@ -9,14 +9,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.group6.travel.common.error.ErrorCode;
 import org.group6.travel.common.exception.ApiException;
-import org.group6.travel.common.error.ErrorCode;
-import org.group6.travel.common.exception.ApiException;
 import org.group6.travel.domain.accommodation.model.dto.AccommodationDto;
 import org.group6.travel.domain.accommodation.model.dto.AccommodationRequest;
 import org.group6.travel.domain.accommodation.model.entity.AccommodationEntity;
 import org.group6.travel.domain.accommodation.repository.AccommodationRepository;
 import org.group6.travel.domain.maps.service.MapsService;
-import org.group6.travel.domain.trip.service.TripService;
 import org.group6.travel.domain.trip.repository.TripRepository;
 import org.springframework.stereotype.Service;
 
@@ -26,14 +23,13 @@ import org.springframework.stereotype.Service;
 public class AccommodationService {
     private final AccommodationRepository accommodationRepository;
     private final TripRepository tripRepository;
-    private final MapsService mapsService;
+    private final MapsService mapsService;      // 순환참조?
 
-    public List<AccommodationDto> findByTripId(Long tripId) {
+    public List<AccommodationDto> getAccommodations(Long tripId) {
         var tripEntity = tripRepository.findByTripId(tripId)
             .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
         // TODO : 로그인 사용자 검증 추가
-
 
         return accommodationRepository.findByTripEntity(tripEntity)
             .stream()
@@ -41,8 +37,7 @@ public class AccommodationService {
             .collect(Collectors.toList());
     }
 
-
-    public AccommodationDto save(Long tripId, AccommodationRequest accommodationRequest) {
+    public AccommodationDto createAccommodation(Long tripId, AccommodationRequest accommodationRequest) {
 
         // TODO : 로그인 사용자 검증 추가
         var tripEntity = tripRepository.findByTripId(tripId)
@@ -77,7 +72,7 @@ public class AccommodationService {
             .orElseThrow(() -> new ApiException(ErrorCode.BAD_REQUEST, "잘못된 서식입니다."));
     }
 
-    public void delete(Long tripId, Long accommodationId) {
+    public void deleteAccommodation(Long tripId, Long accommodationId) {
 
         var tripEntity = tripRepository.findByTripId(tripId)
             .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
@@ -94,12 +89,12 @@ public class AccommodationService {
     }
 
     public static boolean isValidDateTime(
-        LocalDate startTravel, LocalDate endTravel,
-        LocalDateTime checkIn, LocalDateTime checkOut
+        LocalDate travelStartDate, LocalDate travelEndDate,
+        LocalDateTime checkInDatetime, LocalDateTime checkOutDatetime
     ) {
-        return (checkIn.toLocalDate().isEqual(startTravel) || checkIn.toLocalDate().isAfter(startTravel)) &&
-            (checkOut.toLocalDate().isEqual(endTravel) || checkOut.toLocalDate().isBefore(endTravel)) &&
-            (checkIn.isBefore(checkOut));
+        return (checkInDatetime.toLocalDate().isEqual(travelStartDate) || checkInDatetime.toLocalDate().isAfter(travelStartDate)) &&
+            (checkOutDatetime.toLocalDate().isEqual(travelEndDate) || checkOutDatetime.toLocalDate().isBefore(travelEndDate)) &&
+            (checkInDatetime.isBefore(checkOutDatetime));
     }
 
 }

@@ -17,43 +17,42 @@ public class ReplyController {
 
     private final ReplyService replyService;
 
-    //여행 댓글 작성
-    @PostMapping
-    public Api<ReplyDto> create(
-        @PathVariable("trip_id") Long tripId,
-        @Valid @RequestBody ReplyRequest replyRequest
-    ) {
-        return Api.SUCCESS(replyService.create(tripId,replyRequest));
-    }
-
     //여행아이디 별 댓글 조회
     @GetMapping
-    public Api<List<ReplyDto>> getByTripId(@PathVariable("trip_id") Long tripId) {
-        var reponse = replyService.getByTripId(tripId);
+    public Api<List<ReplyDto>> getReplies(@PathVariable("trip_id") Long tripId) {
+        var reponse = replyService.getReplies(tripId);
         return Api.OK(reponse);
     }
 
-    //여행 댓글 삭제
-    @DeleteMapping("/{reply_id}")
-    public Api<String> delete(
+    //여행 댓글 작성
+    @PostMapping
+    public Api<ReplyDto> createReply(
         @PathVariable("trip_id") Long tripId,
-        @PathVariable("reply_id") Long replyId
+        @Valid @RequestBody ReplyRequest replyRequest
     ) {
-        replyService.delete(tripId, replyId);
-        return Api.OK("삭제 성공");
-
+        return Api.SUCCESS(replyService.createReply(tripId,replyRequest));
     }
 
     //댓글 수정
     @PutMapping("/{reply_id}")
-    public Api<?> update(
+    public Api<?> updateReply(
         @PathVariable("trip_id") Long tripId,
         @PathVariable("reply_id") Long replyId,
         @RequestBody ReplyRequest replyRequest
     ){
-        var updateReply = replyService.update(tripId, replyId, replyRequest);
+        var updateReply = replyService.updateReply(tripId, replyId, replyRequest);
 
         return Api.SUCCESS(updateReply);
     }
 
+    //여행 댓글 삭제
+    @DeleteMapping("/{reply_id}")
+    public Api<String> deleteReply(
+        @PathVariable("trip_id") Long tripId,
+        @PathVariable("reply_id") Long replyId
+    ) {
+        replyService.deleteReply(tripId, replyId);
+        return Api.OK("삭제 성공");
+
+    }
 }
