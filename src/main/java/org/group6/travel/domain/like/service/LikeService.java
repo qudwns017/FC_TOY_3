@@ -23,25 +23,24 @@ public class LikeService {
     private final UserRepository userRepository;
 
     public LikeDto like(Long tripId) {
-        var tripEntity = tripRepository.findById(tripId)
+        tripRepository.findById(tripId)
             .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
         //존재 확인
-        LikeEntity existingLike = likeRepository.findByTripId(tripId)
-                .orElse(null);
+        Optional<LikeEntity> existingLikeOptional = likeRepository.findByTripId(tripId);
 
-        if (existingLike == null) {
+        if (existingLikeOptional.isPresent()) {
+            LikeEntity existingLike = existingLikeOptional.get();
+            likeRepository.delete(existingLike);
+            throw new ApiException(ErrorCode.UNLIKE);
+            // 삭제
+        } else {
             LikeEntity newLike = LikeEntity.builder()
                 .userId(1L)
                 .tripId(tripId)
                 .build();
             newLike = likeRepository.save(newLike);
             return LikeDto.toDto(newLike);
-
-        } else {
-            likeRepository.delete(existingLike);
-            return null;
-            //삭제
         }
     }
 
