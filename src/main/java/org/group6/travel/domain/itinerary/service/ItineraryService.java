@@ -52,7 +52,6 @@ public class ItineraryService {
         return ItineraryDto.toDto(move, stay);
     }
 
-    @Transactional
     public ItineraryDto createItinerary(
         ItineraryRequest itineraryRequest,
         Long tripId

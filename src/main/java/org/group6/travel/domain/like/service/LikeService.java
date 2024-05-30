@@ -23,6 +23,7 @@ public class LikeService {
     private final TripRepository tripRepository;
     private final UserRepository userRepository;
 
+    @Transactional(readOnly = true)
     public List<LikeEntity> getlikes() {
         return likeRepository.findAll();
     }

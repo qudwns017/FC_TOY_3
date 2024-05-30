@@ -31,7 +31,7 @@ public class ItineraryController {
         @PathVariable
         Long tripId
     ) {
-        var response = itineraryService.getItineraries(tripId);
+        var response = itineraryService.getItinerary(tripId);
         return Api.OK(response);
     }
 
