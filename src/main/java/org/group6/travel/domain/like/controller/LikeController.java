@@ -15,21 +15,20 @@ public class LikeController {
 
     private final LikeService likeService;
 
-    //여행 좋아요, post put 201
-   @PostMapping("/trip/{trip_id}/like")
-    public Api<?> like(
-        @PathVariable("trip_id") Long tripId
-    ) {
-        var clickLike = likeService.like(tripId);
-        return Api.SUCCESS(clickLike);
-    }
-
     //좋아요 목록 조회
     @GetMapping("/user/like-list")
-    public Api<List<?>> LikeList(){
-        var likeList = likeService.all();
+    public Api<List<?>> getlikes(){
+        var likeList = likeService.getlikes();
         return Api.OK(likeList);
     }
 
+    //여행 좋아요, post put 201
+   @PostMapping("/trip/{trip_id}/like")
+    public Api<?> addLike(
+        @PathVariable("trip_id") Long tripId
+    ) {
+        var clickLike = likeService.addLike(tripId);
+        return Api.SUCCESS(clickLike);
+    }
 
 }

@@ -34,7 +34,7 @@ public class ItineraryService {
     private final StayRepository stayRepository;
     private final TripRepository tripRepository;
 
-    public List<ItineraryDto> getItinerary(Long tripId) {
+    public List<ItineraryDto> getItineraries(Long tripId) {
         var tripEntity = tripRepository.findByTripId(tripId)
             .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
@@ -42,7 +42,6 @@ public class ItineraryService {
             .stream()
             .map(this::mapToItineraryDto)
             .collect(Collectors.toList());
-
     }
 
     private ItineraryDto mapToItineraryDto(ItineraryEntity itinerary) {
@@ -154,11 +153,11 @@ public class ItineraryService {
     }
 
     public static boolean isValidDateTime(
-        LocalDate startTravel, LocalDate endTravel,
-        LocalDateTime startItinerary, LocalDateTime endItinerary
+        LocalDate travelStartDate, LocalDate travelEndDate,
+        LocalDateTime itineraryStartDatetime, LocalDateTime itineraryEndDatetime
     ) {
-        return (startItinerary.toLocalDate().isEqual(startTravel) || startItinerary.toLocalDate().isAfter(startTravel)) &&
-            (endItinerary.toLocalDate().isEqual(endTravel) || endItinerary.toLocalDate().isBefore(endTravel)) &&
-            (startItinerary.isBefore(endItinerary));
+        return (itineraryStartDatetime.toLocalDate().isEqual(travelStartDate) || itineraryStartDatetime.toLocalDate().isAfter(travelStartDate)) &&
+            (itineraryEndDatetime.toLocalDate().isEqual(travelEndDate) || itineraryEndDatetime.toLocalDate().isBefore(travelEndDate)) &&
+            (itineraryStartDatetime.isBefore(itineraryEndDatetime));
     }
 }

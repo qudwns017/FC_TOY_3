@@ -22,8 +22,12 @@ public class LikeService {
     private final TripRepository tripRepository;
     private final UserRepository userRepository;
 
-    public LikeDto like(Long tripId) {
-        tripRepository.findById(tripId)
+    public List<LikeEntity> getlikes() {
+        return likeRepository.findAll();
+    }
+
+    public LikeDto addLike(Long tripId) {
+        var tripEntity = tripRepository.findById(tripId)
             .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
         //존재 확인

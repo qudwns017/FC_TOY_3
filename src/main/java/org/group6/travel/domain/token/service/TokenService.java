@@ -1,6 +1,7 @@
 package org.group6.travel.domain.token.service;
 
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.group6.travel.common.error.ErrorCode;
@@ -9,6 +10,7 @@ import org.group6.travel.domain.token.model.dto.TokenDto;
 import org.group6.travel.domain.token.model.response.TokenResponse;
 import org.group6.travel.domain.token.provider.TokenProvider;
 import org.group6.travel.domain.user.model.entity.UserEntity;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -39,5 +41,15 @@ public class TokenService {
         var data = new HashMap<String, Object>();
         data.put("userId", userId);
         return tokenProvider.issueRefreshToken(data);
+    }
+
+    public Long validationAccessToken(String accessToken){
+        var map = tokenProvider.validationTokenWithThrow(accessToken);
+
+        var userId = map.get("userId");
+
+        Objects.requireNonNull(userId, ()->{throw new ApiException(ErrorCode.NULL_POINT);});
+
+        return Long.parseLong(userId.toString());
     }
 }

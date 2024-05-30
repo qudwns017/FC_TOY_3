@@ -24,8 +24,8 @@ public class TokenProvider {
 
     private final Key key;
 
-    @Value("${jwt.expiration_time}")
-    private static int EXPIRATION_TIME;
+//    @Value("${jwt.expiration_time}")
+//    private static int EXPIRATION_TIME;
 
     public TokenProvider(
             @Value("${jwt.secret}")
@@ -35,7 +35,7 @@ public class TokenProvider {
     }
 
     public TokenDto issueAccessToken(Map<String, Object> data) {
-        var expiredLocalDateTime = LocalDateTime.now().plusHours(EXPIRATION_TIME);
+        var expiredLocalDateTime = LocalDateTime.now().plusHours(4);
 
         var expiredAt = Date.from(
                 expiredLocalDateTime.atZone(
@@ -56,7 +56,7 @@ public class TokenProvider {
     }
 
     public TokenDto issueRefreshToken(Map<String, Object> data) {
-        var expiredLocalDateTime = LocalDateTime.now().plusHours(EXPIRATION_TIME);
+        var expiredLocalDateTime = LocalDateTime.now().plusHours(4);
 
         var expiredAt = Date.from(
                 expiredLocalDateTime.atZone(
