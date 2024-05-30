@@ -18,7 +18,7 @@ public class UserConverter {
         return Optional.ofNullable(request)
                 .map(it -> UserEntity.builder()
                         .email(request.getEmail())
-                        .password(passwordEncoder.encode(request.getPassword()))
+                        .encryptedPassword(passwordEncoder.encode(request.getPassword()))
                         .userName(request.getName())
                         .build())
                 .orElseThrow(() -> new ApiException(ErrorCode.NULL_POINT, "UserRegisterRequest is null"));

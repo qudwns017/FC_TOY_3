@@ -28,21 +28,20 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers(HttpMethod.GET,
-                                "/api/trip",
-                                "/api/trip/{tripId}",
-                                "/api/trip/search",
-                                "/api/trip/{tripId}/reply",
-                                "/api/trip/{tripId}/accommodation",
-                                "/api/trip/{tripId}/itinerary")
-                        .permitAll()
-                        .requestMatchers(HttpMethod.POST,
-                                "/api/user/register",
-                                "/api/user/login")
-                        .permitAll()
-                        .anyRequest()
-//                        .authenticated()
-                                .permitAll()
+                    .requestMatchers(HttpMethod.GET,
+                            "/api/trip",
+                            "/api/trip/{tripId}",
+                            "/api/trip/search",
+                            "/api/trip/{tripId}/reply",
+                            "/api/trip/{tripId}/accommodation",
+                            "/api/trip/{tripId}/itinerary")
+                    .permitAll()
+                    .requestMatchers(HttpMethod.POST,
+                            "/api/user/register",
+                            "/api/user/login")
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated()
                 );
 
         return http.build();

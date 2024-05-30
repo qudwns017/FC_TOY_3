@@ -7,8 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> findByEmail(String email);
     boolean existsByEmail(String email);
-    Optional<UserEntity> findFirstByEmailAndPasswordOrderByUserIdDesc(String email, String password);
     Optional<UserEntity> findFirstByUserIdOrderByUserIdDesc(Long userId);
+    Optional<UserEntity> findFirstByEmailAndEncryptedPasswordOrderByUserIdDesc(String email, String encryptedPassword);
 
 
 }

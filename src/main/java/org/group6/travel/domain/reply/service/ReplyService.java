@@ -27,7 +27,7 @@ public class ReplyService {
 
     public List<ReplyDto> getReplies(Long tripId) {
         var trip = tripRepository.findById(tripId)
-            .orElseThrow(()->new ApiException(ErrorCode.TRIP_NOT_EXIST));
+                .orElseThrow(()->new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
         List<ReplyEntity> replyEntityList;
 

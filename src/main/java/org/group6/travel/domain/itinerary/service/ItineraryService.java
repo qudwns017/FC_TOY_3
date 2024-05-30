@@ -34,7 +34,8 @@ public class ItineraryService {
     private final StayRepository stayRepository;
     private final TripRepository tripRepository;
 
-    public List<ItineraryDto> getItineraries(Long tripId) {
+    @Transactional(readOnly = true)
+    public List<ItineraryDto> getItinerary(Long tripId) {
         var tripEntity = tripRepository.findByTripId(tripId)
             .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
@@ -70,6 +71,7 @@ public class ItineraryService {
 
         return saveItineraryByType(null,itineraryRequest,tripEntity,moveEntity,stayEntity);
     }
+
     public ItineraryDto saveItineraryByType(Long itineraryId, ItineraryRequest itineraryRequest, TripEntity tripEntity, MoveEntity moveEntity, StayEntity stayEntity){
         if(itineraryRequest.getType().getValue()==0){
             moveEntity = MoveEntity.builder()
@@ -83,10 +85,10 @@ public class ItineraryService {
                     .transportation(itineraryRequest.getTransportation())
                     .departurePlace(itineraryRequest.getDeparturePlace())
                     .arrivalPlace(itineraryRequest.getArrivalPlace())
-                    .departureLat(itineraryRequest.getDepartureLat())
-                    .departureLng(itineraryRequest.getDepartureLng())
-                    .arrivalLat(itineraryRequest.getArrivalLat())
-                    .arrivalLng(itineraryRequest.getArrivalLng())
+                    .departureLatitude(itineraryRequest.getDepartureLatitude())
+                    .departureLongitude(itineraryRequest.getDepartureLongitude())
+                    .arrivalLatitude(itineraryRequest.getArrivalLatitude())
+                    .arrivalLongitude(itineraryRequest.getArrivalLongitude())
                     .build();
             moveRepository.save(moveEntity);
         }
@@ -100,13 +102,14 @@ public class ItineraryService {
                     .endDatetime(itineraryRequest.getEndDatetime())
                     .itineraryComment(itineraryRequest.getItineraryComment())
                     .place(itineraryRequest.getPlace())
-                    .lat(itineraryRequest.getLat())
-                    .lng(itineraryRequest.getLng())
+                    .latitude(itineraryRequest.getLatitude())
+                    .longitude(itineraryRequest.getLongitude())
                     .build();
             stayRepository.save(stayEntity);
         }
         return ItineraryDto.toDto(moveEntity, stayEntity);
     }
+
     @Transactional
     public ItineraryDto updateItinerary(
             Long tripId,

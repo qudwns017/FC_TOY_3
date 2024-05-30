@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +40,7 @@ public class UserService {
         return userConverter.toResponse(responseEntity);
     }
 
+    @Transactional(readOnly = true)
     public TokenResponse login(
             UserLoginRequest request
     ) {
@@ -46,19 +48,21 @@ public class UserService {
         return tokenService.issueToken(userEntity);
     }
 
+    @Transactional(readOnly = true)
     public UserEntity getUserWithThrow(String email, String password) {
         System.out.println(email + " " + password);
 
         UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ApiException(UserErrorCode.USER_NOT_FOUND, "Unregistered email"));
 
-        if (!passwordEncoder.matches(password, user.getPassword())) {
+        if (!passwordEncoder.matches(password, user.getEncryptedPassword())) {
             throw new ApiException(UserErrorCode.INVALID_PASSWORD, "Invalid password");
         }
 
         return user;
     }
 
+    @Transactional(readOnly = true)
     public UserEntity getUserWithThrow(
             Long userId
     ) {

@@ -36,13 +36,13 @@ public class ItineraryRequest {
     private String transportation;
     private String departurePlace;
     private String arrivalPlace;
-    private Double departureLat;
-    private Double departureLng;
-    private Double arrivalLat;
-    private Double arrivalLng;
+    private Double departureLatitude;
+    private Double departureLongitude;
+    private Double arrivalLatitude;
+    private Double arrivalLongitude;
     private String place;
-    private Double lat;
-    private Double lng;
+    private Double latitude;
+    private Double longitude;
 
     @AssertTrue(message = "종료시간은 시각시간을 앞설 수 없습니다.")
     public boolean isValidPeriod() {

@@ -35,14 +35,14 @@ public class MoveEntity extends ItineraryEntity{
     private String arrivalPlace;
 
     @Column(nullable = false)
-    private Double departureLat;
+    private Double departureLatitude;
 
     @Column(nullable = false)
-    private Double departureLng;
+    private Double departureLongitude;
 
     @Column(nullable = false)
-    private Double arrivalLat;
+    private Double arrivalLatitude;
 
     @Column(nullable = false)
-    private Double arrivalLng;
+    private Double arrivalLongitude;
 }

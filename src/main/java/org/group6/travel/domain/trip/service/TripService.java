@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,26 +30,32 @@ public class TripService {
         return trip.getUserId().equals(userId);
     }
 
+    @Transactional(readOnly = true)
     public List<TripDto> getTrips(){
         return tripRepository.findAll().stream()
                 .map(TripDto::toDto)
                 .collect(Collectors.toList());
     }
+
+    @Transactional(readOnly = true)
     public TripEntity getTripById(Long tripId){
         return tripRepository.findById(tripId)
                 .orElseThrow(()->new ApiException(ErrorCode.TRIP_NOT_EXIST));
     }
 
+    @Transactional(readOnly = true)
     public List<TripEntity> getTripsByUser(Long userId){
         return tripRepository.findByUserId(userId).get();
     }
 
+    @Transactional(readOnly = true)
     public List<TripDto> getTripsByKeyword(String keyword){
         return tripRepository.findByTripNameContains(keyword).stream()
                 .map(TripDto::toDto)
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<TripEntity> getTripsByUserLike(Long userId){
         List<Long> tripIdList = likeRepository.findByUserId(userId);
         return tripRepository.findByLikeList(tripIdList);
@@ -67,6 +74,7 @@ public class TripService {
         );
     }
 
+    @Transactional
     public TripEntity updateTrip(Long tripId, TripRequest tripRequest){
         TripEntity entity = tripRepository.findById(tripId)
                 .orElseThrow(()->new ApiException(ErrorCode.TRIP_NOT_EXIST));
@@ -81,10 +89,12 @@ public class TripService {
 
     }
 
+    @Transactional
     public void deleteTrip(Long tripId){
         TripEntity entity = tripRepository.findById(tripId)
                 .orElseThrow(()->new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
         tripRepository.delete(entity);
+
     }
 }

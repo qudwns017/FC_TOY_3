@@ -16,6 +16,7 @@ import org.group6.travel.domain.accommodation.repository.AccommodationRepository
 import org.group6.travel.domain.maps.service.MapsService;
 import org.group6.travel.domain.trip.repository.TripRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -23,9 +24,10 @@ import org.springframework.stereotype.Service;
 public class AccommodationService {
     private final AccommodationRepository accommodationRepository;
     private final TripRepository tripRepository;
-    private final MapsService mapsService;      // 순환참조?
+    private final MapsService mapsService;
 
-    public List<AccommodationDto> getAccommodations(Long tripId) {
+    @Transactional(readOnly = true)
+    public List<AccommodationDto> getAccommodationList(Long tripId) {
         var tripEntity = tripRepository.findByTripId(tripId)
             .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
@@ -39,16 +41,16 @@ public class AccommodationService {
 
     public AccommodationDto createAccommodation(Long tripId, AccommodationRequest accommodationRequest) {
 
-        // TODO : 로그인 사용자 검증 추가
         var tripEntity = tripRepository.findByTripId(tripId)
             .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
-        var loginUserId = '1'; // TODO : 로그인 사용자 Id 변경
-
-        // 오류 코드 수정해야함.
-        if(tripEntity.getUserId() != loginUserId) {
-            throw new ApiException(ErrorCode.BAD_REQUEST);
-        }
+        // TODO : 로그인 사용자 검증 추가
+//        String loginUserId = "test@test.com";
+//
+//        // 오류 코드 수정해야함.
+//        if(!tripEntity.getUserId().equals(loginUserId)) {
+//            throw new ApiException(ErrorCode.BAD_REQUEST, "비정상 접근입니다.");
+//        }
 
         if(!isValidDateTime(
             tripEntity.getStartDate(), tripEntity.getEndDate(), accommodationRequest.getCheckInDatetime(), accommodationRequest.getCheckOutDatetime()
@@ -63,8 +65,8 @@ public class AccommodationService {
             .name(accommodationRequest.getName())
             .checkInDatetime(accommodationRequest.getCheckInDatetime())
             .checkOutDatetime(accommodationRequest.getCheckOutDatetime())
-            .lat(geocodingResult.lat)
-            .lng(geocodingResult.lng)
+            .latitude(geocodingResult.lat)
+            .longitude(geocodingResult.lng)
             .build();
 
         return Optional.of(accommodationRepository.save(accommodationEntity))
@@ -72,6 +74,7 @@ public class AccommodationService {
             .orElseThrow(() -> new ApiException(ErrorCode.BAD_REQUEST, "잘못된 서식입니다."));
     }
 
+    @Transactional
     public void deleteAccommodation(Long tripId, Long accommodationId) {
 
         var tripEntity = tripRepository.findByTripId(tripId)
@@ -79,22 +82,24 @@ public class AccommodationService {
 
         // TODO : 로그인 사용자 검증 추가
         var tripUserId = tripEntity.getUserId();
+        /*
         var loginUserId = '1'; // TODO : 로그인 사용자 Id 변경
 
         if(tripUserId != loginUserId) {
-            throw new ApiException(ErrorCode.BAD_REQUEST);
+            throw new ApiException(ErrorCode.BAD_REQUEST, "비정상 접근입니다.");
         }
+         */
 
         accommodationRepository.deleteById(accommodationId);
     }
 
     public static boolean isValidDateTime(
-        LocalDate travelStartDate, LocalDate travelEndDate,
-        LocalDateTime checkInDatetime, LocalDateTime checkOutDatetime
+        LocalDate startTravel, LocalDate endTravel,
+        LocalDateTime checkIn, LocalDateTime checkOut
     ) {
-        return (checkInDatetime.toLocalDate().isEqual(travelStartDate) || checkInDatetime.toLocalDate().isAfter(travelStartDate)) &&
-            (checkOutDatetime.toLocalDate().isEqual(travelEndDate) || checkOutDatetime.toLocalDate().isBefore(travelEndDate)) &&
-            (checkInDatetime.isBefore(checkOutDatetime));
+        return (checkIn.toLocalDate().isEqual(startTravel) || checkIn.toLocalDate().isAfter(startTravel)) &&
+            (checkOut.toLocalDate().isEqual(endTravel) || checkOut.toLocalDate().isBefore(endTravel)) &&
+            (checkIn.isBefore(checkOut));
     }
 
 }

@@ -26,10 +26,10 @@ public class AccommodationController {
     private final AccommodationService accommodationService;
 
     @GetMapping
-    public Api<List<AccommodationDto>> getAccommodations(
+    public Api<List<AccommodationDto>> getAccommodationList(
         @PathVariable Long tripId
     ) {
-      var response = accommodationService.getAccommodations(tripId);
+      var response = accommodationService.getAccommodationList(tripId);
       return Api.OK(response);
     }
 

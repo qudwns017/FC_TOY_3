@@ -17,14 +17,11 @@ import org.group6.travel.domain.accommodation.model.entity.AccommodationEntity;
 public class AccommodationDto {
     private Long id;
 
-    //  @ManyToOne
     private Long tripId;
     private String name;
 
-    //  latitude 이름 바꾸기
-    private Double lat;
-    // longitude
-    private Double lng;
+    private Double latitude;
+    private Double longitude;
 
     private LocalDateTime checkInDatetime;
     private LocalDateTime checkOutDatetime;
@@ -34,8 +31,8 @@ public class AccommodationDto {
             .tripId(accommodationEntity.getTripEntity().getTripId())
             .id(accommodationEntity.getId())
             .name(accommodationEntity.getName())
-            .lat(accommodationEntity.getLat())
-            .lng(accommodationEntity.getLng())
+            .latitude(accommodationEntity.getLatitude())
+            .longitude(accommodationEntity.getLongitude())
             .checkInDatetime(accommodationEntity.getCheckInDatetime())
             .checkOutDatetime(accommodationEntity.getCheckOutDatetime())
             .build();

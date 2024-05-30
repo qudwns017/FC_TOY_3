@@ -26,9 +26,9 @@ public class StayEntity extends ItineraryEntity{
     private String place;
 
     @Column(nullable = false)
-    private Double lat;
+    private Double latitude;
 
     @Column(nullable = false)
-    private Double lng;
+    private Double longitude;
 
 }
