@@ -38,6 +38,7 @@ public class LikeService {
         if (existingLikeOptional.isPresent()) {
             LikeEntity existingLike = existingLikeOptional.get();
             likeRepository.delete(existingLike);
+            tripRepository.decrementLikeCount(tripEntity.getTripId());
             throw new ApiException(SuccessCode.UNLIKE);
             // 삭제
         } else {
@@ -46,6 +47,7 @@ public class LikeService {
                 .tripId(tripId)
                 .build();
             newLike = likeRepository.save(newLike);
+            tripRepository.incrementLikeCount(tripEntity.getTripId());
             return LikeDto.toDto(newLike);
         }
     }
