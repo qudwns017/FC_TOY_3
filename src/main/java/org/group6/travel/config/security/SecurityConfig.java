@@ -41,7 +41,8 @@ public class SecurityConfig {
                                 "/api/user/login")
                         .permitAll()
                         .anyRequest()
-                        .authenticated()
+//                        .authenticated()
+                                .permitAll()
                 );
 
         return http.build();
