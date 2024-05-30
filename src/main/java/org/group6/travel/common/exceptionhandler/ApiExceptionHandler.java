@@ -2,6 +2,7 @@ package org.group6.travel.common.exceptionhandler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.group6.travel.common.api.Api;
+import org.group6.travel.common.api.ResponseApi;
 import org.group6.travel.common.exception.ApiException;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
@@ -14,17 +15,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ApiExceptionHandler {
 
     @ExceptionHandler(value = ApiException.class)
-    public ResponseEntity<Api<Object>> apiException(
+    public ResponseApi<?> apiException(
         ApiException apiException
     ) {
         log.error("", apiException);
 
-        var errorCode = apiException.getErrorCodeIfs();
-
-        return ResponseEntity
-            .status(errorCode.getHttpStatusCode())
-            .body(
-                Api.ERROR(errorCode, apiException.getErrorDescription())
-            );
+        var errorCode = apiException.getErrorCode();
+        log.info(apiException.getErrorCode().getDescription());
+        return ResponseApi.ERROR(errorCode, apiException.getErrorDescription());
     }
 }
