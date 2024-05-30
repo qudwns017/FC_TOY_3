@@ -28,7 +28,7 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        /*.requestMatchers(HttpMethod.GET,
+                        .requestMatchers(HttpMethod.GET,
                                 "/api/trip",
                                 "/api/trip/{tripId}",
                                 "/api/trip/search",
@@ -39,10 +39,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST,
                                 "/api/user/register",
                                 "/api/user/login")
-                        .permitAll()*/
-                        .anyRequest()
-                        /*.authenticated()*/
                         .permitAll()
+                        .anyRequest()
+                        .authenticated()
                 );
 
         return http.build();
