@@ -68,8 +68,8 @@ public class AccommodationService {
             .name(accommodationRequest.getName())
             .checkInDatetime(accommodationRequest.getCheckInDatetime())
             .checkOutDatetime(accommodationRequest.getCheckOutDatetime())
-            .lat(geocodingResult.lat)
-            .lng(geocodingResult.lng)
+            .latitude(geocodingResult.lat)
+            .longitude(geocodingResult.lng)
             .build();
 
         return Optional.of(accommodationRepository.save(accommodationEntity))
@@ -87,7 +87,7 @@ public class AccommodationService {
         var loginUserId = '1'; // TODO : 로그인 사용자 Id 변경
 
         if(tripUserId != loginUserId) {
-            throw new ApiException(ErrorCode.BAD_REQUEST);
+            throw new ApiException(ErrorCode.BAD_REQUEST, "비정상 접근입니다.");
         }
 
         accommodationRepository.deleteById(accommodationId);

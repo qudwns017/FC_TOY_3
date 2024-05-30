@@ -43,25 +43,25 @@ public class ItineraryDto {
     private String arrivalPlace;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private Double departureLat;
+    private Double departureLatitude;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private Double departureLng;
+    private Double departureLongitude;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private Double arrivalLat;
+    private Double arrivalLatitude;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private Double arrivalLng;
+    private Double arrivalLongitude;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String place;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private Double lat;
+    private Double latitude;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private Double lng;
+    private Double longitude;
 
     public static ItineraryDto toDto(
         MoveEntity move,
@@ -78,13 +78,13 @@ public class ItineraryDto {
             .transportation(move != null ? move.getTransportation() : null)
             .departurePlace(move != null ? move.getDeparturePlace() : null)
             .arrivalPlace(move != null ? move.getArrivalPlace() : null)
-            .departureLat(move != null ? move.getDepartureLat() : null)
-            .departureLng(move != null ? move.getDepartureLng() : null)
-            .arrivalLat(move != null ? move.getArrivalLat() : null)
-            .arrivalLng(move != null ? move.getArrivalLng() : null)
+            .departureLatitude(move != null ? move.getDepartureLatitude() : null)
+            .departureLongitude(move != null ? move.getDepartureLongitude() : null)
+            .arrivalLatitude(move != null ? move.getArrivalLatitude() : null)
+            .arrivalLongitude(move != null ? move.getArrivalLongitude() : null)
             .place(stay != null ? stay.getPlace() : null)
-            .lat(stay != null ? stay.getLat() : null)
-            .lng(stay != null ? stay.getLng() : null)
+            .latitude(stay != null ? stay.getLatitude() : null)
+            .longitude(stay != null ? stay.getLongitude() : null)
             .build();
     }
 }

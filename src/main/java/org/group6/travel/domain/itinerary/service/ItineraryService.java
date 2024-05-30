@@ -84,10 +84,10 @@ public class ItineraryService {
                     .transportation(itineraryRequest.getTransportation())
                     .departurePlace(itineraryRequest.getDeparturePlace())
                     .arrivalPlace(itineraryRequest.getArrivalPlace())
-                    .departureLat(itineraryRequest.getDepartureLat())
-                    .departureLng(itineraryRequest.getDepartureLng())
-                    .arrivalLat(itineraryRequest.getArrivalLat())
-                    .arrivalLng(itineraryRequest.getArrivalLng())
+                    .departureLatitude(itineraryRequest.getDepartureLatitude())
+                    .departureLongitude(itineraryRequest.getDepartureLongitude())
+                    .arrivalLatitude(itineraryRequest.getArrivalLatitude())
+                    .arrivalLongitude(itineraryRequest.getArrivalLongitude())
                     .build();
             moveRepository.save(moveEntity);
         }
@@ -101,8 +101,8 @@ public class ItineraryService {
                     .endDatetime(itineraryRequest.getEndDatetime())
                     .itineraryComment(itineraryRequest.getItineraryComment())
                     .place(itineraryRequest.getPlace())
-                    .lat(itineraryRequest.getLat())
-                    .lng(itineraryRequest.getLng())
+                    .latitude(itineraryRequest.getLatitude())
+                    .longitude(itineraryRequest.getLongitude())
                     .build();
             stayRepository.save(stayEntity);
         }

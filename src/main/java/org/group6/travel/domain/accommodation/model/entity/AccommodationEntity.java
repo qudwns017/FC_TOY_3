@@ -37,12 +37,10 @@ public class AccommodationEntity {
     @Column(length = 50, nullable = false)
     private String name;
 
-    // latitude
     @Column(nullable = false)
-    private Double lat;
-    // longitude
+    private Double latitude;
     @Column(nullable = false)
-    private Double lng;
+    private Double longitude;
 
     @Column(nullable = false)
     private LocalDateTime checkInDatetime;

@@ -21,6 +21,7 @@ public class MapsService {
 
     public LatLng getLatLngFromAddress(String address) {
         GeocodingApiRequest request = GeocodingApi.geocode(geoApiContext, address);
+
         try {
             GeocodingResult[] results = request.await();
 
