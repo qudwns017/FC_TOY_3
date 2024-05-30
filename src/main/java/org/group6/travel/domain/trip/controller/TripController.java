@@ -17,22 +17,14 @@ import java.util.List;
 public class TripController {
     private final TripService tripService;
 
-    @PostMapping
-    public Api<?> insertTrip(
-            @Valid
-            @RequestBody TripRequest tripRequest
-    ){
-        return Api.OK(tripService.insertTrip(tripRequest));
-    }
-
     @GetMapping
-    public Api<List<?>> getTripList(){
-        return Api.OK(tripService.getTripAll());
+    public Api<List<?>> getTrips(){
+        return Api.OK(tripService.getTrips());
     }
 
     @GetMapping("/user")
-    public Api<List<?>> getTripListByUser(){
-        return Api.OK(tripService.getTripByUserId((long)1));
+    public Api<List<?>> getTripsByUser(){
+        return Api.OK(tripService.getTripsByUser((long)1));
     }
 
     @GetMapping("/{tripId}")
@@ -43,15 +35,23 @@ public class TripController {
     }
 
     @GetMapping("/user/like-list")
-    public Api<List<?>> getTripListByUserLike(){
-        return Api.OK(tripService.getTripByLike((long) 1));
+    public Api<List<?>> getTripsByUserLike(){
+        return Api.OK(tripService.getTripsByUserLike((long) 1));
     }
 
     @GetMapping("/search")
-    public Api<List<?>> searchTripListByKeyword(
+    public Api<List<?>> getTripsByKeyword(
             @RequestParam("keyword") String keyword
     ){
-        return Api.OK(tripService.getTripByKeyword(keyword));
+        return Api.OK(tripService.getTripsByKeyword(keyword));
+    }
+
+    @PostMapping
+    public Api<?> createTrip(
+        @Valid
+        @RequestBody TripRequest tripRequest
+    ){
+        return Api.OK(tripService.createTrip(tripRequest));
     }
 
     @PutMapping("/{tripId}")

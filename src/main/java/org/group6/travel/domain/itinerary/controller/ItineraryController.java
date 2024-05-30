@@ -27,11 +27,11 @@ public class ItineraryController {
     private final ItineraryService itineraryService;
 
     @GetMapping
-    public Api<List<ItineraryDto>> getItinerary(
+    public Api<List<ItineraryDto>> getItineraries(
         @PathVariable
         Long tripId
     ) {
-        var response = itineraryService.getItinerary(tripId);
+        var response = itineraryService.getItineraries(tripId);
         return Api.OK(response);
     }
 

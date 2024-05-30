@@ -34,7 +34,7 @@ public class ItineraryService {
     private final StayRepository stayRepository;
     private final TripRepository tripRepository;
 
-    public List<ItineraryDto> getItinerary(Long tripId) {
+    public List<ItineraryDto> getItineraries(Long tripId) {
         var tripEntity = tripRepository.findByTripId(tripId)
             .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
@@ -42,7 +42,6 @@ public class ItineraryService {
             .stream()
             .map(this::mapToItineraryDto)
             .collect(Collectors.toList());
-
     }
 
     private ItineraryDto mapToItineraryDto(ItineraryEntity itinerary) {
