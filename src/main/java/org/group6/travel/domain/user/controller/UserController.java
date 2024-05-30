@@ -25,9 +25,7 @@ public class UserController {
 
     @GetMapping
     public Api<UserResponse> getMyInfo() {
-        var requestContext = Objects.requireNonNull(RequestContextHolder.getRequestAttributes());
-        var userId = requestContext.getAttribute("userId", RequestAttributes.SCOPE_REQUEST);
-        UserResponse response = service.getMyInfo(Long.parseLong(userId.toString()));
+        UserResponse response = service.getMyInfo();
         return Api.OK(response);
     }
 

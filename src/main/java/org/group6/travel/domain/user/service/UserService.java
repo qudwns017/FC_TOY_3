@@ -1,5 +1,6 @@
 package org.group6.travel.domain.user.service;
 
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.group6.travel.common.error.UserErrorCode;
 import org.group6.travel.common.exception.ApiException;
@@ -13,6 +14,8 @@ import org.group6.travel.domain.user.model.response.UserResponse;
 import org.group6.travel.domain.user.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 
 @Service
 @RequiredArgsConstructor
@@ -23,8 +26,10 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
 
-    public UserResponse getMyInfo(Long userId) {
-        UserEntity user = getUserWithThrow(userId);
+    public UserResponse getMyInfo() {
+        var requestContext = Objects.requireNonNull(RequestContextHolder.getRequestAttributes());
+        var userId = requestContext.getAttribute("userId", RequestAttributes.SCOPE_REQUEST);
+        UserEntity user = getUserWithThrow(Long.parseLong(userId.toString()));
         return userConverter.toResponse(user);
     }
 
