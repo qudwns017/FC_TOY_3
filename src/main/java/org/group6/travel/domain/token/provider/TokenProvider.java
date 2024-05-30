@@ -2,14 +2,11 @@ package org.group6.travel.domain.token.provider;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import java.security.Key;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import javax.crypto.SecretKey;
@@ -17,9 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.group6.travel.common.error.ErrorCode;
 import org.group6.travel.common.exception.ApiException;
 import org.group6.travel.domain.token.model.dto.TokenDto;
-import org.group6.travel.domain.token.model.entity.UserDetailsEntity;
-import org.group6.travel.domain.user.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import io.jsonwebtoken.security.SignatureException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,51 +32,50 @@ public class TokenProvider {
 //    @Value("${jwt.expiration_time}")
 //    private static int EXPIRATION_TIME;
 
-
     public TokenDto issueAccessToken(Map<String, Object> data) {
         var expiredLocalDateTime = LocalDateTime.now().plusHours(4);
 
         var expiredAt = Date.from(
-                expiredLocalDateTime.atZone(
-                        ZoneId.systemDefault()
-                ).toInstant()
-        );
+            expiredLocalDateTime.atZone(
+                ZoneId.systemDefault()
+            ).toInstant()
+    );
 
         var key = Keys.hmacShaKeyFor(secretKey.getBytes());
 
         var jwtToken = Jwts.builder()
-                .signWith(key)
-                .claims(data)
-                .expiration(expiredAt)
-                .compact();
+            .signWith(key)
+            .claims(data)
+            .expiration(expiredAt)
+            .compact();
 
         return TokenDto.builder()
-                .token(jwtToken)
-                .expiredAt(expiredLocalDateTime)
-                .build();
-    }
+            .token(jwtToken)
+            .expiredAt(expiredLocalDateTime)
+            .build();
+            }
 
     public TokenDto issueRefreshToken(Map<String, Object> data) {
         var expiredLocalDateTime = LocalDateTime.now().plusHours(12);
 
         var expiredAt = Date.from(
-                expiredLocalDateTime.atZone(
-                        ZoneId.systemDefault()
-                ).toInstant()
+            expiredLocalDateTime.atZone(
+                    ZoneId.systemDefault()
+            ).toInstant()
         );
 
         var key = Keys.hmacShaKeyFor(secretKey.getBytes());
 
         var jwtToken = Jwts.builder()
-                .signWith(key)
-                .claims(data)
-                .expiration(expiredAt)
-                .compact();
+            .signWith(key)
+            .claims(data)
+            .expiration(expiredAt)
+            .compact();
 
         return TokenDto.builder()
-                .token(jwtToken)
-                .expiredAt(expiredLocalDateTime)
-                .build();
+            .token(jwtToken)
+            .expiredAt(expiredLocalDateTime)
+            .build();
     }
 
     public Map<String, Object> validationTokenWithThrow(String token) {
