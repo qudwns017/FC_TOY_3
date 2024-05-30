@@ -86,6 +86,5 @@ public class TripService {
                 .orElseThrow(()->new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
         tripRepository.delete(entity);
-
     }
 }

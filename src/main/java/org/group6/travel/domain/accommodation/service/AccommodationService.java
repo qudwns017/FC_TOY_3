@@ -89,12 +89,12 @@ public class AccommodationService {
     }
 
     public static boolean isValidDateTime(
-        LocalDate startTravel, LocalDate endTravel,
-        LocalDateTime checkIn, LocalDateTime checkOut
+        LocalDate travelStartDate, LocalDate travelEndDate,
+        LocalDateTime checkInDatetime, LocalDateTime checkOutDatetime
     ) {
-        return (checkIn.toLocalDate().isEqual(startTravel) || checkIn.toLocalDate().isAfter(startTravel)) &&
-            (checkOut.toLocalDate().isEqual(endTravel) || checkOut.toLocalDate().isBefore(endTravel)) &&
-            (checkIn.isBefore(checkOut));
+        return (checkInDatetime.toLocalDate().isEqual(travelStartDate) || checkInDatetime.toLocalDate().isAfter(travelStartDate)) &&
+            (checkOutDatetime.toLocalDate().isEqual(travelEndDate) || checkOutDatetime.toLocalDate().isBefore(travelEndDate)) &&
+            (checkInDatetime.isBefore(checkOutDatetime));
     }
 
 }

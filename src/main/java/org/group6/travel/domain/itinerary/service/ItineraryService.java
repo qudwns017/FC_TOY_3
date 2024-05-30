@@ -153,11 +153,11 @@ public class ItineraryService {
     }
 
     public static boolean isValidDateTime(
-        LocalDate startTravel, LocalDate endTravel,
-        LocalDateTime startItinerary, LocalDateTime endItinerary
+        LocalDate travelStartDate, LocalDate travelEndDate,
+        LocalDateTime itineraryStartDatetime, LocalDateTime itineraryEndDatetime
     ) {
-        return (startItinerary.toLocalDate().isEqual(startTravel) || startItinerary.toLocalDate().isAfter(startTravel)) &&
-            (endItinerary.toLocalDate().isEqual(endTravel) || endItinerary.toLocalDate().isBefore(endTravel)) &&
-            (startItinerary.isBefore(endItinerary));
+        return (itineraryStartDatetime.toLocalDate().isEqual(travelStartDate) || itineraryStartDatetime.toLocalDate().isAfter(travelStartDate)) &&
+            (itineraryEndDatetime.toLocalDate().isEqual(travelEndDate) || itineraryEndDatetime.toLocalDate().isBefore(travelEndDate)) &&
+            (itineraryStartDatetime.isBefore(itineraryEndDatetime));
     }
 }
