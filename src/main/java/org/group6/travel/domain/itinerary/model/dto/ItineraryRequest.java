@@ -23,11 +23,11 @@ public class ItineraryRequest {
     @NotNull
     private ItineraryType type;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm", timezone = "Asia/Seoul")
     @NotNull(message = "시작일자는 빈 값일 수 없습니다.")
     private LocalDateTime startDatetime;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm", timezone = "Asia/Seoul")
     @NotNull(message= "도착시간은 빈칸일 수 없습니다.")
     private LocalDateTime endDatetime;
 
