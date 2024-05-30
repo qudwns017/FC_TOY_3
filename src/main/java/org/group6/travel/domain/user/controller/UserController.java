@@ -26,9 +26,7 @@ public class UserController {
     @GetMapping
     public Api<UserResponse> getMyInfo() {
         var requestContext = Objects.requireNonNull(RequestContextHolder.getRequestAttributes());
-        System.out.println("requestContext : " + requestContext);
         var userId = requestContext.getAttribute("userId", RequestAttributes.SCOPE_REQUEST);
-        System.out.println(userId);
         UserResponse response = service.getMyInfo(Long.parseLong(userId.toString()));
         return Api.OK(response);
     }
@@ -47,7 +45,6 @@ public class UserController {
             @Valid
             @RequestBody UserLoginRequest request
     ) {
-        System.out.println(request.toString());
         TokenResponse response = service.login(request);
         return Api.OK(response);
     }

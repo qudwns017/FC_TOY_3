@@ -59,7 +59,6 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
 
         var userId = tokenService.validationAccessToken(accessToken);
 
-        System.out.println("userId" + userId);
 
         if (userId != null) {
             var requestContext = Objects.requireNonNull(RequestContextHolder.getRequestAttributes());
