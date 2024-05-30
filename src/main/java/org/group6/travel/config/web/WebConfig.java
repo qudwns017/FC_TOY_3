@@ -11,6 +11,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
+    /*
     private final AuthorizationInterceptor authorizationInterceptor;
 
     private final List<String> DEFAULT_EXCLUDE = List.of(
@@ -34,4 +35,6 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludePathPatterns(SWAGGER)
         ;
     }
+
+     */
 }

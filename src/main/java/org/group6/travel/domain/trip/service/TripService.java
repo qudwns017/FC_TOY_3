@@ -10,6 +10,8 @@ import org.group6.travel.domain.trip.model.dto.TripDto;
 import org.group6.travel.domain.trip.model.dto.TripRequest;
 import org.group6.travel.domain.trip.model.entity.TripEntity;
 import org.group6.travel.domain.trip.repository.TripRepository;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -61,9 +63,13 @@ public class TripService {
         return tripRepository.findByLikeList(tripIdList);
     }
 
-    public TripDto createTrip(TripRequest tripRequest){
+    public TripDto createTrip(
+        TripRequest tripRequest,
+        Long userId
+    ){
+        log.info(" ID '{}' User created a new trip", userId);
         return TripDto.toDto(tripRepository.save(TripEntity.builder()
-            .userId((long)1)
+            .userId(userId)
             .tripName(tripRequest.getTripName())
             .startDate(tripRequest.getStartDate())
             .endDate(tripRequest.getEndDate())

@@ -21,6 +21,7 @@ import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 @Component
 public class AuthorizationInterceptor implements HandlerInterceptor {
 
+    /*
     private final TokenService tokenService;
 
     private static final List<String> EXCLUDED_URIS = List.of(
@@ -71,4 +72,6 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
     private boolean isExcludedUri(String requestUri) {
         return EXCLUDED_URIS.stream().anyMatch(uri -> uri.equalsIgnoreCase(requestUri));
     }
+
+     */
 }

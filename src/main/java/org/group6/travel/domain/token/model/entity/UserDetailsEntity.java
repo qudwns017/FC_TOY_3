@@ -27,9 +27,11 @@ public class UserDetailsEntity implements UserDetails {
 
     private StoreUserRole role;
 
+    private Collection<? extends GrantedAuthority> authorities;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(this.role.toString()));
+        return List.of(new SimpleGrantedAuthority("user"));
     }
 
     @Override
