@@ -3,6 +3,7 @@ package org.group6.travel.domain.reply.service;
 import lombok.RequiredArgsConstructor;
 import org.group6.travel.common.error.ErrorCode;
 import org.group6.travel.common.exception.ApiException;
+import org.group6.travel.domain.accommodation.model.dto.AccommodationDto;
 import org.group6.travel.domain.reply.model.dto.ReplyDto;
 import org.group6.travel.domain.reply.model.entity.ReplyEntity;
 import org.group6.travel.domain.reply.model.request.ReplyRequest;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,12 +25,11 @@ public class ReplyService {
 
     private final ReplyRepository replyRepository;
     private final TripRepository tripRepository;
-    private final UserRepository userRepository;
 
     public ReplyDto create(
         Long tripId, ReplyRequest replyRequest
     ) {
-        var tripEntity = tripRepository.findById(tripId)
+        var tripEntity = tripRepository.findById(tripId) //403
             .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
         var replyEntity = ReplyEntity.builder()
@@ -38,50 +39,35 @@ public class ReplyService {
             .createdAt(LocalDateTime.now())
             .build();
 
-        try {
-            replyRepository.save(replyEntity);
+        ReplyEntity savedReplyEntity = replyRepository.save(replyEntity);
 
-        } catch (Exception e) {
-            throw new ApiException(ErrorCode.SERVER_ERROR);
-        }
+        return ReplyDto.toDto(savedReplyEntity);
 
-        return ReplyDto.toDto(replyEntity);
     }
 
 
+    @Transactional(readOnly = true)
     public List<ReplyDto> getByTripId(Long tripId) {
         var trip = tripRepository.findById(tripId)
-                .orElseThrow(()->new ApiException(ErrorCode.TRIP_NOT_EXIST));
+            .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
-        List<ReplyEntity> replyEntityList;
-
-        try {
-            replyEntityList = replyRepository.findAllByTripEntity(trip);
-        } catch (Exception e) {
-            // TODO error 수정하기
-            throw new ApiException(ErrorCode.SERVER_ERROR);
-        }
-
-        return replyEntityList
-            .stream()
-            .map(ReplyDto::toDto)
-            .collect(Collectors.toList());
+       return replyRepository.findAllByTripEntity(trip)
+           .stream()
+           .map(ReplyDto::toDto)
+           .collect(Collectors.toList());
 
     }
 
     @Transactional
     public void delete(Long tripId, Long replyId) {
         var tripEntity = tripRepository.findById(tripId)
-                .orElseThrow(()->new ApiException(ErrorCode.TRIP_NOT_EXIST));
-        var replyEntity = replyRepository.findByReplyId(replyId);
+            .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
-        if(replyEntity == null){
-            throw new ApiException(ErrorCode.REPLY_NOT_EXIST);
-        }
-
+        replyRepository.findById(replyId)
+                .orElseThrow(()-> new ApiException(ErrorCode.REPLY_NOT_EXIST));
 
         replyRepository.deleteByReplyIdAndTripEntity(replyId, tripEntity)
-                .orElseThrow(()->new ApiException(ErrorCode.REPLY_NOT_EXIST, "Error"));
+            .orElseThrow(() -> new ApiException(ErrorCode.BAD_REQUEST, "Error"));
     }
 
     @Transactional
@@ -89,25 +75,22 @@ public class ReplyService {
                            ReplyRequest replyRequest
     ) {
         var tripEntity = tripRepository.findById(tripId)
-                .orElseThrow(()->new ApiException(ErrorCode.TRIP_NOT_EXIST));
-        var replyEntity = replyRepository.findByReplyId(replyId);
+            .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
-        if(replyEntity == null){
-            throw new ApiException(ErrorCode.REPLY_NOT_EXIST);
-        }
+        var replyEntityOptional = replyRepository.findById(replyId);
 
-        replyEntity  = ReplyEntity.builder()
-                 .replyId(replyId)
-                 .tripEntity(tripEntity)
-                 .userId(1L)
-                 .replyComment(replyRequest.getReplyComment())
-                 .updatedAt(LocalDateTime.now())
-                 .createdAt(replyEntity.getCreatedAt())
-                 .build();
+        replyEntityOptional.ifPresent(replyEntity -> {
+            replyEntity.setTripEntity(tripEntity);
+            replyEntity.setUserId(1L);
+            replyEntity.setReplyComment(replyRequest.getReplyComment());
+            replyEntity.setUpdatedAt(LocalDateTime.now());
+            replyRepository.updateCommentByIdAndTripId(replyRequest.getReplyComment(), replyId, tripEntity);
+        });
 
-        replyRepository.updateCommentByIdAndTripId(replyEntity.getReplyComment(), replyId, tripEntity);
+        return replyEntityOptional.map(ReplyDto::toDto)
+            .orElseThrow(() -> new ApiException(ErrorCode.REPLY_NOT_EXIST));
 
-        return ReplyDto.toDto(replyEntity);
+
     }
 
 }

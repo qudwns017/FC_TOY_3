@@ -18,6 +18,7 @@ public interface ReplyRepository extends JpaRepository<ReplyEntity, Long> {
 
     List<ReplyEntity> findAllByTripEntity(TripEntity trip);
 
+
     Optional<ReplyEntity> deleteByReplyIdAndTripEntity(Long replyId, TripEntity trip);
 
     @Modifying
@@ -25,8 +26,7 @@ public interface ReplyRepository extends JpaRepository<ReplyEntity, Long> {
     void updateCommentByIdAndTripId(@Param("comment") String comment, @Param("id") Long id, @Param("trip") TripEntity trip);
 
     ReplyEntity findByTripEntity(TripEntity trip);
-    ReplyEntity findByReplyId(Long replyId);
-
+    Optional findByReplyId(Long replyId);
     @Modifying
     @Query("UPDATE ReplyEntity r SET r.replyComment = :#{#replyEntity.replyComment} WHERE r.replyId = :#{#replyEntity.replyId}")
     void updateReply(@Param("replyEntity") ReplyEntity replyEntity);
