@@ -2,11 +2,14 @@ package org.group6.travel.domain.trip.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.group6.travel.common.api.ResponseApi;
+import org.group6.travel.domain.token.model.entity.UserDetailsEntity;
 import org.group6.travel.domain.trip.model.dto.TripDto;
 import org.group6.travel.domain.trip.model.dto.TripRequest;
 import org.group6.travel.domain.trip.model.entity.TripEntity;
 import org.group6.travel.domain.trip.service.TripService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,6 +17,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/trip")
+@Slf4j
 public class TripController {
     private final TripService tripService;
 
@@ -48,9 +52,12 @@ public class TripController {
 
     @PostMapping
     public ResponseApi<?> createTrip(
+            @AuthenticationPrincipal
+            UserDetailsEntity userDetails,
         @Valid
         @RequestBody TripRequest tripRequest
     ){
+        log.info(userDetails.getUserId().toString());
         return ResponseApi.OK(tripService.createTrip(tripRequest));
     }
 

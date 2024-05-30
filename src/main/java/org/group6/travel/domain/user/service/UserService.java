@@ -4,14 +4,17 @@ import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.group6.travel.common.error.ErrorCode;
 import org.group6.travel.common.exception.ApiException;
+import org.group6.travel.domain.token.model.entity.UserDetailsEntity;
 import org.group6.travel.domain.token.model.response.TokenResponse;
-import org.group6.travel.domain.token.service.TokenService;
+import org.group6.travel.domain.token.provider.TokenProviderNew;
 import org.group6.travel.domain.user.model.converter.UserConverter;
 import org.group6.travel.domain.user.model.entity.UserEntity;
 import org.group6.travel.domain.user.model.request.UserLoginRequest;
 import org.group6.travel.domain.user.model.request.UserRegisterRequest;
 import org.group6.travel.domain.user.model.response.UserResponse;
 import org.group6.travel.domain.user.repository.UserRepository;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestAttributes;
@@ -25,7 +28,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserConverter userConverter;
     private final PasswordEncoder passwordEncoder;
-    private final TokenService tokenService;
+    private final TokenProviderNew tokenProvider;
 
     public UserResponse getMyInfo() {
         var requestContext = Objects.requireNonNull(RequestContextHolder.getRequestAttributes());
@@ -41,11 +44,13 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public TokenResponse login(
+    public String login(
             UserLoginRequest request
     ) {
         UserEntity userEntity = getUserWithThrow(request.getEmail(), request.getPassword());
-        return tokenService.issueToken(userEntity);
+
+        return tokenProvider.createToken(userEntity.getEmail());
+
     }
 
     @Transactional(readOnly = true)

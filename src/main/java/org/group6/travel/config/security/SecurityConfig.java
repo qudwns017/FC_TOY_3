@@ -1,5 +1,10 @@
 package org.group6.travel.config.security;
 
+import lombok.RequiredArgsConstructor;
+import org.group6.travel.domain.token.provider.TokenProvider;
+import org.group6.travel.domain.token.provider.TokenProviderNew;
+import org.group6.travel.domain.token.service.JwtAuthenticationFilter;
+import org.group6.travel.domain.token.service.TokenService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -9,10 +14,13 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+    private final TokenProviderNew tokenProvider;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -40,10 +48,13 @@ public class SecurityConfig {
                     "/api/user/register",
                     "/api/user/login")
                 .permitAll()
-                .anyRequest()
-                // .authenticated()
-                .permitAll()
+                .anyRequest().authenticated()
+
+                //.permitAll()
             );
+
+        http.addFilterBefore(new JwtAuthenticationFilter(tokenProvider),
+                        UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

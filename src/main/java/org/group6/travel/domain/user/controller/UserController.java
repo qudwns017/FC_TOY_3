@@ -39,11 +39,11 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseApi<TokenResponse> login(
+    public ResponseApi<?> login(
             @Valid
             @RequestBody UserLoginRequest request
     ) {
-        TokenResponse response = service.login(request);
+        String response = service.login(request);
         return ResponseApi.OK(response);
     }
 }
