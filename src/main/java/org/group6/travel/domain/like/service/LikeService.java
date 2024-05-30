@@ -1,8 +1,8 @@
 package org.group6.travel.domain.like.service;
 
 import lombok.RequiredArgsConstructor;
-import org.group6.travel.common.api.Api;
 import org.group6.travel.common.error.ErrorCode;
+import org.group6.travel.common.error.SuccessCode;
 import org.group6.travel.common.exception.ApiException;
 import org.group6.travel.domain.like.model.dto.LikeDto;
 import org.group6.travel.domain.like.model.entity.LikeEntity;
@@ -38,7 +38,7 @@ public class LikeService {
         if (existingLikeOptional.isPresent()) {
             LikeEntity existingLike = existingLikeOptional.get();
             likeRepository.delete(existingLike);
-            throw new ApiException(ErrorCode.UNLIKE);
+            throw new ApiException(SuccessCode.UNLIKE);
             // 삭제
         } else {
             LikeEntity newLike = LikeEntity.builder()

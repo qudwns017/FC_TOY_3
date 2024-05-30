@@ -1,11 +1,9 @@
 package org.group6.travel.common.exceptionhandler;
 
 import lombok.extern.slf4j.Slf4j;
-import org.group6.travel.common.api.Api;
 import org.group6.travel.common.api.ResponseApi;
 import org.group6.travel.common.exception.ApiException;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 

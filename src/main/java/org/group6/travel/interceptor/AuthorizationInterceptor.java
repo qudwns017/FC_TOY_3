@@ -7,7 +7,6 @@ import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.group6.travel.common.error.ErrorCode;
-import org.group6.travel.common.error.TokenErrorCode;
 import org.group6.travel.common.exception.ApiException;
 import org.group6.travel.domain.token.service.TokenService;
 import org.springframework.http.HttpMethod;
@@ -54,7 +53,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
 
         var accessToken = request.getHeader("authorization-token");
         if (accessToken == null) {
-            throw new ApiException(TokenErrorCode.AUTHORIZATION_TOKEN_NOT_FOUND);
+            throw new ApiException(ErrorCode.AUTHORIZATION_TOKEN_NOT_FOUND);
         }
 
         var userId = tokenService.validationAccessToken(accessToken);

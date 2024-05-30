@@ -18,6 +18,14 @@ public class ResponseApi<T> {
         this.data = init;
     }
 
+    public static <T> ResponseApi<T> OK(T data) {
+        var api = new ResponseApi<T>();
+        api.status = SuccessCode.OK.getErrorCode();
+        api.message = SuccessCode.OK.getDescription();
+        api.data = data;
+        return api;
+    }
+
     public static <T> ResponseApi<T> OK(T data, SuccessCode successCode) {
         var api = new ResponseApi<T>();
         api.status = successCode.getErrorCode();
@@ -26,21 +34,21 @@ public class ResponseApi<T> {
         return api;
     }
 
-    public static ResponseApi<Object> ERROR(ErrorCodeNew errorCode) {
+    public static ResponseApi<Object> ERROR(ErrorCode errorCode) {
         var api = new ResponseApi<Object>("error");
         api.status = errorCode.getErrorCode();
         api.message = errorCode.getDescription();
         return api;
     }
 
-    public static ResponseApi<Object> ERROR(ErrorCodeIfs errorCodeIfs, Throwable throwable) {
+    public static ResponseApi<Object> ERROR(StatusCodeIfs errorCodeIfs, Throwable throwable) {
         var api = new ResponseApi<Object>("error");
         api.status = errorCodeIfs.getErrorCode();
         api.message = errorCodeIfs.getDescription();
         return api;
     }
 
-    public static ResponseApi<Object> ERROR(ErrorCodeIfs errorCodeIfs, String description) {
+    public static ResponseApi<Object> ERROR(StatusCodeIfs errorCodeIfs, String description) {
         var api = new ResponseApi<Object>("error");
         api.status = errorCodeIfs.getErrorCode();
         api.message = description;

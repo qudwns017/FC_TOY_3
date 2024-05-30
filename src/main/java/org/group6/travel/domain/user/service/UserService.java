@@ -2,7 +2,7 @@ package org.group6.travel.domain.user.service;
 
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
-import org.group6.travel.common.error.UserErrorCode;
+import org.group6.travel.common.error.ErrorCode;
 import org.group6.travel.common.exception.ApiException;
 import org.group6.travel.domain.token.model.response.TokenResponse;
 import org.group6.travel.domain.token.service.TokenService;
@@ -53,10 +53,10 @@ public class UserService {
         System.out.println(email + " " + password);
 
         UserEntity user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ApiException(UserErrorCode.USER_NOT_FOUND, "Unregistered email"));
+                .orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND, "Unregistered email"));
 
         if (!passwordEncoder.matches(password, user.getEncryptedPassword())) {
-            throw new ApiException(UserErrorCode.INVALID_PASSWORD, "Invalid password");
+            throw new ApiException(ErrorCode.INVALID_PASSWORD, "Invalid password");
         }
 
         return user;
@@ -68,6 +68,6 @@ public class UserService {
     ) {
         return userRepository.findFirstByUserIdOrderByUserIdDesc(
                 userId
-        ).orElseThrow(() -> new ApiException(UserErrorCode.USER_NOT_FOUND));
+        ).orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
     }
 }

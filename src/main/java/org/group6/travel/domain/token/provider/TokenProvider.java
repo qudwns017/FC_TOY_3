@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
-import org.group6.travel.common.error.TokenErrorCode;
+import org.group6.travel.common.error.ErrorCode;
 import org.group6.travel.common.exception.ApiException;
 import org.group6.travel.domain.token.model.dto.TokenDto;
 import org.springframework.beans.factory.annotation.Value;
@@ -88,13 +88,13 @@ public class TokenProvider {
         }catch (Exception e){
 
             if(e instanceof SignatureException){
-                throw new ApiException(TokenErrorCode.INVALID_TOKEN, e);
+                throw new ApiException(ErrorCode.INVALID_TOKEN, e);
             }
             else if(e instanceof ExpiredJwtException){
-                throw new ApiException(TokenErrorCode.EXPIRED_TOKEN, e);
+                throw new ApiException(ErrorCode.EXPIRED_TOKEN, e);
             }
             else{
-                throw new ApiException(TokenErrorCode.TOKEN_EXCEPTION, e);
+                throw new ApiException(ErrorCode.TOKEN_EXCEPTION, e);
             }
         }
     }

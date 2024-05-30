@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.group6.travel.common.api.Api;
+import org.group6.travel.common.api.ResponseApi;
 import org.group6.travel.domain.itinerary.model.dto.ItineraryDto;
 import org.group6.travel.domain.itinerary.model.dto.ItineraryRequest;
 import org.group6.travel.domain.itinerary.service.ItineraryService;
@@ -27,16 +27,16 @@ public class ItineraryController {
     private final ItineraryService itineraryService;
 
     @GetMapping
-    public Api<List<ItineraryDto>> getItineraries(
+    public ResponseApi<List<ItineraryDto>> getItineraries(
         @PathVariable
         Long tripId
     ) {
         var response = itineraryService.getItinerary(tripId);
-        return Api.OK(response);
+        return ResponseApi.OK(response);
     }
 
     @PostMapping
-    public Api<ItineraryDto> createItinerary(
+    public ResponseApi<ItineraryDto> createItinerary(
         @Parameter(name ="tripId", description = "TripId 입력", required = true, in = ParameterIn.PATH)
         @PathVariable
         Long tripId,
@@ -45,11 +45,11 @@ public class ItineraryController {
         ItineraryRequest itineraryRequest
     ) {
         var response = itineraryService.createItinerary(itineraryRequest, tripId);
-        return Api.OK(response);
+        return ResponseApi.OK(response);
     }
 
     @PutMapping("/{itineraryId}")
-    public Api<ItineraryDto> updateItinerary(
+    public ResponseApi<ItineraryDto> updateItinerary(
         @Parameter(name ="tripId", description = "TripId 입력", required = true, in = ParameterIn.PATH)
         @PathVariable
         Long tripId,
@@ -61,11 +61,11 @@ public class ItineraryController {
         ItineraryRequest itineraryRequest
     ) {
         var response = itineraryService.updateItinerary(tripId, itineraryId, itineraryRequest);
-        return Api.OK(response);
+        return ResponseApi.OK(response);
     }
 
     @DeleteMapping("/{itineraryId}")
-    public Api<?> deleteItinerary(
+    public ResponseApi<?> deleteItinerary(
         @Parameter(name ="tripId", description = "TripId 입력", required = true, in = ParameterIn.PATH)
         @PathVariable
         Long tripId,
@@ -74,6 +74,6 @@ public class ItineraryController {
         Long itineraryId
     ) {
         itineraryService.deleteItinerary(tripId, itineraryId);
-        return Api.OK("삭제에 성공하였습니다.");
+        return ResponseApi.OK("삭제에 성공하였습니다.");
     }
 }

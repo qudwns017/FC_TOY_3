@@ -3,7 +3,7 @@ package org.group6.travel.domain.user.controller;
 import jakarta.validation.Valid;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
-import org.group6.travel.common.api.Api;
+import org.group6.travel.common.api.ResponseApi;
 import org.group6.travel.domain.token.model.response.TokenResponse;
 import org.group6.travel.domain.user.model.request.UserLoginRequest;
 import org.group6.travel.domain.user.model.request.UserRegisterRequest;
@@ -24,26 +24,26 @@ public class UserController {
     private final UserService service;
 
     @GetMapping
-    public Api<UserResponse> getMyInfo() {
+    public ResponseApi<UserResponse> getMyInfo() {
         UserResponse response = service.getMyInfo();
-        return Api.OK(response);
+        return ResponseApi.OK(response);
     }
 
     @PostMapping("/register")
-    public Api<UserResponse> register(
+    public ResponseApi<UserResponse> register(
             @Valid
             @RequestBody UserRegisterRequest request
     ) {
         UserResponse response = service.register(request);
-        return Api.OK(response);
+        return ResponseApi.OK(response);
     }
 
     @PostMapping("/login")
-    public Api<TokenResponse> login(
+    public ResponseApi<TokenResponse> login(
             @Valid
             @RequestBody UserLoginRequest request
     ) {
         TokenResponse response = service.login(request);
-        return Api.OK(response);
+        return ResponseApi.OK(response);
     }
 }
