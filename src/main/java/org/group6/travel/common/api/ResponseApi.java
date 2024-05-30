@@ -3,8 +3,7 @@ package org.group6.travel.common.api;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.group6.travel.common.error.ErrorCode;
-import org.group6.travel.common.error.ErrorCodeIfs;
+import org.group6.travel.common.error.*;
 
 @Data
 @NoArgsConstructor
@@ -19,26 +18,18 @@ public class ResponseApi<T> {
         this.data = init;
     }
 
-    public static <T> ResponseApi<T> OK(T data) {
+    public static <T> ResponseApi<T> OK(T data, SuccessCode successCode) {
         var api = new ResponseApi<T>();
-        api.status = ErrorCode.OK.getErrorCode();
-        api.message = ErrorCode.OK.getDescription();
+        api.status = successCode.getErrorCode();
+        api.message = successCode.getDescription();
         api.data = data;
         return api;
     }
 
-    public static <T> ResponseApi<T> SUCCESS(T data) {
-        var api = new ResponseApi<T>();
-        api.status = ErrorCode.SUCCESS.getErrorCode();
-        api.message = ErrorCode.SUCCESS.getDescription();
-        api.data = data;
-        return api;
-    }
-
-    public static ResponseApi<Object> ERROR(ErrorCodeIfs errorCodeIfs) {
+    public static ResponseApi<Object> ERROR(ErrorCodeNew errorCode) {
         var api = new ResponseApi<Object>("error");
-        api.status = errorCodeIfs.getErrorCode();
-        api.message = errorCodeIfs.getDescription();
+        api.status = errorCode.getErrorCode();
+        api.message = errorCode.getDescription();
         return api;
     }
 
