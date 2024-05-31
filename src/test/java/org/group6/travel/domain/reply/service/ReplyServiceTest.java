@@ -65,13 +65,7 @@ class ReplyServiceTest {
     @Test
     @DisplayName("댓글 추가 ")
     void createReply() {
-
-    }
-}
-
-/*
-
-Long userId = 1L;
+        Long userId = 1L;
         Long tripId = 1L;
         Long replyId = 1L;
 
@@ -99,6 +93,13 @@ Long userId = 1L;
         assertEquals(replyComment, replyDto.getComment());
         //assertEquals(userId, replyDto.getUserId());
         assertEquals(tripId, replyDto.getTripId());
+
+    }
+}
+
+/*
+
+
 
  // Arrange
         TripEntity tripEntity = new TripEntity();
