@@ -14,6 +14,7 @@ import org.group6.travel.domain.accommodation.model.dto.AccommodationRequest;
 import org.group6.travel.domain.accommodation.model.entity.AccommodationEntity;
 import org.group6.travel.domain.accommodation.repository.AccommodationRepository;
 import org.group6.travel.domain.maps.service.MapsService;
+import org.group6.travel.domain.trip.model.entity.TripEntity;
 import org.group6.travel.domain.trip.repository.TripRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,8 @@ public class AccommodationService {
     private final AccommodationRepository accommodationRepository;
     private final TripRepository tripRepository;
     private final MapsService mapsService;
+
+    public boolean compareUserId(Long userId, TripEntity trip) {return userId.equals(trip.getUserId());}
 
     @Transactional(readOnly = true)
     public List<AccommodationDto> getAccommodationList(Long tripId, Long loginUserID) {
@@ -39,18 +42,14 @@ public class AccommodationService {
             .collect(Collectors.toList());
     }
 
-    public AccommodationDto createAccommodation(Long tripId, AccommodationRequest accommodationRequest) {
+    public AccommodationDto createAccommodation(Long tripId, Long userId, AccommodationRequest accommodationRequest) {
 
         var tripEntity = tripRepository.findByTripId(tripId)
             .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
-        // TODO : 로그인 사용자 검증 추가
-//        String loginUserId = "test@test.com";
-//
-//        // 오류 코드 수정해야함.
-//        if(!tripEntity.getUserId().equals(loginUserId)) {
-//            throw new ApiException(ErrorCode.BAD_REQUEST, "비정상 접근입니다.");
-//        }
+        if(!compareUserId(userId, tripEntity)) {
+            throw new ApiException(ErrorCode.USER_NOT_MATCH);
+        }
 
         if(!isValidDateTime(
             tripEntity.getStartDate(), tripEntity.getEndDate(), accommodationRequest.getCheckInDatetime(), accommodationRequest.getCheckOutDatetime()
@@ -75,20 +74,14 @@ public class AccommodationService {
     }
 
     @Transactional
-    public void deleteAccommodation(Long tripId, Long accommodationId) {
+    public void deleteAccommodation(Long tripId, Long accommodationId, Long userId) {
 
         var tripEntity = tripRepository.findByTripId(tripId)
             .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
-        // TODO : 로그인 사용자 검증 추가
-        var tripUserId = tripEntity.getUserId();
-        /*
-        var loginUserId = '1'; // TODO : 로그인 사용자 Id 변경
-
-        if(tripUserId != loginUserId) {
-            throw new ApiException(ErrorCode.BAD_REQUEST, "비정상 접근입니다.");
+        if(!compareUserId(userId, tripEntity)) {
+            throw new ApiException(ErrorCode.USER_NOT_MATCH);
         }
-         */
 
         accommodationRepository.deleteById(accommodationId);
     }
