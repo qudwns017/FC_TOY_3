@@ -9,6 +9,8 @@ import org.group6.travel.common.api.ResponseApi;
 import org.group6.travel.domain.accommodation.model.dto.AccommodationDto;
 import org.group6.travel.domain.accommodation.model.dto.AccommodationRequest;
 import org.group6.travel.domain.accommodation.service.AccommodationService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,18 +38,22 @@ public class AccommodationController {
     @PostMapping
     public ResponseApi<AccommodationDto> createAccommodation(
         @PathVariable Long tripId,
+        @AuthenticationPrincipal User loginUser,
         @Valid @RequestBody AccommodationRequest accommodationRequest
     ){
-      var response = accommodationService.createAccommodation(tripId, accommodationRequest);
+        var loginUserId = Long.parseLong(loginUser.getUsername());
+      var response = accommodationService.createAccommodation(tripId, loginUserId, accommodationRequest);
       return ResponseApi.OK(response);
     }
 
     @DeleteMapping("/{accommodationId}")
     public ResponseApi<Object> deleteAccommodation(
         @PathVariable Long tripId,
-        @PathVariable Long accommodationId
+        @PathVariable Long accommodationId,
+        @AuthenticationPrincipal User loginUser
     ) {
-        accommodationService.deleteAccommodation(tripId, accommodationId);
+        var loginUserId = Long.parseLong(loginUser.getUsername());
+        accommodationService.deleteAccommodation(tripId, accommodationId, loginUserId);
         return ResponseApi.OK("Deleted accommodation with id " + accommodationId);
     }
 
