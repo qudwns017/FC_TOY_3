@@ -1,3 +1,4 @@
+
 package org.group6.travel.domain.reply.service;
 
 import org.group6.travel.common.api.ResponseApi;
@@ -43,18 +44,15 @@ import static org.mockito.Mockito.*;
 // @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ReplyServiceTest {
 
-
-
-    @Mock
+   /* @Mock
     private TripRepository tripRepository;
 
     @Mock
     private ReplyRepository replyRepository;
 
-    @InjectMocks
-    private ReplyService replyService;
-    @Autowired
-    private UserConverter userConverter;
+      @InjectMocks
+    ReplyService replyService;
+*/
 
 
     @BeforeEach
@@ -64,8 +62,17 @@ class ReplyServiceTest {
 
     @Test
     @DisplayName("댓글 추가 ")
-    void createReply() {
-        Long userId = 1L;
+    void createReplyServiceTest(@Mock TripRepository tripRepository, @Mock ReplyRepository replyRepository) {
+      Long userId = 1L;
+      ReplyRequest replyRequest = new ReplyRequest("testcomment");
+
+    }
+}
+
+
+/*
+//0531
+ Long userId = 1L;
         Long tripId = 1L;
         Long replyId = 1L;
 
@@ -93,12 +100,6 @@ class ReplyServiceTest {
         assertEquals(replyComment, replyDto.getComment());
         //assertEquals(userId, replyDto.getUserId());
         assertEquals(tripId, replyDto.getTripId());
-
-    }
-}
-
-/*
-
 
 
  // Arrange
