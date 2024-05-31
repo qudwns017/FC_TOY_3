@@ -98,13 +98,10 @@ class ItineraryControllerTest {
         itineraryRequest.setTransportation("Car");
         itineraryRequest.setDeparturePlace("Departure Place");
         itineraryRequest.setArrivalPlace("Arrival Place");
-        itineraryRequest.setDepartureLatitude(37.5123);
-        itineraryRequest.setDepartureLongitude(127.0456);
-        itineraryRequest.setArrivalLatitude(37.5789);
-        itineraryRequest.setArrivalLongitude(127.1011);
+        itineraryRequest.setDepartureAddress("DepartureAddress");
+        itineraryRequest.setArrivalAddress("ArrivalAddress");
         itineraryRequest.setPlace("Test Place");
-        itineraryRequest.setLatitude(37.6123);
-        itineraryRequest.setLongitude(127.2345);
+        itineraryRequest.setStayAddress("StayAddress");
 
         given(itineraryService.createItinerary(itineraryRequest, tripId)).willReturn(null);
 
