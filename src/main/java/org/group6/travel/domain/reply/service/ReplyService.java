@@ -62,7 +62,7 @@ public class ReplyService {
             .userId(userId)
             .tripEntity(tripEntity)
             .replyComment(replyRequest.getReplyComment())
-            .createdAt(LocalDateTime.now())
+            //.createdAt(LocalDateTime.now())
             .build();
 
         try {
@@ -89,7 +89,7 @@ public class ReplyService {
         }
 
         replyEntity.setReplyComment(replyRequest.getReplyComment());
-        replyEntity.setUpdatedAt(LocalDateTime.now());
+        //replyEntity.setUpdatedAt(LocalDateTime.now());
         return ReplyDto.toDto(replyRepository.save(replyEntity));
     }
 
