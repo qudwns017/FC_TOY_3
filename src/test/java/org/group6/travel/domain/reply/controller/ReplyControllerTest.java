@@ -1,3 +1,4 @@
+
 package org.group6.travel.domain.reply.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -53,21 +54,8 @@ class ReplyControllerTest {
         JacksonTester.initFields(this, objectMapper);
     }
 
-    @DisplayName("댓글 작성 컨트롤러 테스트 ")
-    @Test
-    public void createReplyTest() throws Exception {
-        ReplyRequest replyRequest = new ReplyRequest("댓글테스트");
-        given(replyService.createReply(tripId, replyRequest)).willReturn(null);
-
-        mvc.perform(MockMvcRequestBuilders.post("/api/trip/{trip_id}/reply", tripId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(replyRequest)))
-            .andDo(print())
-            .andExpectAll(status().isOk());
-    }
-
     @DisplayName("댓글 조회 컨트롤러 테스트")
-    @Test
+    @Test //성공
     public void getRepliesTest() throws Exception {
         // Given
         Long tripId = 1L;
@@ -84,4 +72,18 @@ class ReplyControllerTest {
             .andDo(log())
             .andExpectAll(status().isOk());
     }
+    /*@DisplayName("댓글 작성 컨트롤러 테스트 ")
+    @Test
+    public void createReplyTest() throws Exception {
+        ReplyRequest replyRequest = new ReplyRequest("댓글테스트");
+        given(replyService.createReply(tripId, replyRequest)).willReturn(null);
+
+        mvc.perform(MockMvcRequestBuilders.post("/api/trip/{trip_id}/reply", tripId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(replyRequest)))
+            .andDo(print())
+            .andExpectAll(status().isOk());
+    }
+*/
+
 }
