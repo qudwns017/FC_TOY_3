@@ -36,13 +36,17 @@ public class ItineraryRequest {
     private String transportation;
     private String departurePlace;
     private String arrivalPlace;
-    private Double departureLatitude;
-    private Double departureLongitude;
-    private Double arrivalLatitude;
-    private Double arrivalLongitude;
+
+    @NotNull(message = "출발지 주소가 없습니다.")
+    private String departureAddress;
+
+    @NotNull(message = "도착지 주소가 없습니다.")
+    private String arrivalAddress;
+
     private String place;
-    private Double latitude;
-    private Double longitude;
+    @NotNull(message = "체류 주소가 없습니다.")
+    private String stayAddress;
+
 
     @AssertTrue(message = "종료시간은 시각시간을 앞설 수 없습니다.")
     public boolean isValidPeriod() {
