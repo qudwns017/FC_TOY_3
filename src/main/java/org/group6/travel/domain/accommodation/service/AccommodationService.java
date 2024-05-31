@@ -30,7 +30,7 @@ public class AccommodationService {
     public boolean compareUserId(Long userId, TripEntity trip) {return userId.equals(trip.getUserId());}
 
     @Transactional(readOnly = true)
-    public List<AccommodationDto> getAccommodationList(Long tripId, Long loginUserID) {
+    public List<AccommodationDto> getAccommodationList(Long tripId) {
         var tripEntity = tripRepository.findByTripId(tripId)
             .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 

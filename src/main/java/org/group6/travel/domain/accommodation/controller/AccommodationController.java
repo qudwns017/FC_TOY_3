@@ -3,6 +3,7 @@ package org.group6.travel.domain.accommodation.controller;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.group6.travel.common.api.ResponseApi;
 import org.group6.travel.domain.accommodation.model.dto.AccommodationDto;
@@ -28,12 +29,10 @@ public class AccommodationController {
 
     @GetMapping
     public ResponseApi<List<AccommodationDto>> getAccommodationList(
-        @AuthenticationPrincipal User loginUser,
         @PathVariable Long tripId
     ) {
-        var loginUserID = Long.parseLong(loginUser.getUsername());
-      var response = accommodationService.getAccommodationList(tripId, loginUserID);
-      return ResponseApi.OK(response);
+        var response = accommodationService.getAccommodationList(tripId);
+        return ResponseApi.OK(response);
     }
 
     @PostMapping
@@ -43,8 +42,8 @@ public class AccommodationController {
         @Valid @RequestBody AccommodationRequest accommodationRequest
     ){
         var loginUserId = Long.parseLong(loginUser.getUsername());
-      var response = accommodationService.createAccommodation(tripId, loginUserId, accommodationRequest);
-      return ResponseApi.OK(response);
+        var response = accommodationService.createAccommodation(tripId, loginUserId, accommodationRequest);
+        return ResponseApi.OK(response);
     }
 
     @DeleteMapping("/{accommodationId}")
