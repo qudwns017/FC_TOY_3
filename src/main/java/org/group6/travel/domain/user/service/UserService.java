@@ -36,6 +36,9 @@ public class UserService {
 
     public UserResponse register(UserRegisterRequest request) {
         UserEntity entity = userConverter.toEntity(request, passwordEncoder);
+        if (userRepository.existsByEmail(entity.getEmail())) {
+            throw new ApiException(ErrorCode.USER_NOT_MATCH, "Already exists email");
+        }
         UserEntity responseEntity = userRepository.save(entity);
         return userConverter.toResponse(responseEntity);
     }

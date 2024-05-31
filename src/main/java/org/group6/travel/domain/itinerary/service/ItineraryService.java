@@ -19,6 +19,7 @@ import org.group6.travel.domain.itinerary.model.enums.ItineraryType;
 import org.group6.travel.domain.itinerary.repository.ItineraryRepository;
 import org.group6.travel.domain.itinerary.repository.MoveRepository;
 import org.group6.travel.domain.itinerary.repository.StayRepository;
+import org.group6.travel.domain.maps.service.MapsService;
 import org.group6.travel.domain.trip.model.entity.TripEntity;
 import org.group6.travel.domain.trip.repository.TripRepository;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,7 @@ public class ItineraryService {
     private final MoveRepository moveRepository;
     private final StayRepository stayRepository;
     private final TripRepository tripRepository;
+    private final MapsService mapsService;
 
     @Transactional(readOnly = true)
     public List<ItineraryDto> getItinerary(Long tripId) {
@@ -73,6 +75,10 @@ public class ItineraryService {
 
     public ItineraryDto saveItineraryByType(Long itineraryId, ItineraryRequest itineraryRequest, TripEntity tripEntity, MoveEntity moveEntity, StayEntity stayEntity){
         if(itineraryRequest.getType().getValue()==0){
+
+            var geocodingResultDeparture = mapsService.getLatLngFromAddress(itineraryRequest.getDepartureAddress());
+            var geocodingResultArrival = mapsService.getLatLngFromAddress(itineraryRequest.getArrivalAddress());
+
             moveEntity = MoveEntity.builder()
                     .itineraryId(itineraryId)
                     .tripEntity(tripEntity)
@@ -84,14 +90,16 @@ public class ItineraryService {
                     .transportation(itineraryRequest.getTransportation())
                     .departurePlace(itineraryRequest.getDeparturePlace())
                     .arrivalPlace(itineraryRequest.getArrivalPlace())
-                    .departureLatitude(itineraryRequest.getDepartureLatitude())
-                    .departureLongitude(itineraryRequest.getDepartureLongitude())
-                    .arrivalLatitude(itineraryRequest.getArrivalLatitude())
-                    .arrivalLongitude(itineraryRequest.getArrivalLongitude())
+                    .departureLatitude(geocodingResultDeparture.lat)
+                    .departureLongitude(geocodingResultDeparture.lng)
+                    .arrivalLatitude(geocodingResultArrival.lat)
+                    .arrivalLongitude(geocodingResultArrival.lng)
                     .build();
             moveRepository.save(moveEntity);
         }
         else{
+            var geocodingResult = mapsService.getLatLngFromAddress(itineraryRequest.getStayAddress());
+
             stayEntity = StayEntity.builder()
                     .itineraryId(itineraryId)
                     .tripEntity(tripEntity)
@@ -101,8 +109,8 @@ public class ItineraryService {
                     .endDatetime(itineraryRequest.getEndDatetime())
                     .itineraryComment(itineraryRequest.getItineraryComment())
                     .place(itineraryRequest.getPlace())
-                    .latitude(itineraryRequest.getLatitude())
-                    .longitude(itineraryRequest.getLongitude())
+                    .latitude(geocodingResult.lat)
+                    .longitude(geocodingResult.lng)
                     .build();
             stayRepository.save(stayEntity);
         }
