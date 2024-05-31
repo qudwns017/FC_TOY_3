@@ -9,6 +9,8 @@ import org.group6.travel.common.api.ResponseApi;
 import org.group6.travel.domain.itinerary.model.dto.ItineraryDto;
 import org.group6.travel.domain.itinerary.model.dto.ItineraryRequest;
 import org.group6.travel.domain.itinerary.service.ItineraryService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,11 +42,13 @@ public class ItineraryController {
         @Parameter(name ="tripId", description = "TripId 입력", required = true, in = ParameterIn.PATH)
         @PathVariable
         Long tripId,
+        @AuthenticationPrincipal User loginUser,
         @Valid
         @RequestBody
         ItineraryRequest itineraryRequest
     ) {
-        var response = itineraryService.createItinerary(itineraryRequest, tripId);
+        var loginUserId = Long.parseLong(loginUser.getUsername());
+        var response = itineraryService.createItinerary(itineraryRequest, tripId, loginUserId);
         return ResponseApi.OK(response);
     }
 
@@ -56,11 +60,13 @@ public class ItineraryController {
         @Parameter(name ="itineraryId", description = "Itinerary 입력", required = true, in = ParameterIn.PATH)
         @PathVariable
         Long itineraryId,
+        @AuthenticationPrincipal User loginUser,
         @Parameter(name ="itineraryRequest", description = "여정 정보 입력", required = true)
         @Validated @RequestBody
         ItineraryRequest itineraryRequest
     ) {
-        var response = itineraryService.updateItinerary(tripId, itineraryId, itineraryRequest);
+        var loginUserId = Long.parseLong(loginUser.getUsername());
+        var response = itineraryService.updateItinerary(tripId, itineraryId, loginUserId,itineraryRequest);
         return ResponseApi.OK(response);
     }
 
@@ -71,9 +77,11 @@ public class ItineraryController {
         Long tripId,
         @Parameter(name ="itineraryId", description = "Itinerary 입력", required = true, in = ParameterIn.PATH)
         @PathVariable
-        Long itineraryId
+        Long itineraryId,
+        @AuthenticationPrincipal User loginUser
     ) {
-        itineraryService.deleteItinerary(tripId, itineraryId);
+        var loginUserId = Long.parseLong(loginUser.getUsername());
+        itineraryService.deleteItinerary(tripId, itineraryId, loginUserId);
         return ResponseApi.OK("삭제에 성공하였습니다.");
     }
 }
