@@ -74,7 +74,7 @@ public class TripController {
 
     ){
         var loginUserID = Long.parseLong(loginUser.getUsername());
-        return ResponseApi.OK(tripService.updateTrip(tripId, tripRequest));
+        return ResponseApi.OK(tripService.updateTrip(tripId, tripRequest, loginUserID));
     }
 
     @DeleteMapping("/{tripId}")
@@ -83,7 +83,7 @@ public class TripController {
         @AuthenticationPrincipal User loginUser
     ){
         var loginUserID = Long.parseLong(loginUser.getUsername());
-        tripService.deleteTrip(tripId);
+        tripService.deleteTrip(tripId, loginUserID);
         return ResponseApi.OK("삭제 성공");
     }
 }

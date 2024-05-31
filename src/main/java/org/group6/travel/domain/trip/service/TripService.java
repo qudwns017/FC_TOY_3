@@ -63,6 +63,7 @@ public class TripService {
         return tripRepository.findByLikeList(tripIdList);
     }
 
+    @Transactional
     public TripDto createTrip(
         TripRequest tripRequest,
         Long userId
@@ -81,10 +82,13 @@ public class TripService {
     }
 
     @Transactional
-    public TripEntity updateTrip(Long tripId, TripRequest tripRequest){
+    public TripEntity updateTrip(Long tripId, TripRequest tripRequest, Long userId){
         TripEntity entity = tripRepository.findById(tripId)
                 .orElseThrow(()->new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
+        if(!compareUserId(userId, entity)){
+            throw new ApiException(ErrorCode.USER_NOT_MATCH);
+        }
         entity.setTripName(tripRequest.getTripName());
         entity.setStartDate(tripRequest.getStartDate());
         entity.setEndDate(tripRequest.getEndDate());
@@ -96,9 +100,13 @@ public class TripService {
     }
 
     @Transactional
-    public void deleteTrip(Long tripId){
+    public void deleteTrip(Long tripId, Long userId){
         TripEntity entity = tripRepository.findById(tripId)
                 .orElseThrow(()->new ApiException(ErrorCode.TRIP_NOT_EXIST));
+
+        if(!compareUserId(userId, entity)){
+            throw new ApiException(ErrorCode.USER_NOT_MATCH);
+        }
 
         tripRepository.delete(entity);
 

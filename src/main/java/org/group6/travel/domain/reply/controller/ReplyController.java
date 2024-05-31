@@ -6,6 +6,8 @@ import org.group6.travel.common.api.ResponseApi;
 import org.group6.travel.domain.reply.model.dto.ReplyDto;
 import org.group6.travel.domain.reply.model.request.ReplyRequest;
 import org.group6.travel.domain.reply.service.ReplyService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,9 +30,11 @@ public class ReplyController {
     @PostMapping
     public ResponseApi<ReplyDto> createReply(
         @PathVariable("trip_id") Long tripId,
+        @AuthenticationPrincipal User loginUser,
         @Valid @RequestBody ReplyRequest replyRequest
     ) {
-        return ResponseApi.OK(replyService.createReply(tripId,replyRequest));
+        var loginUserId = Long.parseLong(loginUser.getUsername());
+        return ResponseApi.OK(replyService.createReply(tripId,loginUserId,replyRequest));
     }
 
     //댓글 수정
@@ -38,9 +42,11 @@ public class ReplyController {
     public ResponseApi<?> updateReply(
         @PathVariable("trip_id") Long tripId,
         @PathVariable("reply_id") Long replyId,
+        @AuthenticationPrincipal User loginUser,
         @RequestBody ReplyRequest replyRequest
     ){
-        var updateReply = replyService.updateReply(tripId, replyId, replyRequest);
+        var loginUserId = Long.parseLong(loginUser.getUsername());
+        var updateReply = replyService.updateReply(tripId, replyId, loginUserId, replyRequest);
 
         return ResponseApi.OK(updateReply);
     }
@@ -49,9 +55,11 @@ public class ReplyController {
     @DeleteMapping("/{reply_id}")
     public ResponseApi<String> deleteReply(
         @PathVariable("trip_id") Long tripId,
-        @PathVariable("reply_id") Long replyId
+        @PathVariable("reply_id") Long replyId,
+        @AuthenticationPrincipal User loginUser
     ) {
-        replyService.deleteReply(tripId, replyId);
+        var loginUserID = Long.parseLong(loginUser.getUsername());
+        replyService.deleteReply(tripId, replyId, loginUserID);
         return ResponseApi.OK("삭제 성공");
 
     }
