@@ -1,9 +1,10 @@
 package org.group6.travel.domain.user.controller;
 
 import jakarta.validation.Valid;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.group6.travel.common.api.ResponseApi;
-import org.group6.travel.domain.token.model.response.TokenResponse;
+import org.group6.travel.domain.token.model.dto.TokenResponse;
 import org.group6.travel.domain.user.model.request.UserLoginRequest;
 import org.group6.travel.domain.user.model.request.UserRegisterRequest;
 import org.group6.travel.domain.user.model.response.UserResponse;

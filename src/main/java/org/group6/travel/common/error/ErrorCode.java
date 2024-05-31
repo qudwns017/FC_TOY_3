@@ -20,9 +20,11 @@ public enum ErrorCode implements StatusCodeIfs{
     NULL_POINT(512, "Null Point"),
 
     INVALID_TOKEN(2000 , "유효하지 않은 토큰"),
-    EXPIRED_TOKEN(2001, "만료된 토큰"),
-    TOKEN_EXCEPTION(2002, "토큰 알수없는 에러"),
-    AUTHORIZATION_TOKEN_NOT_FOUND(2003, "인증 헤더 토큰 없음"),
+    EXPIRED_TOKEN(2001, "Token이 만료되었습니다."),
+    EXPIRED_ACCESS_TOKEN(2002, "Access Token이 만료되었습니다."),
+    EXPIRED_REFRESH_TOKEN(2003, "Refresh Token이 만료되었습니다. 다시 로그인을 해주세요."),
+    TOKEN_EXCEPTION(2004, "토큰 알수없는 에러"),
+    AUTHORIZATION_TOKEN_NOT_FOUND(2005, "인증 헤더 토큰 없음"),
 
     USER_NOT_FOUND (1404, "USER_NOT_EXIST"),
     INVALID_PASSWORD(1404, "INVALID_PASSWORD")

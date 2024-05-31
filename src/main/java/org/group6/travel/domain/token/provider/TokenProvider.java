@@ -43,6 +43,8 @@ public class TokenProvider {
 
         var key = Keys.hmacShaKeyFor(secretKey.getBytes());
 
+        data.put("type", "access");
+
         var jwtToken = Jwts.builder()
             .signWith(key)
             .claims(data)
@@ -56,7 +58,7 @@ public class TokenProvider {
             }
 
     public TokenDto issueRefreshToken(Map<String, Object> data) {
-        var expiredLocalDateTime = LocalDateTime.now().plusHours(12);
+        var expiredLocalDateTime = LocalDateTime.now().plusHours(96);
 
         var expiredAt = Date.from(
             expiredLocalDateTime.atZone(
@@ -65,6 +67,8 @@ public class TokenProvider {
         );
 
         var key = Keys.hmacShaKeyFor(secretKey.getBytes());
+
+        data.put("type", "refresh");
 
         var jwtToken = Jwts.builder()
             .signWith(key)
@@ -76,31 +80,6 @@ public class TokenProvider {
             .token(jwtToken)
             .expiredAt(expiredLocalDateTime)
             .build();
-    }
-
-    public Map<String, Object> validationTokenWithThrow(String token) {
-        var key = Keys.hmacShaKeyFor(secretKey.getBytes());
-
-        try{
-            var result = Jwts.parser()
-                .verifyWith(key)
-                .build()
-                .parseSignedClaims(token);
-
-            return result.getPayload();
-
-        } catch (Exception e){
-
-            if(e instanceof SignatureException){
-                throw new ApiException(ErrorCode.INVALID_TOKEN, e);
-            }
-            else if(e instanceof ExpiredJwtException){
-                throw new ApiException(ErrorCode.EXPIRED_TOKEN, e);
-            }
-            else{
-                throw new ApiException(ErrorCode.TOKEN_EXCEPTION, e);
-            }
-        }
     }
 
     public boolean validateToken(String token) {
@@ -132,16 +111,19 @@ public class TokenProvider {
         var key = Keys.hmacShaKeyFor(secretKey.getBytes());
 
         var claims = Jwts.parser()
-            .verifyWith((SecretKey) key)
+            .verifyWith(key)
             .build()
             .parseSignedClaims(token)
             .getPayload()
             ;
 
+        if(!claims.get("type").equals("access")) {
+            throw new ApiException(ErrorCode.INVALID_TOKEN);
+        }
+
         Set<SimpleGrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
 
         return new UsernamePasswordAuthenticationToken(
             new User(claims.get("userId", Long.class).toString(), "", authorities), token, authorities);
-
     }
 }

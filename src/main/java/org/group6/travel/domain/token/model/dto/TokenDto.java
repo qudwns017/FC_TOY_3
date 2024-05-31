@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.group6.travel.common.error.ErrorCode;
 import org.group6.travel.common.exception.ApiException;
-import org.group6.travel.domain.token.model.response.TokenResponse;
 
 @Data
 @Builder

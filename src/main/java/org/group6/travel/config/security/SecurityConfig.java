@@ -58,7 +58,9 @@ public class SecurityConfig {
                 ).permitAll()
                 .requestMatchers(HttpMethod.POST,
                     "/api/user/register",
-                    "/api/user/login").permitAll()
+                    "/api/user/login",
+                    "/api/token"
+                    ).permitAll()
                 .anyRequest().authenticated()
             )
             .exceptionHandling((exceptionConfig) -> exceptionConfig.authenticationEntryPoint(new CustomAuthenticationEntryPoint(new ObjectMapper())))

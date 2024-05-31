@@ -1,24 +1,19 @@
-package org.group6.travel.domain.user.model.request;
+package org.group6.travel.domain.token.model.dto;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class UserLoginRequest {
+public class RefreshTokenRequest {
 
     @NotBlank
-    @Email
-    private String email;
+    private String refreshToken;
 
-    @NotBlank
-    private String password;
 }
