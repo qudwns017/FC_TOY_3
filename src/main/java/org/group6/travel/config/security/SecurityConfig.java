@@ -1,6 +1,8 @@
 package org.group6.travel.config.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.group6.travel.config.security.entrypoint.CustomAuthenticationEntryPoint;
 import org.group6.travel.domain.token.filter.TokenAuthenticationFilter;
 import org.group6.travel.domain.token.provider.TokenProvider;
 import org.springframework.context.annotation.Bean;
@@ -56,9 +58,12 @@ public class SecurityConfig {
                 ).permitAll()
                 .requestMatchers(HttpMethod.POST,
                     "/api/user/register",
-                    "/api/user/login").permitAll()
+                    "/api/user/login",
+                    "/api/token"
+                    ).permitAll()
                 .anyRequest().authenticated()
             )
+            .exceptionHandling((exceptionConfig) -> exceptionConfig.authenticationEntryPoint(new CustomAuthenticationEntryPoint(new ObjectMapper())))
             .csrf(AbstractHttpConfigurer::disable)
             .addFilterBefore(new TokenAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
             .build();

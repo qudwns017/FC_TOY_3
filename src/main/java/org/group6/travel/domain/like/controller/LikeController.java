@@ -3,6 +3,8 @@ package org.group6.travel.domain.like.controller;
 import lombok.RequiredArgsConstructor;
 import org.group6.travel.common.api.ResponseApi;
 import org.group6.travel.domain.like.service.LikeService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,9 +27,11 @@ public class LikeController {
     //여행 좋아요, post put 201
    @PostMapping("/trip/{trip_id}/like")
     public ResponseApi<?> addLike(
-        @PathVariable("trip_id") Long tripId
+        @PathVariable("trip_id") Long tripId,
+        @AuthenticationPrincipal User loginUser
     ) {
-        var clickLike = likeService.addLike(tripId);
+        var loginUserId = Long.parseLong(loginUser.getUsername());
+        var clickLike = likeService.addLike(tripId, loginUserId);
         return ResponseApi.OK(clickLike);
     }
 

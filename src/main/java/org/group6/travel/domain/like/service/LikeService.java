@@ -21,14 +21,14 @@ public class LikeService {
 
     private final LikeRepository likeRepository;
     private final TripRepository tripRepository;
-    private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
     public List<LikeEntity> getlikes() {
         return likeRepository.findAll();
     }
 
-    public LikeDto addLike(Long tripId) {
+    @Transactional
+    public LikeDto addLike(Long tripId, Long userId) {
         var tripEntity = tripRepository.findById(tripId)
             .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
@@ -43,7 +43,7 @@ public class LikeService {
             // 삭제
         } else {
             LikeEntity newLike = LikeEntity.builder()
-                .userId(1L)
+                .userId(userId)
                 .tripId(tripId)
                 .build();
             newLike = likeRepository.save(newLike);

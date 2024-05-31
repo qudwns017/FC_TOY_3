@@ -36,6 +36,8 @@ public class ItineraryService {
     private final TripRepository tripRepository;
     private final MapsService mapsService;
 
+    public boolean compareUserId(Long userId, TripEntity trip) {return trip.getUserId().equals(userId);}
+
     @Transactional(readOnly = true)
     public List<ItineraryDto> getItinerary(Long tripId) {
         var tripEntity = tripRepository.findByTripId(tripId)
@@ -56,11 +58,15 @@ public class ItineraryService {
 
     public ItineraryDto createItinerary(
         ItineraryRequest itineraryRequest,
-        Long tripId
+        Long tripId,
+        Long userId
     ) {
         var tripEntity = tripRepository.findByTripId(tripId)
             .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
+        if(!compareUserId(userId, tripEntity)) {
+            throw new ApiException(ErrorCode.USER_NOT_MATCH);
+        }
         if(!isValidDateTime(
             tripEntity.getStartDate(), tripEntity.getEndDate(), itineraryRequest.getStartDatetime(), itineraryRequest.getEndDatetime()
         )){
@@ -121,10 +127,15 @@ public class ItineraryService {
     public ItineraryDto updateItinerary(
             Long tripId,
             Long itineraryId,
+            Long userId,
             ItineraryRequest itineraryRequest
     ){
         var tripEntity = tripRepository.findByTripId(tripId)
             .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
+
+        if(!compareUserId(userId, tripEntity)){
+            throw new ApiException(ErrorCode.USER_NOT_MATCH);
+        }
 
         if(!isValidDateTime(
             tripEntity.getStartDate(), tripEntity.getEndDate(), itineraryRequest.getStartDatetime(), itineraryRequest.getEndDatetime()
@@ -150,11 +161,14 @@ public class ItineraryService {
 
 
     @Transactional
-    public void deleteItinerary(Long tripId, Long itineraryId) {
+    public void deleteItinerary(Long tripId, Long itineraryId, Long userId) {
 
-        tripRepository.findByTripId(tripId)
+        var tripEntity = tripRepository.findByTripId(tripId)
             .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
+        if(!compareUserId(userId, tripEntity)){
+            throw new ApiException(ErrorCode.USER_NOT_MATCH);
+        }
         if (!itineraryRepository.existsById(itineraryId)) {
             throw new ApiException(ErrorCode.BAD_REQUEST, "Itinerary not found");
         } else {
