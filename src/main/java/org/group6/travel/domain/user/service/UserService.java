@@ -73,4 +73,9 @@ public class UserService {
                 userId
         ).orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
     }
+
+    @Transactional(readOnly = true)
+    public void logout(String refreshToken) {
+
+    }
 }
