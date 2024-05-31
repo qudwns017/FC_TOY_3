@@ -91,6 +91,5 @@ class AccommodationControllerTest {
             .andDo(print())
             .andExpectAll(status().isOk());
 
-
     }
 }

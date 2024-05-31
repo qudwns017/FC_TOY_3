@@ -90,14 +90,15 @@ class ItineraryControllerTest {
             .andExpectAll(status().isOk());
     }
 
+    //실패
     @DisplayName("여정 생성 테스트")
     @Test
     void createItinerary() throws Exception{
         ItineraryRequest itineraryRequest = new ItineraryRequest();
         itineraryRequest.setItineraryName("Test Itinerary");
         itineraryRequest.setType(ItineraryType.MOVE);
-        itineraryRequest.setStartDatetime(LocalDateTime.now().plusHours(1));
-        itineraryRequest.setEndDatetime(LocalDateTime.now().plusHours(2));
+        itineraryRequest.setStartDatetime(LocalDateTime.now());
+        itineraryRequest.setEndDatetime(LocalDateTime.now().plusDays(2));
         itineraryRequest.setItineraryComment("This is a test itinerary.");
         itineraryRequest.setTransportation("Car");
         itineraryRequest.setDeparturePlace("Departure Place");
@@ -114,3 +115,18 @@ class ItineraryControllerTest {
             .andExpectAll(status().isOk());
     }
 }
+
+
+/*
+ ItineraryRequest itineraryRequest = new ItineraryRequest();
+        itineraryRequest.setItineraryName("Test Itinerary");
+        itineraryRequest.setType(ItineraryType.MOVE);
+        itineraryRequest.setStartDatetime(LocalDateTime.now().plusHours(1));
+        itineraryRequest.setEndDatetime(LocalDateTime.now().plusHours(2));
+        itineraryRequest.setItineraryComment("This is a test itinerary.");
+        itineraryRequest.setTransportation("Car");
+        itineraryRequest.setDeparturePlace("Departure Place");
+        itineraryRequest.setArrivalPlace("Arrival Place");
+        itineraryRequest.setPlace("Test Place");
+
+ */
