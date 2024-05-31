@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.persistence.*;
 import lombok.*;
+import org.group6.travel.common.model.BaseEntity;
 import org.group6.travel.domain.trip.model.entity.TripEntity;
 import org.group6.travel.domain.user.model.entity.UserEntity;
 
@@ -17,7 +18,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "reply")
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class ReplyEntity {
+public class ReplyEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,8 +39,8 @@ public class ReplyEntity {
     @Column(name = "comment")
     private String replyComment;
 
-    private LocalDateTime createdAt;
+    /*private LocalDateTime createdAt;
 
-    private LocalDateTime updatedAt;
+    private LocalDateTime updatedAt;*/
 
 }
