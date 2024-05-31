@@ -74,7 +74,8 @@ class AccommodationControllerTest {
         when(accommodationService.getAccommodationList(tripId)).thenReturn(accommodationDtoList);
 
         mvc.perform(MockMvcRequestBuilders.get("/api/trip/{tripId}/accommodation",tripId)
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(tripId)))
             .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].tripId").value(tripId))
