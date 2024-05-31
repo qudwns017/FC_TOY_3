@@ -41,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class TripControllerTest {
 
     Long userId = 1L;
-    int tripId = 1;
+    Long tripId = 1L;
     @LocalServerPort
     private int port;
     @Autowired
@@ -103,20 +103,19 @@ class TripControllerTest {
     @Test //실패
     void getTripIdTest() throws Exception {
         List<TripDto> tripDtoList = new ArrayList<>();
-        TripDto tripDto = new TripDto((long) tripId, userId, "tripname", LocalDate.now(), LocalDate.now().plusDays(10), DomesticType.OVERSEAS, 1, "comment");
+        TripDto tripDto = new TripDto(tripId, userId, "tripname", LocalDate.now(), LocalDate.now().plusDays(10), DomesticType.OVERSEAS, 1, "comment");
         tripDtoList.add(tripDto);
 
         TripEntity tripEntity = TripEntity.builder()
-            .tripId((long) tripId).userId(userId)
+            .tripId(tripId).userId(userId)
             .tripName(tripDto.getTripName()).startDate(tripDto.getStartDate())
             .endDate(tripDto.getEndDate())
             .likeCount(tripDto.getLikeCount())
             .domestic(tripDto.getDomestic()).tripComment(tripDto.getTripComment())
             .build();
 
-
-        when(tripService.getTripById((long) tripId)).thenReturn(tripEntity);
-        mvc.perform(MockMvcRequestBuilders.get("/api/trip" + tripId)
+        when(tripService.getTripById(tripId)).thenReturn(tripEntity);
+        mvc.perform(MockMvcRequestBuilders.get("/api/trip/{tripId}", tripId )
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(tripDtoList)))
             .andDo(print())
