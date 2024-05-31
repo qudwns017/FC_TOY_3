@@ -58,6 +58,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
+
         try {
             String token = resolveToken(request);
 

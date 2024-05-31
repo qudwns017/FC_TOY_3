@@ -4,7 +4,7 @@ import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.group6.travel.common.error.ErrorCode;
 import org.group6.travel.common.exception.ApiException;
-import org.group6.travel.domain.token.model.response.TokenResponse;
+import org.group6.travel.domain.token.model.dto.TokenResponse;
 import org.group6.travel.domain.token.service.TokenService;
 import org.group6.travel.domain.user.model.converter.UserConverter;
 import org.group6.travel.domain.user.model.entity.UserEntity;
@@ -40,7 +40,8 @@ public class UserService {
         return userConverter.toResponse(responseEntity);
     }
 
-    @Transactional(readOnly = true)
+    // JWT refreshToken 관리를 redis가 아닌 DBMS에서 하고 있기 때문에 readonly 불가
+    @Transactional
     public TokenResponse login(
             UserLoginRequest request
     ) {

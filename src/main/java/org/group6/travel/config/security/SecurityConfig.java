@@ -56,7 +56,9 @@ public class SecurityConfig {
                 ).permitAll()
                 .requestMatchers(HttpMethod.POST,
                     "/api/user/register",
-                    "/api/user/login").permitAll()
+                    "/api/user/login",
+                    "/api/token"
+                    ).permitAll()
                 .anyRequest().authenticated()
             )
             .csrf(AbstractHttpConfigurer::disable)
