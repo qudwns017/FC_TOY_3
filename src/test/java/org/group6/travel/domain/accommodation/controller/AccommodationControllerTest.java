@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.group6.travel.domain.accommodation.model.dto.AccommodationDto;
 import org.group6.travel.domain.accommodation.model.dto.AccommodationRequest;
 import org.group6.travel.domain.accommodation.service.AccommodationService;
+import org.group6.travel.testConfig.WithAccount;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -70,8 +72,11 @@ class AccommodationControllerTest {
             .build();
         accommodationDtoList.add(accommodationDto);
 
+        var loginUserID = Long.parseLong(
+            SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+
         //when
-        when(accommodationService.getAccommodationList(tripId)).thenReturn(accommodationDtoList);
+        when(accommodationService.getAccommodationList(tripId, loginUserID)).thenReturn(accommodationDtoList);
 
         mvc.perform(MockMvcRequestBuilders.get("/api/trip/{tripId}/accommodation",tripId)
                 .contentType(MediaType.APPLICATION_JSON)

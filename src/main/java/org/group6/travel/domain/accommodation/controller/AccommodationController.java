@@ -3,12 +3,13 @@ package org.group6.travel.domain.accommodation.controller;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.group6.travel.common.api.ResponseApi;
 import org.group6.travel.domain.accommodation.model.dto.AccommodationDto;
 import org.group6.travel.domain.accommodation.model.dto.AccommodationRequest;
 import org.group6.travel.domain.accommodation.service.AccommodationService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,9 +28,11 @@ public class AccommodationController {
 
     @GetMapping
     public ResponseApi<List<AccommodationDto>> getAccommodationList(
+        @AuthenticationPrincipal User loginUser,
         @PathVariable Long tripId
     ) {
-      var response = accommodationService.getAccommodationList(tripId);
+        var loginUserID = Long.parseLong(loginUser.getUsername());
+      var response = accommodationService.getAccommodationList(tripId, loginUserID);
       return ResponseApi.OK(response);
     }
 

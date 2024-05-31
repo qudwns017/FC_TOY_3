@@ -27,7 +27,7 @@ public class AccommodationService {
     private final MapsService mapsService;
 
     @Transactional(readOnly = true)
-    public List<AccommodationDto> getAccommodationList(Long tripId) {
+    public List<AccommodationDto> getAccommodationList(Long tripId, Long loginUserID) {
         var tripEntity = tripRepository.findByTripId(tripId)
             .orElseThrow(() -> new ApiException(ErrorCode.TRIP_NOT_EXIST));
 
