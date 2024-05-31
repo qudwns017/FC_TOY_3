@@ -4,6 +4,7 @@ import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.group6.travel.common.error.ErrorCode;
 import org.group6.travel.common.exception.ApiException;
+import org.group6.travel.domain.token.model.dto.RefreshTokenRequest;
 import org.group6.travel.domain.token.model.dto.TokenResponse;
 import org.group6.travel.domain.token.service.TokenService;
 import org.group6.travel.domain.user.model.converter.UserConverter;
@@ -75,8 +76,8 @@ public class UserService {
         ).orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
     }
 
-    @Transactional(readOnly = true)
-    public void logout(String refreshToken) {
-
+    @Transactional
+    public void logout(RefreshTokenRequest refreshTokenRequest) {
+        tokenService.deleteRefreshToken(refreshTokenRequest);
     }
 }
