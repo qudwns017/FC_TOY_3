@@ -8,9 +8,7 @@ import org.group6.travel.domain.reply.repository.ReplyRepository;
 import org.group6.travel.domain.trip.model.entity.TripEntity;
 import org.group6.travel.domain.trip.model.enums.DomesticType;
 import org.group6.travel.domain.trip.repository.TripRepository;
-import org.group6.travel.domain.user.model.entity.UserEntity;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,42 +44,41 @@ class ReplyServiceTest {
     @InjectMocks
     ReplyService replyService;
 
-
-    @BeforeAll
-    static void superBeforeAll() {
-
-    }
-
     Long tripId = 1L;
     Long userId = 1L;
     Long replyId = 1L;
 
-
-    @Test
-    @DisplayName("user")
-    void compareUserIdTest() {
-        TripEntity tripEntity = TripEntity.builder()
+    private TripEntity createTripEntity(){
+            return TripEntity.builder()
             .tripId(tripId).userId(userId)
             .tripName("tripname").startDate(LocalDate.now())
             .endDate(LocalDate.now().plusDays(3))
             .likeCount(1)
             .domestic(DomesticType.DOMESTIC).tripComment("tripComment")
             .build();
-        ReplyEntity replyEntity = ReplyEntity.builder().userId(userId).tripEntity(tripEntity).replyComment("replyComment").build();
+    }
 
+    private ReplyEntity createReplyEntity(TripEntity tripEntity){
+        return ReplyEntity.builder().userId(userId).tripEntity(tripEntity).replyComment("replyComment").build();
+
+    }
+
+    @BeforeAll
+    static void setUp() {
+
+    }
+    @Test
+    @DisplayName("user")
+    void compareUserIdTest() {
+        TripEntity tripEntity =createTripEntity();
+        ReplyEntity replyEntity = createReplyEntity(tripEntity);
         boolean result = replyService.compareUserId(userId, replyEntity);
     }
 
     @Test
     @DisplayName("댓글 조회 테스트")
     void getRepliesTest() {
-        TripEntity tripEntity = TripEntity.builder()
-            .tripId(tripId).userId(userId)
-            .tripName("tripname").startDate(LocalDate.now())
-            .endDate(LocalDate.now().plusDays(3))
-            .likeCount(1)
-            .domestic(DomesticType.DOMESTIC).tripComment("tripComment")
-            .build();
+        TripEntity tripEntity = createTripEntity();
         ReplyEntity replyEntity = ReplyEntity.builder().userId(userId).tripEntity(tripEntity).replyComment("replyComment").build();
 
         List<ReplyEntity> replyEntityList = List.of(replyEntity);
@@ -99,15 +96,8 @@ class ReplyServiceTest {
     @Test
     @DisplayName("댓글 추가 ")
     void createReplyServiceTest() {
-        TripEntity tripEntity = TripEntity.builder()
-            .tripId(tripId).userId(userId)
-            .tripName("tripname").startDate(LocalDate.now())
-            .endDate(LocalDate.now().plusDays(3))
-            .likeCount(1)
-            .domestic(DomesticType.DOMESTIC).tripComment("tripComment")
-            .build();
-        ReplyEntity replyEntity = ReplyEntity.builder().userId(userId).tripEntity(tripEntity).replyComment("replyComment").build();
-
+        TripEntity tripEntity = createTripEntity();
+        ReplyEntity replyEntity = createReplyEntity((tripEntity));
         lenient().when(tripRepository.findById(tripId)).thenReturn(Optional.of(tripEntity));
         lenient().when(replyRepository.save(replyEntity)).thenReturn(replyEntity);
 
@@ -118,17 +108,8 @@ class ReplyServiceTest {
     @Test
     @DisplayName("댓글 삭제 성공 테스트")
     void deleteReplyTest() {
-
-        TripEntity tripEntity = TripEntity.builder()
-            .tripId(tripId).userId(userId)
-            .tripName("tripname").startDate(LocalDate.now())
-            .endDate(LocalDate.now().plusDays(3))
-            .likeCount(1)
-            .domestic(DomesticType.DOMESTIC).tripComment("tripComment")
-            .build();
-
-        ReplyEntity replyEntity = ReplyEntity.builder().userId(userId).tripEntity(tripEntity).replyComment("replyComment").build();
-
+        TripEntity tripEntity = createTripEntity();
+        ReplyEntity replyEntity = createReplyEntity(tripEntity);
         lenient().when(tripRepository.findById(tripId)).thenReturn(Optional.of(tripEntity));
         lenient().when(replyRepository.findByReplyId(replyId)).thenReturn(Optional.of(replyEntity));
         lenient().when(replyRepository.deleteByReplyIdAndTripEntity(replyId, tripEntity)).thenReturn(Optional.of(replyEntity));
@@ -144,14 +125,7 @@ class ReplyServiceTest {
     @DisplayName("댓글 업데이트 테스트")
     void updateReplyTest(){
         String replyComment = "comment";
-        TripEntity tripEntity = TripEntity.builder()
-            .tripId(tripId).userId(userId)
-            .tripName("tripname").startDate(LocalDate.now())
-            .endDate(LocalDate.now().plusDays(3))
-            .likeCount(1)
-            .domestic(DomesticType.DOMESTIC).tripComment("tripComment")
-            .build();
-
+        TripEntity tripEntity =createTripEntity();
         ReplyRequest replyRequest =ReplyRequest.builder()
             .replyComment(replyComment)
             .build();
