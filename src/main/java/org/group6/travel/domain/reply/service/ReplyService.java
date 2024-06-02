@@ -1,21 +1,18 @@
 package org.group6.travel.domain.reply.service;
 
 import lombok.RequiredArgsConstructor;
-import org.group6.travel.common.error.ErrorCode;
+import org.group6.travel.common.status.ErrorCode;
 import org.group6.travel.common.exception.ApiException;
 import org.group6.travel.domain.reply.model.dto.ReplyDto;
 import org.group6.travel.domain.reply.model.entity.ReplyEntity;
 import org.group6.travel.domain.reply.model.request.ReplyRequest;
 import org.group6.travel.domain.reply.repository.ReplyRepository;
-import org.group6.travel.domain.trip.model.entity.TripEntity;
 import org.group6.travel.domain.trip.repository.TripRepository;
 import org.group6.travel.domain.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service

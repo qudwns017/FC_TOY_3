@@ -1,7 +1,7 @@
 package org.group6.travel.common.exception;
 
 import lombok.Getter;
-import org.group6.travel.common.error.StatusCodeIfs;
+import org.group6.travel.common.status.StatusCodeIfs;
 
 @Getter
 public class ApiException extends RuntimeException implements ApiExceptionIfs {

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.group6.travel.common.api.ResponseApi;
+import org.group6.travel.common.status.SuccessCode;
 import org.group6.travel.domain.accommodation.model.dto.AccommodationDto;
 import org.group6.travel.domain.accommodation.model.dto.AccommodationRequest;
 import org.group6.travel.domain.accommodation.service.AccommodationService;
@@ -43,7 +44,7 @@ public class AccommodationController {
     ){
         var loginUserId = Long.parseLong(loginUser.getUsername());
       var response = accommodationService.createAccommodation(tripId, loginUserId, accommodationRequest);
-      return ResponseApi.OK(response);
+      return ResponseApi.OK(response, SuccessCode.POST);
     }
 
     @DeleteMapping("/{accommodationId}")
@@ -54,7 +55,8 @@ public class AccommodationController {
     ) {
         var loginUserId = Long.parseLong(loginUser.getUsername());
         accommodationService.deleteAccommodation(tripId, accommodationId, loginUserId);
-        return ResponseApi.OK("Deleted accommodation with id " + accommodationId);
+        return ResponseApi.OK("Deleted accommodation with id " + accommodationId,
+                SuccessCode.DELETE);
     }
 
 }

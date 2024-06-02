@@ -9,9 +9,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
-import javax.crypto.SecretKey;
+
 import lombok.extern.slf4j.Slf4j;
-import org.group6.travel.common.error.ErrorCode;
+import org.group6.travel.common.status.ErrorCode;
 import org.group6.travel.common.exception.ApiException;
 import org.group6.travel.domain.token.model.dto.TokenDto;
 import org.springframework.beans.factory.annotation.Value;

@@ -3,6 +3,7 @@ package org.group6.travel.domain.reply.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.group6.travel.common.api.ResponseApi;
+import org.group6.travel.common.status.SuccessCode;
 import org.group6.travel.domain.reply.model.dto.ReplyDto;
 import org.group6.travel.domain.reply.model.request.ReplyRequest;
 import org.group6.travel.domain.reply.service.ReplyService;
@@ -34,7 +35,8 @@ public class ReplyController {
         @Valid @RequestBody ReplyRequest replyRequest
     ) {
         var loginUserId = Long.parseLong(loginUser.getUsername());
-        return ResponseApi.OK(replyService.createReply(tripId,loginUserId,replyRequest));
+        return ResponseApi.OK(replyService.createReply(tripId,loginUserId,replyRequest)
+                , SuccessCode.POST);
     }
 
     //댓글 수정
@@ -48,7 +50,7 @@ public class ReplyController {
         var loginUserId = Long.parseLong(loginUser.getUsername());
         var updateReply = replyService.updateReply(tripId, replyId, loginUserId, replyRequest);
 
-        return ResponseApi.OK(updateReply);
+        return ResponseApi.OK(updateReply, SuccessCode.PUT);
     }
 
     //여행 댓글 삭제
@@ -60,7 +62,7 @@ public class ReplyController {
     ) {
         var loginUserID = Long.parseLong(loginUser.getUsername());
         replyService.deleteReply(tripId, replyId, loginUserID);
-        return ResponseApi.OK("삭제 성공");
+        return ResponseApi.OK("Deleted reply with id " + replyId, SuccessCode.DELETE);
 
     }
 }

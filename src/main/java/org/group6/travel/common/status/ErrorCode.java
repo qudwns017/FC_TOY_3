@@ -1,4 +1,4 @@
-package org.group6.travel.common.error;
+package org.group6.travel.common.status;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,6 +29,6 @@ public enum ErrorCode implements StatusCodeIfs{
     USER_NOT_FOUND (1404, "USER_NOT_EXIST"),
     INVALID_PASSWORD(1404, "INVALID_PASSWORD")
     ;
-    private final Integer errorCode;
+    private final Integer Code;
     private final String description;
 }
