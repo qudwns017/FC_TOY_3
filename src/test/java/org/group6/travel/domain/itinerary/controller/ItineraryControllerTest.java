@@ -1,10 +1,14 @@
 package org.group6.travel.domain.itinerary.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Optional;
 import org.group6.travel.domain.itinerary.model.dto.ItineraryDto;
 import org.group6.travel.domain.itinerary.model.dto.ItineraryRequest;
 import org.group6.travel.domain.itinerary.model.enums.ItineraryType;
 import org.group6.travel.domain.itinerary.service.ItineraryService;
+import org.group6.travel.domain.user.model.entity.UserEntity;
+import org.group6.travel.domain.user.repository.UserRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -27,12 +32,9 @@ import java.util.List;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get; // 예시로 get 메서드 import
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
-import static org.awaitility.Awaitility.given;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
@@ -40,6 +42,8 @@ import static org.mockito.ArgumentMatchers.any;
 class ItineraryControllerTest {
 
     Long tripId = 1L;
+    Long userId = 1234L;
+    Long itineraryId = 1234L;
 
     @Autowired
     private MockMvc mvc;
@@ -47,12 +51,41 @@ class ItineraryControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @MockBean
     private ItineraryService itineraryService;
+
+    private UserEntity userEntity;
 
     @BeforeEach
     public void beforeEach() {
         JacksonTester.initFields(this, objectMapper);
+    }
+
+    @BeforeEach
+    void setUp() {
+        Optional<UserEntity> existingUser = userRepository.findByEmail("testuser@test.com");
+        if (existingUser.isEmpty()) {
+            userEntity = createUser();
+            userRepository.save(userEntity);
+        } else {
+            userEntity = existingUser.get();
+        }
+    }
+
+    private UserEntity createUser() {
+        return UserEntity.builder()
+            .email("testuser@test.com")
+            .encryptedPassword("password1@")
+            .userName("test")
+            .build();
+    }
+
+    @AfterEach
+    public void end() throws Exception {
+        userRepository.deleteById(userEntity.getUserId());
     }
 
     @DisplayName("여정 조회 테스트")
@@ -90,8 +123,9 @@ class ItineraryControllerTest {
             .andExpectAll(status().isOk());
     }
 
-    /*@DisplayName("여정 생성 테스트")
+    @DisplayName("여정 생성 테스트")
     @Test
+    @WithMockUser
     void createItinerary() throws Exception{
         ItineraryRequest itineraryRequest = new ItineraryRequest();
         itineraryRequest.setItineraryName("Test Itinerary");
@@ -104,12 +138,49 @@ class ItineraryControllerTest {
         itineraryRequest.setArrivalPlace("Arrival Place");
         itineraryRequest.setPlace("Test Place");
 
-        given(itineraryService.createItinerary(itineraryRequest, tripId)).willReturn(null);
+        given(itineraryService.createItinerary(itineraryRequest, tripId, userId)).willReturn(null);
 
-        mvc.perform(MockMvcRequestBuilders.post("/api/trip/{tripId}/itinerary", tripId)
+        mvc.perform(MockMvcRequestBuilders.post("/api/trip/{tripId}/itinerary/{itineraryId}", tripId, itineraryId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(itineraryRequest)))
             .andDo(print())
             .andExpectAll(status().isOk());
-    }*/
+    }
+
+    @DisplayName("여정 업데이트 테스트")
+    @Test
+    @WithMockUser
+    void updateItineraryTest() throws Exception {
+        Long tripId = 1L;
+        Long itineraryId = 1L;
+        ItineraryRequest itineraryRequest = new ItineraryRequest();
+        itineraryRequest.setItineraryName("Test Itinerary");
+        itineraryRequest.setType(ItineraryType.MOVE);
+        itineraryRequest.setStartDatetime(LocalDateTime.now().plusHours(1));
+        itineraryRequest.setEndDatetime(LocalDateTime.now().plusHours(2));
+        itineraryRequest.setItineraryComment("This is a test itinerary.");
+        itineraryRequest.setTransportation("Car");
+        itineraryRequest.setDeparturePlace("Departure Place");
+        itineraryRequest.setArrivalPlace("Arrival Place");
+        itineraryRequest.setPlace("Test Place");
+        ItineraryDto itineraryDto = new ItineraryDto();
+
+        when(itineraryService.updateItinerary(tripId, itineraryId, userId, itineraryRequest)).thenReturn(itineraryDto);
+
+        mvc.perform(MockMvcRequestBuilders.put("/itinerary/{itineraryId}", itineraryId)
+                .param("tripId", String.valueOf(tripId))
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(itineraryRequest)))
+            .andExpect(status().isOk());
+    }
+
+    @DisplayName("여정 업데이트 테스트")
+    @Test
+    @WithMockUser
+    void deleteItineraryTest() throws Exception {
+
+        mvc.perform(MockMvcRequestBuilders.delete("/api/trip/{tripId}/itinerary/{itineraryId", tripId, itineraryId)
+                .param("tripId", String.valueOf(tripId)))
+            .andExpect(status().isOk());
+    }
 }
