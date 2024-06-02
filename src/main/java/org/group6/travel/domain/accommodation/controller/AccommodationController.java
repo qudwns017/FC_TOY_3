@@ -31,8 +31,8 @@ public class AccommodationController {
     public ResponseApi<List<AccommodationDto>> getAccommodationList(
         @PathVariable Long tripId
     ) {
-      var response = accommodationService.getAccommodationList(tripId);
-      return ResponseApi.OK(response);
+        var response = accommodationService.getAccommodationList(tripId);
+        return ResponseApi.OK(response);
     }
 
     @PostMapping
@@ -42,8 +42,8 @@ public class AccommodationController {
         @Valid @RequestBody AccommodationRequest accommodationRequest
     ){
         var loginUserId = Long.parseLong(loginUser.getUsername());
-      var response = accommodationService.createAccommodation(tripId, loginUserId, accommodationRequest);
-      return ResponseApi.OK(response);
+        var response = accommodationService.createAccommodation(tripId, loginUserId, accommodationRequest);
+        return ResponseApi.OK(response);
     }
 
     @DeleteMapping("/{accommodationId}")
