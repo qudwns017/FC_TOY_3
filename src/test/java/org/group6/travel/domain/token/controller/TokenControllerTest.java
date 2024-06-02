@@ -1,41 +1,30 @@
 package org.group6.travel.domain.token.controller;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
-import java.util.Objects;
 import org.group6.travel.domain.token.model.dto.RefreshTokenRequest;
-import org.group6.travel.domain.token.model.dto.TokenDto;
 import org.group6.travel.domain.token.model.entity.RefreshTokenEntity;
 import org.group6.travel.domain.token.provider.TokenProvider;
 import org.group6.travel.domain.token.repository.RefreshTokenRepository;
-import org.group6.travel.domain.token.service.TokenService;
 import org.group6.travel.domain.user.model.entity.UserEntity;
 import org.group6.travel.domain.user.repository.UserRepository;
-import org.group6.travel.domain.user.service.UserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcBuilder;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -64,7 +53,7 @@ class TokenControllerTest {
 
 
     @BeforeEach
-    public void mockMvcSetup() {
+    void init() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
             .build();
         userRepository.deleteAll();
@@ -72,7 +61,7 @@ class TokenControllerTest {
     }
 
     @AfterEach
-    public void clearRepository() {
+    void clearRepository() {
         userRepository.deleteAll();
         refreshTokenRepository.deleteAll();
     }
@@ -95,7 +84,6 @@ class TokenControllerTest {
             .userName(userName)
             .encryptedPassword(encryptedUserPassword).build()
         );
-
 
         var data = new HashMap<String, Object>();
         data.put("userId", testUser.getUserId());
@@ -128,6 +116,7 @@ class TokenControllerTest {
         RefreshTokenEntity newRefToken = refreshTokenRepository.findByUserId(testUser.getUserId()).get();
 
         resultActions
+            .andExpect(jsonPath("$.status").value(200))
             .andExpect(jsonPath("$.refreshToken").value(newRefToken.getRefreshToken()));
 
         resultActions
