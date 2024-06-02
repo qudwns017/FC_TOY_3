@@ -49,6 +49,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class AccommodationControllerTest {
 
     Long tripId = 1L;
+    Long userId = 1234L;
     Long accommodationId = 1L;
 
     @Autowired
@@ -64,6 +65,8 @@ class AccommodationControllerTest {
     private AccommodationService accommodationService;
 
     private UserEntity userEntity;
+    @Autowired
+    private MockMvc mockMvc;
 
     @BeforeEach
     public void beforeEach() {
@@ -90,7 +93,7 @@ class AccommodationControllerTest {
     }
 
     @AfterEach
-    public void end() throws Exception {
+    public void end() {
         userRepository.deleteById(userEntity.getUserId());
     }
 
@@ -145,9 +148,9 @@ class AccommodationControllerTest {
             .checkOutDatetime(LocalDateTime.now().plusDays(3))
             .build();
 
-        given(accommodationService.createAccommodation(tripId, userEntity.getUserId(), accommodationRequest)).willReturn(accommodationDto);
+        given(accommodationService.createAccommodation(tripId, userId, accommodationRequest)).willReturn(accommodationDto);
 
-        mvc.perform(MockMvcRequestBuilders.post("/api/trip/{tripId}/accommodation", tripId)
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/trip/{tripId}/accommodation", tripId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(accommodationRequest)))
             .andDo(print())
