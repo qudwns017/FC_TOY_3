@@ -2,7 +2,7 @@ package org.group6.travel.domain.user.service;
 
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
-import org.group6.travel.common.error.ErrorCode;
+import org.group6.travel.common.status.ErrorCode;
 import org.group6.travel.common.exception.ApiException;
 import org.group6.travel.domain.token.model.dto.RefreshTokenRequest;
 import org.group6.travel.domain.token.model.dto.TokenResponse;

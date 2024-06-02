@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.group6.travel.common.api.ResponseApi;
+import org.group6.travel.common.status.SuccessCode;
 import org.group6.travel.domain.trip.model.dto.TripDto;
 import org.group6.travel.domain.trip.model.dto.TripRequest;
 import org.group6.travel.domain.trip.model.entity.TripEntity;
@@ -62,7 +63,8 @@ public class TripController {
         @AuthenticationPrincipal User loginUser
     ){
         var loginUserID = Long.parseLong(loginUser.getUsername());
-        return ResponseApi.OK(tripService.createTrip(tripRequest, loginUserID));
+        return ResponseApi.OK(tripService.createTrip(tripRequest, loginUserID),
+                SuccessCode.POST);
     }
 
     @PutMapping("/{tripId}")
@@ -74,7 +76,8 @@ public class TripController {
 
     ){
         var loginUserID = Long.parseLong(loginUser.getUsername());
-        return ResponseApi.OK(tripService.updateTrip(tripId, tripRequest, loginUserID));
+        return ResponseApi.OK(tripService.updateTrip(tripId, tripRequest, loginUserID)
+                , SuccessCode.PUT);
     }
 
     @DeleteMapping("/{tripId}")
@@ -84,6 +87,6 @@ public class TripController {
     ){
         var loginUserID = Long.parseLong(loginUser.getUsername());
         tripService.deleteTrip(tripId, loginUserID);
-        return ResponseApi.OK("삭제 성공");
+        return ResponseApi.OK("Deleted trip with id " + tripId, SuccessCode.DELETE);
     }
 }

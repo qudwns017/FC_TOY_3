@@ -5,10 +5,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.group6.travel.common.error.ErrorCode;
+import org.group6.travel.common.status.ErrorCode;
 import org.group6.travel.common.exception.ApiException;
 import org.group6.travel.domain.token.provider.TokenProvider;
 import org.springframework.security.core.Authentication;

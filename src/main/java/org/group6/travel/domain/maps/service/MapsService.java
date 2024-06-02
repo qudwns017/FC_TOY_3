@@ -5,10 +5,9 @@ import com.google.maps.GeocodingApi;
 import com.google.maps.GeocodingApiRequest;
 import com.google.maps.model.GeocodingResult;
 import com.google.maps.model.LatLng;
-import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.group6.travel.common.error.ErrorCode;
+import org.group6.travel.common.status.ErrorCode;
 import org.group6.travel.common.exception.ApiException;
 import org.springframework.stereotype.Service;
 

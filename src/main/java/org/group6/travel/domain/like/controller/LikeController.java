@@ -2,6 +2,7 @@ package org.group6.travel.domain.like.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.group6.travel.common.api.ResponseApi;
+import org.group6.travel.common.status.SuccessCode;
 import org.group6.travel.domain.like.service.LikeService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
@@ -32,7 +33,7 @@ public class LikeController {
     ) {
         var loginUserId = Long.parseLong(loginUser.getUsername());
         var clickLike = likeService.addLike(tripId, loginUserId);
-        return ResponseApi.OK(clickLike);
+        return ResponseApi.OK(clickLike, SuccessCode.POST);
     }
 
 }

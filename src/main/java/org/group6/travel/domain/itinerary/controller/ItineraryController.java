@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.group6.travel.common.api.ResponseApi;
+import org.group6.travel.common.status.SuccessCode;
 import org.group6.travel.domain.itinerary.model.dto.ItineraryDto;
 import org.group6.travel.domain.itinerary.model.dto.ItineraryRequest;
 import org.group6.travel.domain.itinerary.service.ItineraryService;
@@ -49,7 +50,7 @@ public class ItineraryController {
     ) {
         var loginUserId = Long.parseLong(loginUser.getUsername());
         var response = itineraryService.createItinerary(itineraryRequest, tripId, loginUserId);
-        return ResponseApi.OK(response);
+        return ResponseApi.OK(response, SuccessCode.POST);
     }
 
     @PutMapping("/{itineraryId}")
@@ -67,7 +68,7 @@ public class ItineraryController {
     ) {
         var loginUserId = Long.parseLong(loginUser.getUsername());
         var response = itineraryService.updateItinerary(tripId, itineraryId, loginUserId,itineraryRequest);
-        return ResponseApi.OK(response);
+        return ResponseApi.OK(response, SuccessCode.PUT);
     }
 
     @DeleteMapping("/{itineraryId}")
@@ -82,6 +83,6 @@ public class ItineraryController {
     ) {
         var loginUserId = Long.parseLong(loginUser.getUsername());
         itineraryService.deleteItinerary(tripId, itineraryId, loginUserId);
-        return ResponseApi.OK("삭제에 성공하였습니다.");
+        return ResponseApi.OK("Deleted itinerary with id " + itineraryId, SuccessCode.PUT);
     }
 }

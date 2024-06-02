@@ -2,22 +2,16 @@ package org.group6.travel.domain.trip.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.group6.travel.common.error.ErrorCode;
+import org.group6.travel.common.status.ErrorCode;
 import org.group6.travel.common.exception.ApiException;
-import org.group6.travel.domain.like.model.entity.LikeEntity;
 import org.group6.travel.domain.like.repository.LikeRepository;
 import org.group6.travel.domain.trip.model.dto.TripDto;
 import org.group6.travel.domain.trip.model.dto.TripRequest;
 import org.group6.travel.domain.trip.model.entity.TripEntity;
 import org.group6.travel.domain.trip.repository.TripRepository;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.transaction.annotation.Transactional;
 
