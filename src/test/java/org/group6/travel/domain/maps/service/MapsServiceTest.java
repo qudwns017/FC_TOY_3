@@ -22,7 +22,7 @@ class MapsServiceTest {
 
     @DisplayName("getLatLngFromAddress : 구글 API를 통해 주소를 보내면 위도와 경도를 반환한다.")
     @Test
-    void 주소로_위도경도_받아오기() throws Exception {
+    void getLatLngFromAddress() throws Exception {
 
         final LatLng wants = new LatLng(37.57702070,126.97663100);
 
