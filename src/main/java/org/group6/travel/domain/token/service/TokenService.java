@@ -88,7 +88,7 @@ public class TokenService {
     @Transactional
     public void deleteRefreshToken(RefreshTokenRequest refreshTokenRequest) {
 
-        var refreshToken = refreshTokenRequest.getRefreshToken();
+        String refreshToken = refreshTokenRequest.getRefreshToken();
         var entity = refreshTokenRepository.findByRefreshToken(refreshToken);
 
         if(entity.isEmpty()) return;
