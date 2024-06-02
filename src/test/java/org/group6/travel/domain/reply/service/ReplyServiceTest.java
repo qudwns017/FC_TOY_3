@@ -73,6 +73,7 @@ class ReplyServiceTest {
         TripEntity tripEntity =createTripEntity();
         ReplyEntity replyEntity = createReplyEntity(tripEntity);
         boolean result = replyService.compareUserId(userId, replyEntity);
+        assertThat(result).isEqualTo(true);
     }
 
     @Test
