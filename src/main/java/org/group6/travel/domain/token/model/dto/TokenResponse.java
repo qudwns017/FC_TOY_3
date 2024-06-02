@@ -1,4 +1,4 @@
-package org.group6.travel.domain.token.model.response;
+package org.group6.travel.domain.token.model.dto;
 
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
