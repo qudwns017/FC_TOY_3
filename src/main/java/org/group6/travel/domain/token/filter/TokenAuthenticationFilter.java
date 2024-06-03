@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.group6.travel.common.status.ErrorCode;
@@ -13,6 +14,7 @@ import org.group6.travel.domain.token.provider.TokenProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.PatternMatchUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -22,6 +24,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String TOKEN_PREFIX = "Bearer ";
+    public static final String[] SwaggerPatterns = {
+            "/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs/**", "/v3/api-docs",
+    };
 
     public final TokenProvider tokenProvider;
 
@@ -45,7 +50,12 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             log.error("TokenAuthenticationFilter ERROR");
             throw new ApiException(ErrorCode.INVALID_TOKEN, "Authorization Error");
         }
+    }
 
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String servletPath = request.getServletPath();
+        return PatternMatchUtils.simpleMatch(SwaggerPatterns, servletPath);
     }
 
     public String resolveToken(HttpServletRequest request) {

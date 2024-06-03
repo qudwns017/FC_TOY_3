@@ -25,37 +25,42 @@ public class SecurityConfig {
     private final TokenProvider tokenProvider;
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-            .formLogin(AbstractHttpConfigurer::disable)
-            .sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                        "/swagger-ui/**"
-                ).permitAll()
-                .requestMatchers(HttpMethod.GET,
-                    "/api/trip",
-                    "/api/trip/{tripId}",
-                    "/api/trip/search",
-                    "/api/trip/{tripId}/reply",
-                    "/api/trip/{tripId}/accommodation",
-                    "/api/trip/{tripId}/itinerary"
-                ).permitAll()
-                .requestMatchers(HttpMethod.POST,
-                    "/api/user/register",
-                    "/api/user/login",
-                    "/api/token"
-                    ).permitAll()
-                .anyRequest().authenticated()
-            )
-            .exceptionHandling((exceptionConfig) -> exceptionConfig.authenticationEntryPoint(new CustomAuthenticationEntryPoint(new ObjectMapper())))
-            .csrf(AbstractHttpConfigurer::disable)
-            .addFilterBefore(new TokenAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
-            .build();
+                .formLogin(AbstractHttpConfigurer::disable)
+                .sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/swagger-resources/**",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/v3/api-docs"
+                        ).permitAll()
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/trip",
+                                "/api/trip/{tripId}",
+                                "/api/trip/search",
+                                "/api/trip/{tripId}/reply",
+                                "/api/trip/{tripId}/accommodation",
+                                "/api/trip/{tripId}/itinerary"
+                        ).permitAll()
+                        .requestMatchers(HttpMethod.POST,
+                                "/api/user/register",
+                                "/api/user/login",
+                                "/api/token"
+                        ).permitAll()
+                        .anyRequest().authenticated()
+                )
+                .exceptionHandling((exceptionConfig) -> exceptionConfig.authenticationEntryPoint(
+                        new CustomAuthenticationEntryPoint(new ObjectMapper())))
+                .csrf(AbstractHttpConfigurer::disable)
+                .addFilterBefore(new TokenAuthenticationFilter(tokenProvider),
+                        UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 }
