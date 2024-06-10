@@ -1,5 +1,3 @@
-src/main/resources/application.yaml
-src/main/resources/application.yml
 
 HELP.md
 .gradle
@@ -19,7 +17,6 @@ build/
 bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
-**/src/main/resources/application.*
 
 ### IntelliJ IDEA ###
 .idea
