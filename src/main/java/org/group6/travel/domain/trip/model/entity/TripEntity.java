@@ -40,14 +40,14 @@ public class TripEntity {
     @OneToMany(
             mappedBy = "tripEntity"
     )
-    private List<ItineraryEntity> itineraryList = List.of();
+    private final List<ItineraryEntity> itineraryList = List.of();
 
     @OneToMany(
             mappedBy = "tripEntity"
     )
-    private List<AccommodationEntity> accommodationList = List.of();
+    private final List<AccommodationEntity> accommodationList = List.of();
     @OneToMany(
             mappedBy = "tripEntity"
     )
-    private List<ReplyEntity> replyList = List.of();
+    private final List<ReplyEntity> replyList = List.of();
 }
