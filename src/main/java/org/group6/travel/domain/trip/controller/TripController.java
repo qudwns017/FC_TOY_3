@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.group6.travel.common.api.ResponseApi;
+import org.group6.travel.config.s3.S3Config;
 import org.group6.travel.domain.trip.model.dto.TripDto;
 import org.group6.travel.domain.trip.model.dto.TripRequest;
 import org.group6.travel.domain.trip.model.entity.TripEntity;
@@ -19,6 +20,7 @@ import java.util.List;
 @RequestMapping("/api/trip")
 public class TripController {
     private final TripService tripService;
+    private final
 
     @GetMapping
     public ResponseApi<List<?>> getTrips(){

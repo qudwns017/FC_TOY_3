@@ -19,3 +19,14 @@ jwt:
 google:
   maps:
     api-key: AIzaSyDctBzKQ0wsNg94opERP27ceJ9kD63I6QU
+
+cloud:
+  aws:
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: cbjunbucket
+    credentials:
+      accessKey: AKIAQ3EGU3FH4IDGBCWM
+      secretKey: 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
+
