@@ -26,31 +26,32 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
     public final TokenProvider tokenProvider;
 
-//    @Override
-//    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-//
-//        String[] excludePostPath = {
-//                "/api/user/register",
-//                "/api/user/login"};
-//
-//        String[] excludeGetPath = {
-//                "/api/trip",
-//                "/api/trip/{tripId}",
-//                "/api/trip/search",
-//                "/api/trip/{tripId}/reply",
-//                "/api/trip/{tripId}/accommodation",
-//                "/api/trip/{tripId}/itinerary"
-//        };
-//        String path = request.getRequestURI();
-//        String method = request.getMethod();
-//        if (method.equals("GET")) {
-//            return Arrays.stream(excludeGetPath).anyMatch(path::startsWith);
-//        }
-//        if (method.equals("POST")) {
-//            return Arrays.stream(excludePostPath).anyMatch(path::startsWith);
-//        }
-//        return false;
-//    }
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+
+        String[] excludePostPath = {
+                "/api/user/register",
+                "/api/user/login",
+                "/api/upload"};
+
+        String[] excludeGetPath = {
+                "/api/trip",
+                "/api/trip/{tripId}",
+                "/api/trip/search",
+                "/api/trip/{tripId}/reply",
+                "/api/trip/{tripId}/accommodation",
+                "/api/trip/{tripId}/itinerary"
+        };
+        String path = request.getRequestURI();
+        String method = request.getMethod();
+        if (method.equals("GET")) {
+            return Arrays.stream(excludeGetPath).anyMatch(path::startsWith);
+        }
+        if (method.equals("POST")) {
+            return Arrays.stream(excludePostPath).anyMatch(path::startsWith);
+        }
+        return false;
+    }
 
     @Override
     protected void doFilterInternal(

@@ -20,7 +20,6 @@ import java.util.List;
 @RequestMapping("/api/trip")
 public class TripController {
     private final TripService tripService;
-    private final
 
     @GetMapping
     public ResponseApi<List<?>> getTrips(){
