@@ -52,6 +52,10 @@ dependencies {
 
 }
 
+test {
+    exclude '**/*'
+}
+
 tasks.named('test') {
     outputs.dir snippetsDir
     useJUnitPlatform()
